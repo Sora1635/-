@@ -142,6 +142,10 @@ function startTimer() {
 // Отправка теста
 function submitTest() {
     try {
+        // Сохраняем ответ на текущий вопрос перед подсчетом результатов
+        const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
+        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+
         let score = 0;
         const resultsDetails = document.getElementById("results-details");
 

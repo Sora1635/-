@@ -38,21 +38,9 @@
 
     <script>
         function startTest(part) {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const subject = urlParams.get("subject");
-                if (!subject) {
-                    console.error("Ошибка: предмет не выбран");
-                    alert("Ката: Предмет тандалган жок!");
-                    return;
-                }
-                const testUrl = `test.html?subject=${encodeURIComponent(subject)}&part=${encodeURIComponent(part)}`;
-                console.log("Переход на:", testUrl);
-                window.location.href = testUrl;
-            } catch (error) {
-                console.error("Ошибка в startTest:", error);
-                alert("Ката: Тестти баштоо мүмкүн эмес!");
-            }
+            const urlParams = new URLSearchParams(window.location.search);
+            const subject = urlParams.get("subject");
+            window.location.href = `test.html?subject=${subject}&part=${part}`;
         }
     </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест - ОРТго даярдануу</title>
+    <title>Тест - ОРТго даярдануу lounge</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,7 +20,7 @@
         <section id="start-section">
             <h2>Тестти баштоого даярсызбы?</h2>
             <p>30 суроо, убакыт: <span id="time-info">30 мүнөт</span>.</p>
-            <button id="start-test" class="actionხ: "Жооптор" class="action-btn">Тестти баштоо</button>
+            <button id="start-test" class="action-btn">Тестти баштоо</button>
         </section>
 
         <section id="test-section" style="display: none;">
@@ -56,7 +56,7 @@
         <p>© 2025 ОРТго даярдануу платформасы</p>
     </footer>
 
-    <script src="questions.js"></script>
+    <script src="questions.js" onerror="document.getElementById('error-message').textContent = 'Ката: questions.js жүктөлгөн жок'; document.getElementById('error-message').style.display = 'block';"></script>
     <script src="script.js"></script>
 </body>
 </html>
