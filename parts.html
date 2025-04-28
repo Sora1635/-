@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Бөлүктөр - ОРТго даярдануу</title>
+    <title>Тесттер - ОРТго даярдануу</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Бөлүктөр</h1>
+        <h1>Тесттер</h1>
         <nav>
             <button onclick="window.location.href='index.html'" class="nav-btn">Башкы бет</button>
             <button onclick="window.location.href='about.html'" class="nav-btn">Сайт жөнүндө</button>
-            <button onclick="window.location.href='subjects.html'" class="nav-btn">Тесттер</button>
+            <button onclick="window.location.href='subjects.html'" class="nav-btn active">Тесттер</button>
         </nav>
     </header>
 
     <main>
         <section class="card-section">
-            <h2>Бөлүктү тандаңыз</h2>
+            <h2>Предметти тандаңыз</h2>
             <div class="card-container">
-                <div class="card" onclick="startTest('part1')">
-                    <h3>1-бөлүк (Жеңил)</h3>
-                    <p>30 суроо, 30 мүнөт. Жөнөкөй маселелер.</p>
+                <div class="card" onclick="window.location.href='parts.html?subject=math'">
+                    <h3>Математика</h3>
+                    <p>Арифметика, алгебра, геометрия жана башка темалар.</p>
                 </div>
-                <div class="card" onclick="startTest('part2')">
-                    <h3>2-бөлүк (Татаал)</h3>
-                    <p>30 суроо, 60 мүнөт. Татаал маселелер.</p>
+                <div class="card" onclick="window.location.href='parts.html?subject=kyrgyz'">
+                    <h3>Кыргыз тили</h3>
+                    <p>Лексика, грамматика жана текстти түшүнүү.</p>
                 </div>
+                <!-- Дагы предметтерди кошууга болот -->
             </div>
         </section>
     </main>
@@ -35,13 +36,5 @@
     <footer>
         <p>© 2025 ОРТго даярдануу платформасы</p>
     </footer>
-
-    <script>
-        function startTest(part) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const subject = urlParams.get("subject");
-            window.location.href = `test.html?subject=${subject}&part=${part}`;
-        }
-    </script>
 </body>
 </html>

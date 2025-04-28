@@ -25,7 +25,6 @@
 
         <section id="test-section" style="display: none;">
             <div id="timer">Калган убакыт: <span id="time-remaining">30:00</span></div>
-            <div id="error-message" style="color: red; display: none;"></div>
             <div id="question-area">
                 <div id="question-header">
                     <span>Суроо №</span><span id="question-number">1</span><span>/30</span>
@@ -44,6 +43,15 @@
             <button id="submit-test" class="action-btn">Тестти тапшыруу</button>
         </section>
 
+        <section id="confirm-section" style="display: none;">
+            <h2>Тестти аяктоо</h2>
+            <p>Бардык суроолорго жооп бердиңиз. Тестти тапшырууга даярсызбы же жоопторду оңдоону каалайсызбы?</p>
+            <div class="confirm-buttons">
+                <button id="confirm-submit" class="action-btn">Тестти тапшыруу</button>
+                <button id="return-to-questions" class="action-btn secondary">Жоопторду оңдоо</button>
+            </div>
+        </section>
+
         <section id="results-section" style="display: none;">
             <h2>Жыйынтыктар</h2>
             <p>Сиздин упайыңыз: <span id="score"></span>/30</p>
@@ -56,7 +64,7 @@
         <p>© 2025 ОРТго даярдануу платформасы</p>
     </footer>
 
-    <script src="questions.js" onerror="document.getElementById('error-message').textContent = 'Ката: questions.js жүктөлгөн жок'; document.getElementById('error-message').style.display = 'block';"></script>
+    <script src="questions.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
