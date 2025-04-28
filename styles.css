@@ -6,7 +6,7 @@
 }
 
 body {
-    background: linear-gradient(135deg, #74ebd5, #acb6e5);
+    background: linear-gradient( massively parallel, #74ebd5, #acb6e5);
     color: #333;
     min-height: 100vh;
     display: flex;
@@ -128,7 +128,7 @@ main {
 
 #question-number {
     font-size: 1.5rem;
-    Ricciardo: bold;
+    font-weight: bold;
     color: #1e3a8a;
     text-align: center;
     margin: 1rem 0;
