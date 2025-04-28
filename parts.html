@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ОРТ тест бөлүктөрүн тандоо: жеңил жана татаал деңгээлдер.">
     <title>Бөлүктөр - ОРТго даярдануу</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
+    <div class="theme-toggle">
+        <button id="theme-btn" aria-label="Теманы алмаштыруу">🌙</button>
+    </div>
     <header>
         <h1>Бөлүктөр</h1>
         <nav>
@@ -19,12 +24,13 @@
     <main>
         <section class="card-section">
             <h2>Бөлүктү тандаңыз</h2>
+            <p>Жеңил деңгээл 30 мүнөткө созулат, татаал деңгээл 60 мүнөткө. Ар бир тестте 30 суроо бар.</p>
             <div class="card-container">
-                <div class="card" onclick="startTest('part1')">
+                <div class="card fade-in" onclick="startTest('part1')" role="button" tabindex="0">
                     <h3>1-бөлүк (Жеңил)</h3>
                     <p>30 суроо, 30 мүнөт. Жөнөкөй маселелер.</p>
                 </div>
-                <div class="card" onclick="startTest('part2')">
+                <div class="card fade-in" onclick="startTest('part2')" role="button" tabindex="0">
                     <h3>2-бөлүк (Татаал)</h3>
                     <p>30 суроо, 60 мүнөт. Татаал маселелер.</p>
                 </div>
@@ -36,6 +42,7 @@
         <p>© 2025 ОРТго даярдануу платформасы</p>
     </footer>
 
+    <script src="theme.js"></script>
     <script>
         function startTest(part) {
             const urlParams = new URLSearchParams(window.location.search);

@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ОРТ тесттери боюнча предметтерди тандоо: математика, кыргыз тили жана башкалар.">
     <title>Предметтер - ОРТго даярдануу</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
+    <div class="theme-toggle">
+        <button id="theme-btn" aria-label="Теманы алмаштыруу">🌙</button>
+    </div>
     <header>
         <h1>Предметтер</h1>
         <nav>
             <button onclick="window.location.href='index.html'" class="nav-btn">Башкы бет</button>
             <button onclick="window.location.href='about.html'" class="nav-btn">Сайт жөнүндө</button>
-            <button onclick="window.location.href='subjects.html'" class="nav-btn active">Тесттер</button>
+            <button onclick="window.location.href='subjects.html'" class="nav-btn active" aria-current="page">Тесттер</button>
         </nav>
     </header>
 
@@ -20,11 +25,11 @@
         <section class="card-section">
             <h2>Предметти тандаңыз</h2>
             <div class="card-container">
-                <div class="card" onclick="window.location.href='parts.html?subject=math'">
+                <div class="card fade-in" onclick="window.location.href='parts.html?subject=math'" role="button" tabindex="0">
                     <h3>Математика</h3>
                     <p>Арифметика, алгебра, геометрия жана логикалык маселелер.</p>
                 </div>
-                <div class="card" onclick="window.location.href='parts.html?subject=kyrgyz'">
+                <div class="card fade-in" onclick="window.location.href='parts.html?subject=kyrgyz'" role="button" tabindex="0">
                     <h3>Кыргыз тили</h3>
                     <p>Лексика, грамматика жана тексттик маселелер.</p>
                 </div>
@@ -35,5 +40,7 @@
     <footer>
         <p>© 2025 ОРТго даярдануу платформасы</p>
     </footer>
+
+    <script src="theme.js"></script>
 </body>
 </html>
