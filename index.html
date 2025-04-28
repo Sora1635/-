@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ОРТ Пробалык Тест</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>ОРТ Пробалык Тест</h1>
+        <div class="lang-switch">
+            <button onclick="switchLanguage('ky')">Кыргызча</button>
+            <button onclick="switchLanguage('ru')">Русский</button>
+        </div>
+    </header>
+    <main>
+        <section id="home" class="active">
+            <h2 data-lang="ky">Предметти тандаңыз</h2>
+            <h2 data-lang="ru">Выберите предмет</h2>
+            <div class="subjects">
+                <button onclick="showSubject('math')">Математика</button>
+                <button onclick="showSubject('kyrgyz')">Кыргыз тили</button>
+            </div>
+        </section>
+
+        <section id="subject" class="hidden">
+            <h2 id="subject-title"></h2>
+            <div class="parts">
+                <button onclick="showPart(1)">1-бөлүк (Жеңил)</button>
+                <button onclick="showPart(2)">2-бөлүк (Татаал)</button>
+            </div>
+        </section>
+
+        <section id="part-details" class="hidden">
+            <h2 id="part-title"></h2>
+            <p id="part-description"></p>
+            <button onclick="startTest()">Тестти баштоо</button>
+        </section>
+
+        <section id="test" class="hidden">
+            <h2 id="test-title"></h2>
+            <div id="timer"></div>
+            <div id="questions"></div>
+            <div id="answers">
+                <h3 data-lang="ky">Жоопторду тандоо</h3>
+                <h3 data-lang="ru">Выберите ответы</h3>
+                <div id="answer-options"></div>
+            </div>
+            <button onclick="submitTest()">Тестти тапшыруу</button>
+        </section>
+
+        <section id="results" class="hidden">
+            <h2 data-lang="ky">Жыйынтыктар</h2>
+            <h2 data-lang="ru">Результаты</h2>
+            <p id="score"></p>
+            <p id="percentage"></p>
+            <p id="knowledge"></p>
+            <button onclick="backToHome()">Кайра башкы бетке</button>
+        </section>
+    </main>
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
