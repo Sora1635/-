@@ -7,8 +7,7 @@ const questions = {
                 options: ["8", "12", "10", "7"],
                 correct: "8",
                 category: "арифметика",
-                difficulty: "easy",
-                variant: 1
+                difficulty: "easy"
             },
             {
                 id: 2,
@@ -16,10 +15,17 @@ const questions = {
                 options: ["50 сом", "60 сом", "40 сом", "70 сом"],
                 correct: "60 сом",
                 category: "текстовые задачи",
-                difficulty: "easy",
-                variant: 1
+                difficulty: "easy"
             },
-            // Добавить больше вопросов
+            {
+                id: 3,
+                text: "5тин квадраты канчага барабар?",
+                options: ["20", "25", "15", "30"],
+                correct: "25",
+                category: "арифметика",
+                difficulty: "easy"
+            },
+            // Добавьте еще вопросы (100+ для разнообразия)
         ],
         part2: [
             {
@@ -28,10 +34,17 @@ const questions = {
                 options: ["1 жана 3", "2 жана 2", "-1 жана -3", "0 жана 4"],
                 correct: "1 жана 3",
                 category: "алгебра",
-                difficulty: "hard",
-                variant: 1
+                difficulty: "hard"
             },
-            // Добавить больше вопросов
+            {
+                id: 102,
+                text: "Тегеректин радиусу 5 см болсо, анын аянты канча?",
+                options: ["25π см²", "10π см²", "15π см²", "20π см²"],
+                correct: "25π см²",
+                category: "геометрия",
+                difficulty: "hard"
+            },
+            // Добавьте еще вопросы
         ]
     },
     kyrgyz: {
@@ -42,13 +55,12 @@ const questions = {
                 options: ["Жашыл", "Асман", "Сары", "Кызыл"],
                 correct: "Асман",
                 category: "лексика",
-                difficulty: "easy",
-                variant: 1
+                difficulty: "easy"
             },
-           OLAТь больше вопросов
+            // Добавьте еще вопросы
         ],
         part2: [
-            // Добавить вопросы
+            // Добавьте вопросы
         ]
     }
 };
