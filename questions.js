@@ -25,6 +25,22 @@ const questions = {
                 category: "арифметика",
                 difficulty: "easy"
             },
+            {
+                id: 4,
+                text: "10дун 20% канча?",
+                options: ["2", "4", "1", "5"],
+                correct: "2",
+                category: "проценты",
+                difficulty: "easy"
+            },
+            {
+                id: 5,
+                text: "Эгерде унаа 2 саатта 120 км жүрсө, анын ылдамдыгы канча?",
+                options: ["50 км/саат", "60 км/саат", "70 км/саат", "80 км/саат"],
+                correct: "60 км/саат",
+                category: "текстовые задачи",
+                difficulty: "easy"
+            },
             // Добавьте еще вопросы (100+ для разнообразия)
         ],
         part2: [
@@ -44,6 +60,14 @@ const questions = {
                 category: "геометрия",
                 difficulty: "hard"
             },
+            {
+                id: 103,
+                text: "a + b = 10, a * b = 24, a^2 + b^2 = ?",
+                options: ["52", "48", "56", "60"],
+                correct: "52",
+                category: "алгебра",
+                difficulty: "hard"
+            },
             // Добавьте еще вопросы
         ]
     },
@@ -54,6 +78,14 @@ const questions = {
                 text: "«Көк» сөзүнүн синоними кайсы?",
                 options: ["Жашыл", "Асман", "Сары", "Кызыл"],
                 correct: "Асман",
+                category: "лексика",
+                difficulty: "easy"
+            },
+            {
+                id: 202,
+                text: "«Ыйман» сөзүнүн мааниси эмне?",
+                options: ["Акыл", "Адеп", "Сабыр", "Кайрат"],
+                correct: "Адеп",
                 category: "лексика",
                 difficulty: "easy"
             },

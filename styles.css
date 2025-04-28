@@ -62,12 +62,12 @@ main {
     flex: 1;
 }
 
-.hero {
+.hero, #start-section, #results-section {
     text-align: center;
     padding: 2rem;
 }
 
-.hero h2 {
+.hero h2, #start-section h2, #results-section h2 {
     font-size: 2rem;
     margin-bottom: 1rem;
     color: #1e3a8a;
@@ -126,52 +126,54 @@ main {
     margin: 1rem 0;
 }
 
-#question-carousel {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 2rem 0;
-}
-
-.question {
-    flex: 1;
-    padding: 1.5rem;
+#question-area {
     background-color: #f9fafb;
+    padding: 2rem;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
-    min-height: 200px;
+    margin: 1rem 0;
 }
 
-.question p {
+#question-header {
     font-size: 1.2rem;
+    font-weight: bold;
     margin-bottom: 1rem;
 }
 
-.question label {
-    display: block;
-    margin: 0.75rem 0;
-    font-size: 1.1rem;
+#question-text {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+}
+
+#options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.carousel-btn {
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    padding: 1rem;
-    font-size: 1.5rem;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s;
+.option:hover {
+    background-color: #f3f4f6;
 }
 
-.carousel-btn:hover {
-    background-color: #2563eb;
+.option input {
+    margin-right: 0.5rem;
 }
 
-.carousel-btn:disabled {
-    background-color: #9ca3af;
-    cursor: not-allowed;
+#navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
 }
 
 #answer-table {
@@ -195,18 +197,28 @@ main {
     border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 0.9rem;
+    transition: background-color 0.2s;
 }
 
-#results-section {
-    text-align: center;
+.answer-cell:hover {
+    background-color: #e5e7eb;
 }
 
-#results-details p {
+#results-details .result-item {
     margin: 1rem 0;
     padding: 1rem;
     background-color: #f9fafb;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
+}
+
+#error-message {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    text-align: center;
 }
 
 footer {
@@ -237,8 +249,7 @@ footer {
         grid-template-columns: repeat(5, 1fr);
     }
 
-    .carousel-btn {
-        padding: 0.75rem;
-        font-size: 1.2rem;
+    #question-text {
+        font-size: 1.1rem;
     }
 }
