@@ -62,12 +62,12 @@ main {
     flex: 1;
 }
 
-.hero, #start-section, #results-section, #confirm-section {
+.hero, #start-section, #results-section {
     text-align: center;
     padding: 2rem;
 }
 
-.hero h2, #start-section h2, #results-section h2, #confirm-section h2 {
+.hero h2, #start-section h2, #results-section h2 {
     font-size: 2rem;
     margin-bottom: 1rem;
     color: #1e3a8a;
@@ -87,14 +87,6 @@ main {
 .action-btn:hover {
     background-color: #15803d;
     transform: translateY(-2px);
-}
-
-.action-btn.secondary {
-    background-color: #6b7280;
-}
-
-.action-btn.secondary:hover {
-    background-color: #4b5563;
 }
 
 .card-section {
@@ -146,9 +138,6 @@ main {
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
 }
 
 #question-text {
@@ -179,6 +168,10 @@ main {
 
 .option input {
     margin-right: 0.5rem;
+}
+
+.option span {
+    font-size: 1.1rem;
 }
 
 #navigation {
@@ -215,19 +208,21 @@ main {
     background-color: #e5e7eb;
 }
 
-#confirm-section .confirm-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
 #results-details .result-item {
     margin: 1rem 0;
     padding: 1rem;
     background-color: #f9fafb;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
+}
+
+#error-message {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    text-align: center;
 }
 
 footer {
@@ -256,6 +251,16 @@ footer {
 
     #answer-grid {
         grid-template-columns: repeat(5, 1fr);
+    }
+
+    #question-text {
+        font-size: 1.1rem;
+    }
+
+    .option span {
+        font-size: 1rem;
+    }
+}d-template-columns: repeat(5, 1fr);
     }
 
     #question-text {

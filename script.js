@@ -24,89 +24,106 @@ function shuffle(array) {
 
 // Загрузка вопросов
 function loadQuestions() {
-    // Проверка наличия вопросов
-    if (!questions?.[subject]?.[part]?.length) {
-        console.error(`Суроолор табылган жок: ${subject}, ${part}`);
-        return;
-    }
+    try {
+        // Проверка наличия вопросов
+        if (!questions?.[subject]?.[part]?.length) {
+            throw new Error(`Суроолор табылган жок: ${subject}, ${part}`);
+        }
 
-    // Получение использованных вопросов
-    const usedQuestions = JSON.parse(localStorage.getItem("usedQuestions") || "{}");
-    if (!usedQuestions[subject]) usedQuestions[subject] = {};
-    if (!usedQuestions[subject][part]) usedQuestions[subject][part] = [];
+        // Получение использованных вопросов
+        const usedQuestions = JSON.parse(localStorage.getItem("usedQuestions") || "{}");
+        if (!usedQuestions[subject]) usedQuestions[subject] = {};
+        if (!usedQuestions[subject][part]) usedQuestions[subject][part] = [];
 
-    // Фильтрация неиспользованных вопросов
-    let availableQuestions = questions[subject][part].filter(
-        q => !usedQuestions[subject][part].includes(q.id)
-    );
+        // Фильтрация неиспользованных вопросов
+        let availableQuestions = questions[subject][part].filter(
+            q => !usedQuestions[subject][part].includes(q.id)
+        );
 
-    // Если вопросов меньше 30, сбрасываем использованные
-    if (availableQuestions.length < 30) {
-        usedQuestions[subject][part] = [];
-        availableQuestions = questions[subject][part];
+        // Если вопросов меньше 30, сбрасываем использованные
+        if (availableQuestions.length < 30) {
+            usedQuestions[subject][part] = [];
+            availableQuestions = questions[subject][part];
+            localStorage.setItem("usedQuestions", JSON.stringify(usedQuestions));
+        }
+
+        // Выбор 30 случайных вопросов
+        currentQuestions = shuffle(availableQuestions).slice(0, 30).map(q => ({
+            ...q,
+            options: shuffle([...q.options])
+        }));
+
+        // Сохранение использованных вопросов
+        usedQuestions[subject][part].push(...currentQuestions.map(q => q.id));
         localStorage.setItem("usedQuestions", JSON.stringify(usedQuestions));
+
+        // Отображение первого вопроса и таблицы ответов
+        displayQuestion(0);
+        updateAnswerTable();
+    } catch (error) {
+        console.error("Ошибка загрузки вопросов:", error);
+        showError(error.message);
     }
-
-    // Выбор 30 случайных вопросов
-    currentQuestions = shuffle(availableQuestions).slice(0, 30).map(q => ({
-        ...q,
-        options: shuffle([...q.options])
-    }));
-
-    // Сохранение использованных вопросов
-    usedQuestions[subject][part].push(...currentQuestions.map(q => q.id));
-    localStorage.setItem("usedQuestions", JSON.stringify(usedQuestions));
-
-    // Отображение первого вопроса и таблицы ответов
-    displayQuestion(0);
-    updateAnswerTable();
 }
 
 // Отображение вопроса
 function displayQuestion(index) {
-    const question = currentQuestions[index];
-    if (!question) {
-        console.error(`Суроо табылган жок: индекс ${index}`);
-        return;
+    try {
+        const question = currentQuestions[index];
+        if (!question) throw new Error(`Суроо табылган жок: индекс ${index}`);
+
+        // Обновление номера вопроса
+        document.getElementById("question-number").textContent = index + 1;
+
+        // Отображение текста вопроса
+        document.getElementById("question-text").textContent = question.text;
+
+        // Отображение вариантов ответа с буквами (а, б, в, г)
+        const optionsContainer = document.getElementById("options-container");
+        optionsContainer.innerHTML = question.options.map((opt, i) => {
+            const letter = String.fromCharCode(1072 + i); // а, б, в, г
+            return `
+                <label class="option">
+                    <input type="radio" name="q${question.id}" value="${opt}" data-letter="${letter}" ${userAnswers[question.id] === opt ? "checked" : ""}>
+                    <span>${letter}. ${opt}</span>
+                </label>
+            `;
+        }).join("");
+
+        // Обновление кнопок навигации
+        document.getElementById("prev-question").disabled = index === 0;
+        document.getElementById("next-question").disabled = index === currentQuestions.length - 1;
+    } catch (error) {
+        console.error("Ошибка отображения вопроса:", error);
+        showError(error.message);
     }
-
-    // Обновление номера вопроса
-    document.getElementById("question-number").textContent = index + 1;
-
-    // Отображение текста вопроса
-    document.getElementById("question-text").textContent = question.text;
-
-    // Отображение вариантов ответа с буквами (а, б, в, г)
-    const optionsContainer = document.getElementById("options-container");
-    optionsContainer.innerHTML = question.options.map((opt, i) => {
-        const letter = String.fromCharCode(1072 + i); // а, б, в, г
-        return `
-            <label class="option">
-                <input type="radio" name="q${question.id}" value="${letter}" ${userAnswers[question.id] === letter ? "checked" : ""}>
-                <span>${letter}. ${opt}</span>
-            </label>
-        `;
-    }).join("");
-
-    // Обновление кнопок навигации
-    document.getElementById("prev-question").disabled = index === 0;
-    document.getElementById("next-question").disabled = index === currentQuestions.length - 1;
 }
 
 // Обновление таблицы ответов
 function updateAnswerTable() {
-    const answerGrid = document.getElementById("answer-grid");
-    answerGrid.innerHTML = currentQuestions.map((q, i) => `
-        <div class="answer-cell" onclick="goToQuestion(${i})" style="cursor: pointer; ${userAnswers[q.id] ? 'background-color: #d1fae5;' : ''}">
-            ${i + 1}: ${userAnswers[q.id] || "-"}
-        </div>
-    `).join("");
+    try {
+        const answerGrid = document.getElementById("answer-grid");
+        answerGrid.innerHTML = currentQuestions.map((q, i) => {
+            const selected = userAnswers[q.id];
+            const letter = selected ? q.options.findIndex(opt => opt === selected) : -1;
+            return `
+                <div class="answer-cell" onclick="goToQuestion(${i})" style="cursor: pointer; ${selected ? 'background-color: #d1fae5;' : ''}">
+                    ${i + 1}: ${selected ? String.fromCharCode(1072 + letter) : "-"}
+                </div>
+            `;
+        }).join("");
+    } catch (error) {
+        console.error("Ошибка обновления таблицы ответов:", error);
+        showError(error.message);
+    }
 }
 
 // Переход к вопросу по клику на таблицу
 function goToQuestion(index) {
     const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-    if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+    if (selected) {
+        userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+    }
     currentQuestionIndex = index;
     displayQuestion(currentQuestionIndex);
     updateAnswerTable();
@@ -130,32 +147,36 @@ function startTimer() {
 
 // Отправка теста
 function submitTest() {
-    let score = 0;
-    const resultsDetails = document.getElementById("results-details");
+    try {
+        let score = 0;
+        const resultsDetails = document.getElementById("results-details");
 
-    currentQuestions.forEach(q => {
-        // Проверяем, совпадает ли выбранная буква с буквой правильного ответа
-        const correctIndex = q.options.indexOf(q.correct);
-        const correctLetter = String.fromCharCode(1072 + correctIndex);
-        if (userAnswers[q.id] === correctLetter) score++;
-    });
+        currentQuestions.forEach(q => {
+            if (userAnswers[q.id] === q.correct) score++;
+        });
 
-    document.getElementById("score").textContent = score;
-    resultsDetails.innerHTML = currentQuestions.map(q => {
-        const correctIndex = q.options.indexOf(q.correct);
-        const correctLetter = String.fromCharCode(1072 + correctIndex);
-        return `
+        document.getElementById("score").textContent = score;
+        resultsDetails.innerHTML = currentQuestions.map(q => `
             <div class="result-item">
                 <p>${q.text}</p>
                 <p>Сиздин жооп: ${userAnswers[q.id] || "Жооп берилген жок"}</p>
-                <p>Туура жооп: ${correctLetter}. ${q.correct}</p>
+                <p>Туура жооп: ${q.correct}</p>
             </div>
-        `;
-    }).join("");
+        `).join("");
 
-    document.getElementById("test-section").style.display = "none";
-    document.getElementById("confirm-section").style.display = "none";
-    document.getElementById("results-section").style.display = "block";
+        document.getElementById("test-section").style.display = "none";
+        document.getElementById("results-section").style.display = "block";
+    } catch (error) {
+        console.error("Ошибка подсчета результатов:", error);
+        showError(error.message);
+    }
+}
+
+// Показ ошибки
+function showError(message) {
+    const errorDiv = document.getElementById("error-message");
+    errorDiv.textContent = `Ката: ${message}`;
+    errorDiv.style.display = "block";
 }
 
 // События
@@ -169,7 +190,9 @@ document.getElementById("start-test")?.addEventListener("click", () => {
 document.getElementById("prev-question")?.addEventListener("click", () => {
     if (currentQuestionIndex > 0) {
         const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+        if (selected) {
+            userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+        }
         currentQuestionIndex--;
         displayQuestion(currentQuestionIndex);
         updateAnswerTable();
@@ -177,32 +200,25 @@ document.getElementById("prev-question")?.addEventListener("click", () => {
 });
 
 document.getElementById("next-question")?.addEventListener("click", () => {
-    // Сохраняем ответ для текущего вопроса
-    const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-    if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
-
     if (currentQuestionIndex < currentQuestions.length - 1) {
+        const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
+        if (selected) {
+            userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+        }
         currentQuestionIndex++;
         displayQuestion(currentQuestionIndex);
         updateAnswerTable();
-    } else {
-        // Переход на страницу подтверждения
-        document.getElementById("test-section").style.display = "none";
-        document.getElementById("confirm-section").style.display = "block";
     }
 });
 
-document.getElementById("submit-test")?.addEventListener("click", () => {
-    // Сохраняем ответ для текущего вопроса перед отправкой
-    const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-    if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
-    submitTest();
-});
+document.getElementById("submit-test")?.addEventListener("click", submitTest);
 
-document.getElementById("confirm-submit")?.addEventListener("click", () => {
-    // Сохраняем ответ для последнего вопроса (на всякий случай)
-    const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-    if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+// Проверка загрузки questions.js
+window.addEventListener("load", () => {
+    if (!window.questions) {
+        showError("questions.js жүктөлгөн жок");
+    }
+});ted.value;
     submitTest();
 });
 
