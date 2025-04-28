@@ -138,6 +138,9 @@ main {
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 #question-text {
@@ -168,10 +171,6 @@ main {
 
 .option input {
     margin-right: 0.5rem;
-}
-
-.option span {
-    font-size: 1.1rem;
 }
 
 #navigation {
@@ -256,9 +255,7 @@ footer {
     #question-text {
         font-size: 1.1rem;
     }
-
-    .option span {
-        font-size: 1rem;
+}       font-size: 1rem;
     }
 }d-template-columns: repeat(5, 1fr);
     }
