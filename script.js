@@ -84,7 +84,7 @@ function displayQuestion(index) {
             const letter = String.fromCharCode(1072 + i); // а, б, в, г
             return `
                 <label class="option">
-                    <input type="radio" name="q${question.id}" value="${opt}" data-letter="${letter}" ${userAnswers[question.id] === opt ? "checked" : ""}>
+                    <input type="radio" name="q${question.id}" value="${letter}" ${userAnswers[question.id] === letter ? "checked" : ""}>
                     <span>${letter}. ${opt}</span>
                 </label>
             `;
@@ -103,15 +103,11 @@ function displayQuestion(index) {
 function updateAnswerTable() {
     try {
         const answerGrid = document.getElementById("answer-grid");
-        answerGrid.innerHTML = currentQuestions.map((q, i) => {
-            const selected = userAnswers[q.id];
-            const letter = selected ? q.options.findIndex(opt => opt === selected) : -1;
-            return `
-                <div class="answer-cell" onclick="goToQuestion(${i})" style="cursor: pointer; ${selected ? 'background-color: #d1fae5;' : ''}">
-                    ${i + 1}: ${selected ? String.fromCharCode(1072 + letter) : "-"}
-                </div>
-            `;
-        }).join("");
+        answerGrid.innerHTML = currentQuestions.map((q, i) => `
+            <div class="answer-cell" onclick="goToQuestion(${i})" style="cursor: pointer; ${userAnswers[q.id] ? 'background-color: #d1fae5;' : ''}">
+                ${i + 1}: ${userAnswers[q.id] || "-"}
+            </div>
+        `).join("");
     } catch (error) {
         console.error("Ошибка обновления таблицы ответов:", error);
         showError(error.message);
@@ -121,9 +117,7 @@ function updateAnswerTable() {
 // Переход к вопросу по клику на таблицу
 function goToQuestion(index) {
     const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-    if (selected) {
-        userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
-    }
+    if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
     currentQuestionIndex = index;
     displayQuestion(currentQuestionIndex);
     updateAnswerTable();
@@ -148,21 +142,32 @@ function startTimer() {
 // Отправка теста
 function submitTest() {
     try {
+        // Сохраняем ответ на текущий вопрос перед подсчетом результатов
+        const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
+        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+
         let score = 0;
         const resultsDetails = document.getElementById("results-details");
 
         currentQuestions.forEach(q => {
-            if (userAnswers[q.id] === q.correct) score++;
+            // Проверяем, совпадает ли выбранная буква с буквой правильного ответа
+            const correctIndex = q.options.indexOf(q.correct);
+            const correctLetter = String.fromCharCode(1072 + correctIndex);
+            if (userAnswers[q.id] === correctLetter) score++;
         });
 
         document.getElementById("score").textContent = score;
-        resultsDetails.innerHTML = currentQuestions.map(q => `
-            <div class="result-item">
-                <p>${q.text}</p>
-                <p>Сиздин жооп: ${userAnswers[q.id] || "Жооп берилген жок"}</p>
-                <p>Туура жооп: ${q.correct}</p>
-            </div>
-        `).join("");
+        resultsDetails.innerHTML = currentQuestions.map(q => {
+            const correctIndex = q.options.indexOf(q.correct);
+            const correctLetter = String.fromCharCode(1072 + correctIndex);
+            return `
+                <div class="result-item">
+                    <p>${q.text}</p>
+                    <p>Сиздин жооп: ${userAnswers[q.id] || "Жооп берилген жок"}</p>
+                    <p>Туура жооп: ${correctLetter}. ${q.correct}</p>
+                </div>
+            `;
+        }).join("");
 
         document.getElementById("test-section").style.display = "none";
         document.getElementById("results-section").style.display = "block";
@@ -190,9 +195,7 @@ document.getElementById("start-test")?.addEventListener("click", () => {
 document.getElementById("prev-question")?.addEventListener("click", () => {
     if (currentQuestionIndex > 0) {
         const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-        if (selected) {
-            userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
-        }
+        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
         currentQuestionIndex--;
         displayQuestion(currentQuestionIndex);
         updateAnswerTable();
@@ -202,9 +205,7 @@ document.getElementById("prev-question")?.addEventListener("click", () => {
 document.getElementById("next-question")?.addEventListener("click", () => {
     if (currentQuestionIndex < currentQuestions.length - 1) {
         const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-        if (selected) {
-            userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
-        }
+        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
         currentQuestionIndex++;
         displayQuestion(currentQuestionIndex);
         updateAnswerTable();
@@ -212,22 +213,6 @@ document.getElementById("next-question")?.addEventListener("click", () => {
 });
 
 document.getElementById("submit-test")?.addEventListener("click", submitTest);
-
-// Проверка загрузки questions.js
-window.addEventListener("load", () => {
-    if (!window.questions) {
-        showError("questions.js жүктөлгөн жок");
-    }
-});ted.value;
-    submitTest();
-});
-
-document.getElementById("return-to-questions")?.addEventListener("click", () => {
-    // Возвращаемся к вопросам
-    document.getElementById("confirm-section").style.display = "none";
-    document.getElementById("test-section").style.display = "block";
-    displayQuestion(currentQuestionIndex);
-});bmitTest);
 
 // Проверка загрузки questions.js
 window.addEventListener("load", () => {
