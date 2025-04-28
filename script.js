@@ -78,14 +78,17 @@ function displayQuestion(index) {
         // Отображение текста вопроса
         document.getElementById("question-text").textContent = question.text;
 
-        // Отображение вариантов ответа
+        // Отображение вариантов ответа с буквами (а, б, в, г)
         const optionsContainer = document.getElementById("options-container");
-        optionsContainer.innerHTML = question.options.map((opt, i) => `
-            <label class="option">
-                <input type="radio" name="q${question.id}" value="${opt}" ${userAnswers[question.id] === opt ? "checked" : ""}>
-                <span>${String.fromCharCode(1072 + i)}. ${opt}</span>
-            </label>
-        `).join("");
+        optionsContainer.innerHTML = question.options.map((opt, i) => {
+            const letter = String.fromCharCode(1072 + i); // а, б, в, г
+            return `
+                <label class="option">
+                    <input type="radio" name="q${question.id}" value="${letter}" ${userAnswers[question.id] === letter ? "checked" : ""}>
+                    <span>${letter}. ${opt}</span>
+                </label>
+            `;
+        }).join("");
 
         // Обновление кнопок навигации
         document.getElementById("prev-question").disabled = index === 0;
@@ -102,7 +105,7 @@ function updateAnswerTable() {
         const answerGrid = document.getElementById("answer-grid");
         answerGrid.innerHTML = currentQuestions.map((q, i) => `
             <div class="answer-cell" onclick="goToQuestion(${i})" style="cursor: pointer; ${userAnswers[q.id] ? 'background-color: #d1fae5;' : ''}">
-                ${i + 1}: ${userAnswers[q.id] ? userAnswers[q.id] : "-"}
+                ${i + 1}: ${userAnswers[q.id] || "-"}
             </div>
         `).join("");
     } catch (error) {
@@ -139,21 +142,32 @@ function startTimer() {
 // Отправка теста
 function submitTest() {
     try {
+        // Сохраняем ответ на текущий вопрос перед подсчетом результатов
+        const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
+        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+
         let score = 0;
         const resultsDetails = document.getElementById("results-details");
 
         currentQuestions.forEach(q => {
-            if (userAnswers[q.id] === q.correct) score++;
+            // Проверяем, совпадает ли выбранная буква с буквой правильного ответа
+            const correctIndex = q.options.indexOf(q.correct);
+            const correctLetter = String.fromCharCode(1072 + correctIndex);
+            if (userAnswers[q.id] === correctLetter) score++;
         });
 
         document.getElementById("score").textContent = score;
-        resultsDetails.innerHTML = currentQuestions.map(q => `
-            <div class="result-item">
-                <p>${q.text}</p>
-                <p>Сиздин жооп: ${userAnswers[q.id] || "Жооп берилген жок"}</p>
-                <p>Туура жооп: ${q.correct}</p>
-            </div>
-        `).join("");
+        resultsDetails.innerHTML = currentQuestions.map(q => {
+            const correctIndex = q.options.indexOf(q.correct);
+            const correctLetter = String.fromCharCode(1072 + correctIndex);
+            return `
+                <div class="result-item">
+                    <p>${q.text}</p>
+                    <p>Сиздин жооп: ${userAnswers[q.id] || "Жооп берилген жок"}</p>
+                    <p>Туура жооп: ${correctLetter}. ${q.correct}</p>
+                </div>
+            `;
+        }).join("");
 
         document.getElementById("test-section").style.display = "none";
         document.getElementById("results-section").style.display = "block";
@@ -205,122 +219,4 @@ window.addEventListener("load", () => {
     if (!window.questions) {
         showError("questions.js жүктөлгөн жок");
     }
-});   currentQuestions.forEach(q => {
-                const correctIndex = q.options.indexOf(q.correct);
-                const correctLetter = String.fromCharCode(1072 + correctIndex);
-                if (userAnswers[q.id] === correctLetter) score++;
-            });
-
-            const scoreElement = document.getElementById("score");
-            if (scoreElement) scoreElement.textContent = score;
-
-            resultsDetails.innerHTML = currentQuestions.map(q => {
-                const correctIndex = q.options.indexOf(q.correct);
-                const correctLetter = String.fromCharCode(1072 + correctIndex);
-                return `
-                    <div class="result-item">
-                        <p>${q.text}</p>
-                        <p>Сиздин жооп: ${userAnswers[q.id] || "Жооп берилген жок"}</p>
-                        <p>Туура жооп: ${correctLetter}. ${q.correct}</p>
-                    </div>
-                `;
-            }).join("");
-
-            const testSection = document.getElementById("test-section");
-            const resultsSection = document.getElementById("results-section");
-            if (testSection) testSection.style.display = "none";
-            if (resultsSection) resultsSection.style.display = "block";
-        } catch (error) {
-            showError(error.message);
-        }
-    }
-
-    // Привязка событий
-    const startButton = document.getElementById("start-test");
-    if (startButton) {
-        startButton.addEventListener("click", () => {
-            console.log("Кнопка 'Тестти баштоо' нажата");
-            const startSection = document.getElementById("start-section");
-            const testSection = document.getElementById("test-section");
-            if (startSection) startSection.style.display = "none";
-            if (testSection) testSection.style.display = "block";
-            loadQuestions();
-            startTimer();
-        });
-    } else {
-        console.error("Кнопка #start-test не найдена");
-    }
-
-    const prevButton = document.getElementById("prev-question");
-    if (prevButton) {
-        prevButton.addEventListener("click", () => {
-            if (currentQuestionIndex > 0) {
-                const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-                if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
-                currentQuestionIndex--;
-                displayQuestion(currentQuestionIndex);
-                updateAnswerTable();
-            }
-        });
-    }
-
-    const nextButton = document.getElementById("next-question");
-    if (nextButton) {
-        nextButton.addEventListener("click", () => {
-            if (currentQuestionIndex < currentQuestions.length - 1) {
-                const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-                if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
-                currentQuestionIndex++;
-                displayQuestion(currentQuestionIndex);
-                updateAnswerTable();
-            }
-        });
-    }
-
-    const submitButton = document.getElementById("submit-test");
-    if (submitButton) {
-        submitButton.addEventListener("click", submitTest);
-    }
-});
-    document.getElementById("next-question")?.addEventListener("click", () => {
-        if (currentQuestionIndex < currentQuestions.length - 1) {
-            const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-            if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
-            currentQuestionIndex++;
-            displayQuestion(currentQuestionIndex);
-            updateAnswerTable();
-            updateProgressBar();
-        }
-    });
-
-    document.getElementById("pause-test")?.addEventListener("click", pauseTest);
-
-    document.getElementById("mark-question")?.addEventListener("click", () => {
-        const questionId = currentQuestions[currentQuestionIndex].id;
-        if (markedQuestions.has(questionId)) {
-            markedQuestions.delete(questionId);
-        } else {
-            markedQuestions.add(questionId);
-        }
-        updateAnswerTable();
-        displayQuestion(currentQuestionIndex);
-    });
-
-    document.getElementById("submit-test")?.addEventListener("click", () => {
-        if (confirm("Сиз чын эле тестти тапшыргыңыз келеби?")) {
-            clearInterval(timerInterval);
-            submitTest();
-        }
-    });
-
-    // Клавиатурная навигация
-    document.addEventListener("keydown", (e) => {
-        if (document.getElementById("test-section").style.display !== "none") {
-            if (e.key === "ArrowLeft" && currentQuestionIndex > 0) {
-                document.getElementById("prev-question").click();
-            } else if (e.key === "ArrowRight" && currentQuestionIndex < currentQuestions.length - 1) {
-                document.getElementById("next-question").click();
-            }
-        }
-    });
 });
