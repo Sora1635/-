@@ -1,9 +1,14 @@
-// Загрузка вопросов
-const part = window.location.pathname.includes("part1") ? "part1" : "part2";
-const timeLimit = part === "part1" ? 30 * 60 : 60 * 60; // 30 или 60 минут в секундах
+// Получение параметров из URL
+const urlParams = new URLSearchParams(window.location.search);
+const subject = urlParams.get("subject") || "math";
+const part = urlParams.get("part") || "part1";
+const timeLimit = part === "part1" ? 30 * 60 : 60 * 60;
+
 let currentQuestions = [];
 let userAnswers = {};
+let currentQuestionIndex = 0;
 let timeRemaining = timeLimit;
+let timerInterval;
 
 // Рандомизация массива
 function shuffle(array) {
@@ -14,49 +19,78 @@ function shuffle(array) {
     return array;
 }
 
-// Загрузка и рандомизация вопросов
+// Загрузка вопросов
 function loadQuestions() {
-    // Фильтрация по варианту (например, взять только variant: 1)
-    const variant = localStorage.getItem("currentVariant") || 1;
-    let availableQuestions = questions[part].filter(q => q.variant == variant);
-    
-    // Выбрать 30 случайных вопросов
-    availableQuestions = shuffle(availableQuestions).slice(0, 30);
-    
-    currentQuestions = availableQuestions.map(q => ({
+    // Получаем использованные вопросы
+    const usedQuestions = JSON.parse(localStorage.getItem("usedQuestions") || "{}");
+    if (!usedQuestions[subject]) usedQuestions[subject] = {};
+    if (!usedQuestions[subject][part]) usedQuestions[subject][part] = [];
+
+    // Фильтруем неиспользованные вопросы
+    let availableQuestions = questions[subject][part].filter(
+        q => !usedQuestions[subject][part].includes(q.id)
+    );
+
+    // Если не хватает вопросов, очищаем использованные
+    if (availableQuestions.length < 30) {
+        usedQuestions[subject][part] = [];
+        availableQuestions = questions[subject][part];
+        localStorage.setItem("usedQuestions", JSON.stringify(usedQuestions));
+    }
+
+    // Выбираем 30 случайных вопросов
+    currentQuestions = shuffle(availableQuestions).slice(0, 30).map(q => ({
         ...q,
-        options: shuffle([...q.options]) // Рандомизация ответов
+        options: shuffle([...q.options])
     }));
 
-    // Отображение вопросов
+    // Добавляем выбранные вопросы в использованные
+    usedQuestions[subject][part].push(...currentQuestions.map(q => q.id));
+    localStorage.setItem("usedQuestions", JSON.stringify(usedQuestions));
+
+    displayQuestion(0);
+    updateAnswerTable();
+}
+
+// Отображение текущего вопроса
+function displayQuestion(index) {
+    const question = currentQuestions[index];
     const container = document.getElementById("question-container");
-    currentQuestions.forEach((q, index) => {
-        const div = document.createElement("div");
-        div.className = "question";
-        div.innerHTML = `
-            <p>${index + 1}. ${q.text}</p>
-            ${q.options.map((opt, i) => `
-                <label>
-                    <input type="radio" name="q${q.id}" value="${opt}">
-                    ${opt}
-                </label><br>
-            `).join("")}
-        `;
-        container.appendChild(div);
-    });
+    container.innerHTML = `
+        <p>${index + 1}. ${question.text}</p>
+        ${question.options.map((opt, i) => `
+            <label>
+                <input type="radio" name="q${question.id}" value="${opt}" ${userAnswers[question.id] === opt ? "checked" : ""}>
+                ${opt}
+            </label><br>
+        `).join("")}
+    `;
+    
+    document.getElementById("prev-question").disabled = index === 0;
+    document.getElementById("next-question").disabled = index === currentQuestions.length - 1;
+}
+
+// Обновление таблицы ответов
+function updateAnswerTable() {
+    const answerGrid = document.getElementById("answer-grid");
+    answerGrid.innerHTML = currentQuestions.map((q, i) => `
+        <div class="answer-cell">${i + 1}: ${
+            userAnswers[q.id] ? userAnswers[q.id] : "-"
+        }</div>
+    `).join("");
 }
 
 // Таймер
 function startTimer() {
     const timerDisplay = document.getElementById("time-remaining");
-    const interval = setInterval(() => {
+    timerInterval = setInterval(() => {
         timeRemaining--;
         const minutes = Math.floor(timeRemaining / 60);
         const seconds = timeRemaining % 60;
         timerDisplay.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
         
         if (timeRemaining <= 0) {
-            clearInterval(interval);
+            clearInterval(timerInterval);
             submitTest();
         }
     }, 1000);
@@ -68,11 +102,7 @@ function submitTest() {
     const resultsDetails = document.getElementById("results-details");
     
     currentQuestions.forEach(q => {
-        const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
-        const userAnswer = selected ? selected.value : null;
-        userAnswers[q.id] = userAnswer;
-        
-        if (userAnswer === q.correct) {
+        if (userAnswers[q.id] === q.correct) {
             score++;
         }
     });
@@ -91,12 +121,31 @@ function submitTest() {
 }
 
 // События
-document.getElementById("submit-test").addEventListener("click", submitTest);
-document.getElementById("restart-test").addEventListener("click", () => {
-    localStorage.setItem("currentVariant", parseInt(localStorage.getItem("currentVariant") || 1) + 1);
-    window.location.reload();
+document.getElementById("start-test")?.addEventListener("click", () => {
+    document.getElementById("start-section").style.display = "none";
+    document.getElementById("test-section").style.display = "block";
+    loadQuestions();
+    startTimer();
 });
 
-// Инициализация
-loadQuestions();
-startTimer();
+document.getElementById("prev-question")?.addEventListener("click", () => {
+    if (currentQuestionIndex > 0) {
+        const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
+        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+        currentQuestionIndex--;
+        displayQuestion(currentQuestionIndex);
+        updateAnswerTable();
+    }
+});
+
+document.getElementById("next-question")?.addEventListener("click", () => {
+    if (currentQuestionIndex < currentQuestions.length - 1) {
+        const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
+        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+        currentQuestionIndex++;
+        displayQuestion(currentQuestionIndex);
+        updateAnswerTable();
+    }
+});
+
+document.getElementById("submit-test")?.addEventListener("click", submitTest);

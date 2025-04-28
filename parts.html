@@ -10,18 +10,24 @@
     <header>
         <h1>Бөлүктөр</h1>
         <nav>
-            <a href="index.html">Башкы бет</a>
-            <a href="about.html">Сайт жөнүндө</a>
-            <a href="subjects.html">Предметтер</a>
+            <button onclick="window.location.href='index.html'" class="nav-btn">Башкы бет</button>
+            <button onclick="window.location.href='about.html'" class="nav-btn">Сайт жөнүндө</button>
+            <button onclick="window.location.href='subjects.html'" class="nav-btn">Тесттер</button>
         </nav>
     </header>
 
     <main>
-        <section id="parts">
+        <section class="card-section">
             <h2>Бөлүктү тандаңыз</h2>
-            <div class="part-list">
-                <a href="test.html?subject=math&variant=1&part=1" class="part-card">1-бөлүк (Жеңил, 30 мүнөт)</a>
-                <a href="test.html?subject=math&variant=1&part=2" class="part-card">2-бөлүк (Татаал, 60 мүнөт)</a>
+            <div class="card-container">
+                <div class="card" onclick="startTest('part1')">
+                    <h3>1-бөлүк (Жеңил)</h3>
+                    <p>30 суроо, 30 мүнөт. Жөнөкөй маселелер.</p>
+                </div>
+                <div class="card" onclick="startTest('part2')">
+                    <h3>2-бөлүк (Татаал)</h3>
+                    <p>30 суроо, 60 мүнөт. Татаал маселелер.</p>
+                </div>
             </div>
         </section>
     </main>
@@ -29,5 +35,13 @@
     <footer>
         <p>© 2025 ОРТго даярдануу платформасы</p>
     </footer>
+
+    <script>
+        function startTest(part) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const subject = urlParams.get("subject");
+            window.location.href = `test.html?subject=${subject}&part=${part}`;
+        }
+    </script>
 </body>
 </html>
