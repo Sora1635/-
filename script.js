@@ -2,7 +2,8 @@ let currentSubject = localStorage.getItem('subject') || '';
 let currentPart = localStorage.getItem('part') || 0;
 let currentTest = null;
 let timerInterval = null;
-let currentQuestionIndex = 0; // Учурдагы суроонун индекси
+let currentQuestionIndex = 0;
+let userAnswers = Array(30).fill(null); // Массив для хранения ответов пользователя
 
 // Предметти тандоо
 function selectSubject(subject) {
@@ -31,14 +32,24 @@ function startTest() {
 
 // Тестти жүктөө
 async function loadTest() {
-    const file = `questions/${currentSubject}_part${currentPart}.json`;
-    const response = await fetch(file);
-    const data = await response.json();
-    const variants = data.variants;
-    currentTest = variants[Math.floor(Math.random() * variants.length)];
-    
-    currentQuestionIndex = 0; // Биринчи суроодон баштайбыз
-    displayQuestion(); // Учурдагы суроону көрсөтүү
+    const file = `${currentSubject}_part${currentPart}.json`;
+    try {
+        const response = await fetch(file);
+        if (!response.ok) {
+            throw new Error(`JSON файл жок: ${file}`);
+        }
+        const data = await response.json();
+        if (!data.variants || data.variants.length === 0 || data.variants[0].length !== 30) {
+            throw new Error("Суроолор толук эмес! 30 суроо болушу керек.");
+        }
+        const variants = data.variants;
+        currentTest = variants[Math.floor(Math.random() * variants.length)];
+        currentQuestionIndex = 0;
+        displayQuestion();
+    } catch (error) {
+        console.error(error);
+        alert(`Суроолорду жүктөөдө ката: ${error.message}`);
+    }
 }
 
 // Учурдагы суроону көрсөтүү
@@ -47,7 +58,6 @@ function displayQuestion() {
     const answersDiv = document.getElementById('answers');
     const questionCounter = document.getElementById('question-counter');
 
-    // Учурдагы суроону гана көрсөтүү
     const q = currentTest[currentQuestionIndex];
     questionsDiv.innerHTML = `
         <div class="question">
@@ -58,16 +68,24 @@ function displayQuestion() {
             <p>г) ${q.options.d}</p>
         </div>
     `;
+    const checked = userAnswers[currentQuestionIndex] ? `checked` : '';
     answersDiv.innerHTML = `
         <div class="answer-row">
             <span>${currentQuestionIndex + 1}.</span>
-            <label><input type="radio" name="ans${currentQuestionIndex}" value="a"> a</label>
-            <label><input type="radio" name="ans${currentQuestionIndex}" value="б"> б</label>
-            <label><input type="radio" name="ans${currentQuestionIndex}" value="в"> в</label>
-            <label><input type="radio" name="ans${currentQuestionIndex}" value="г"> г</label>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="a" ${userAnswers[currentQuestionIndex] === 'a' ? 'checked' : ''}> a</label>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="б" ${userAnswers[currentQuestionIndex] === 'б' ? 'checked' : ''}> б</label>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="в" ${userAnswers[currentQuestionIndex] === 'в' ? 'checked' : ''}> в</label>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="г" ${userAnswers[currentQuestionIndex] === 'г' ? 'checked' : ''}> г</label>
         </div>
     `;
     questionCounter.textContent = `${currentQuestionIndex + 1}/30`;
+
+    // Сохраняем выбор пользователя
+    answersDiv.querySelectorAll(`input[name="ans${currentQuestionIndex}"]`).forEach(input => {
+        input.addEventListener('change', () => {
+            userAnswers[currentQuestionIndex] = input.value;
+        });
+    });
 }
 
 // Мурунку суроого өтүү
@@ -108,8 +126,7 @@ function submitTest() {
     clearInterval(timerInterval);
     let score = 0;
     currentTest.forEach((q, i) => {
-        const selected = document.querySelector(`input[name="ans${i}"]:checked`);
-        if (selected && selected.value === q.correct) score++;
+        if (userAnswers[i] === q.correct) score++;
     });
     const percentage = (score / 30 * 100).toFixed(2);
     const knowledge = percentage >= 80 ? 'Жогорку' : percentage >= 50 ? 'Орточо' : 'Төмөн';
