@@ -1,10 +1,17 @@
-<!DOCTYPE html>
-<html lang="ky">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест - ОРТго даярдануу lounge</title>
+    <title>Тест - ОРТго даярдануу</title>
     <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="ОРТго даярдануу үчүн акысыз тесттер. Математика, кыргыз тили жана башка предметтер боюнча реалдуу суроолор.">
+    <meta name="keywords" content="ОРТ, тест, даярдануу, математика, кыргыз тили, Кыргызстан">
+    <meta property="og:title" content="ОРТго даярдануу платформасы">
+    <meta property="og:description" content="Математика жана кыргыз тили боюнча ОРТ тесттерине даярдан. Акысыз жана реалдуу суроолор!">
+    <meta property="og:image" content="https://sora4635.github.io/og-image.png">
+    <meta property="og:url" content="https://sora4635.github.io">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
 </head>
 <body>
     <header>
@@ -13,50 +20,52 @@
             <button onclick="window.location.href='index.html'" class="nav-btn">Башкы бет</button>
             <button onclick="window.location.href='about.html'" class="nav-btn">Сайт жөнүндө</button>
             <button onclick="window.location.href='subjects.html'" class="nav-btn">Тесттер</button>
+            <button onclick="window.location.href='stats.html'" class="nav-btn">Статистика</button>
         </nav>
     </header>
-
     <main>
+        <nav class="breadcrumbs">
+            <a href="index.html">Башкы бет</a> &gt; <a href="subjects.html">Предметтер</a> &gt; <a href="parts.html?subject=${new URLSearchParams(window.location.search).get('subject')}">Бөлүктөр</a> &gt; Тест
+        </nav>
         <section id="start-section">
             <h2>Тестти баштоого даярсызбы?</h2>
             <p>30 суроо, убакыт: <span id="time-info">30 мүнөт</span>.</p>
             <button id="start-test" class="action-btn">Тестти баштоо</button>
+            <button onclick="window.location.href='parts.html?subject=${new URLSearchParams(window.location.search).get('subject')}'" class="nav-btn">Артка</button>
         </section>
-
         <section id="test-section" style="display: none;">
+            <div id="progress-bar">
+                <div id="progress" style="width: 0%;"></div>
+            </div>
             <div id="timer">Калган убакыт: <span id="time-remaining">30:00</span></div>
             <div id="error-message" style="color: red; display: none;"></div>
-            <div id="question-area">
+            <section id="question-area" role="region" aria-label="Суроо жана жооптор">
                 <div id="question-header">
                     <span>Суроо №</span><span id="question-number">1</span><span>/30</span>
                 </div>
                 <div id="question-text"></div>
                 <div id="options-container"></div>
                 <div id="navigation">
-                    <button id="prev-question" class="nav-btn">← Мурунку</button>
-                    <button id="next-question" class="nav-btn">Кийинки →</button>
+                    <button id="prev-question" class="nav-btn" aria-label="Мурунку суроого өтүү">← Мурунку</button>
+                    <button id="next-question" class="nav-btn" aria-label="Кийинки суроого өтүү">Кийинки →</button>
                 </div>
-            </div>
+            </section>
             <div id="answer-table">
                 <h3>Жооптор</h3>
                 <div id="answer-grid"></div>
             </div>
             <button id="submit-test" class="action-btn">Тестти тапшыруу</button>
         </section>
-
         <section id="results-section" style="display: none;">
             <h2>Жыйынтыктар</h2>
             <p>Сиздин упайыңыз: <span id="score"></span>/30</p>
             <div id="results-details"></div>
             <button onclick="window.location.href='subjects.html'" class="action-btn">Башка тестти тандоо</button>
         </section>
-    </main>
-
+    </main Flex
     <footer>
         <p>© 2025 ОРТго даярдануу платформасы</p>
     </footer>
-
     <script src="questions.js" onerror="document.getElementById('error-message').textContent = 'Ката: questions.js жүктөлгөн жок'; document.getElementById('error-message').style.display = 'block';"></script>
     <script src="script.js"></script>
 </body>
-</html>
