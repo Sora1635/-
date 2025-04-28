@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест - ОРТго даярдануу</title>
+    <title>Тестке даярдануу - ОРТго даярдануу</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>ОРТ Тест</h1>
+        <h1>ОРТ Тестке Даярдануу</h1>
         <nav>
             <button onclick="window.location.href='index.html'" class="nav-btn">Башкы бет</button>
             <button onclick="window.location.href='about.html'" class="nav-btn">Сайт жөнүндө</button>
@@ -17,38 +17,24 @@
     </header>
 
     <main>
-        <section id="start-section">
+        <section id="prep-section">
             <h2>Тестти баштоого даярсызбы?</h2>
-            <p>30 суроо, убакыт: <span id="time-info">30 мүнөт</span></p>
+            <div class="form-group">
+                <label for="subject">Предметти тандаңыз:</label>
+                <select id="subject">
+                    <option value="math">Математика</option>
+                    <option value="kyrgyz">Кыргыз тили</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="part">Бөлүктү тандаңыз:</label>
+                <select id="part">
+                    <option value="part1">1-бөлүк (Жеңил, 30 мүнөт)</option>
+                    <option value="part2">2-бөлүк (Татаал, 60 мүнөт)</option>
+                </select>
+            </div>
             <button id="start-test" class="action-btn">Тестти баштоо</button>
             <div id="error-message" style="color: red; display: none;"></div>
-        </section>
-
-        <section id="test-section" style="display: none;">
-            <div id="timer">Калган убакыт: <span id="time-remaining">30:00</span></div>
-            <div id="question-area">
-                <div id="question-header">
-                    Суроо №<span id="question-number">1</span>/30
-                </div>
-                <div id="question-text"></div>
-                <div id="options-container"></div>
-                <div id="navigation">
-                    <button id="prev-question" class="nav-btn">← Мурунку</button>
-                    <button id="next-question" class="nav-btn">Кийинки →</button>
-                </div>
-            </div>
-            <div id="answer-table">
-                <h3>Жооптор</h3>
-                <div id="answer-grid"></div>
-            </div>
-            <button id="submit-test" class="action-btn">Тестти тапшыруу</button>
-        </section>
-
-        <section id="results-section" style="display: none;">
-            <h2>Жыйынтыктар</h2>
-            <p>Сиздин упайыңыз: <span id="score"></span>/30</p>
-            <div id="results-details"></div>
-            <button onclick="window.location.href='subjects.html'" class="action-btn">Башка тестти тандоо</button>
         </section>
     </main>
 
@@ -56,6 +42,7 @@
         <p>© 2025 ОРТго даярдануу платформасы</p>
     </footer>
 
+    <script src="questions.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
