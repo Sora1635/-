@@ -134,12 +134,13 @@ main {
     margin: 1rem 0;
 }
 
-#question-number {
-    font-size: 1.5rem;
+#question-header {
+    font-size: 1.2rem;
     font-weight: bold;
-    color: #1e3a8a;
-    text-align: center;
     margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 #question-text {
@@ -179,7 +180,7 @@ main {
 }
 
 #answer-table {
-    margin: 2rem; 0;
+    margin: 2rem 0;
     padding: 1rem;
     background-color: #f9fafb;
     border-radius: 8px;
@@ -254,8 +255,7 @@ footer {
     #question-text {
         font-size: 1.1rem;
     }
-
-    #question-number {
+}mber {
         font-size: 1.2rem;
     }
 }    }

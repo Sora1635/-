@@ -73,7 +73,7 @@ function displayQuestion(index) {
         if (!question) throw new Error(`Суроо табылган жок: индекс ${index}`);
 
         // Обновление номера вопроса
-        document.getElementById("question-number").textContent = `${index + 1}/30`;
+        document.getElementById("question-number").textContent = index + 1;
 
         // Отображение текста вопроса
         document.getElementById("question-text").textContent = question.text;
@@ -84,7 +84,7 @@ function displayQuestion(index) {
             const letter = String.fromCharCode(1072 + i); // а, б, в, г
             return `
                 <label class="option">
-                    <input type="radio" name="q${question.id}" value="${opt}" ${userAnswers[question.id] === opt ? "checked" : ""}>
+                    <input type="radio" name="q${question.id}" value="${letter}" ${userAnswers[question.id] === letter ? "checked" : ""}>
                     <span>${letter}. ${opt}</span>
                 </label>
             `;
@@ -103,21 +103,11 @@ function displayQuestion(index) {
 function updateAnswerTable() {
     try {
         const answerGrid = document.getElementById("answer-grid");
-        answerGrid.innerHTML = currentQuestions.map((q, i) => {
-            // Находим букву выбранного ответа
-            let answerLetter = "-";
-            if (userAnswers[q.id]) {
-                const optionIndex = q.options.indexOf(userAnswers[q.id]);
-                if (optionIndex !== -1) {
-                    answerLetter = String.fromCharCode(1072 + optionIndex); // а, б, в, г
-                }
-            }
-            return `
-                <div class="answer-cell" onclick="goToQuestion(${i})" style="cursor: pointer; ${userAnswers[q.id] ? 'background-color: #d1fae5;' : ''}">
-                    ${i + 1}: ${answerLetter}
-                </div>
-            `;
-        }).join("");
+        answerGrid.innerHTML = currentQuestions.map((q, i) => `
+            <div class="answer-cell" onclick="goToQuestion(${i})" style="cursor: pointer; ${userAnswers[q.id] ? 'background-color: #d1fae5;' : ''}">
+                ${i + 1}: ${userAnswers[q.id] || "-"}
+            </div>
+        `).join("");
     } catch (error) {
         console.error("Ошибка обновления таблицы ответов:", error);
         showError(error.message);
@@ -156,17 +146,24 @@ function submitTest() {
         const resultsDetails = document.getElementById("results-details");
 
         currentQuestions.forEach(q => {
-            if (userAnswers[q.id] === q.correct) score++;
+            // Проверяем, совпадает ли выбранная буква с буквой правильного ответа
+            const correctIndex = q.options.indexOf(q.correct);
+            const correctLetter = String.fromCharCode(1072 + correctIndex);
+            if (userAnswers[q.id] === correctLetter) score++;
         });
 
         document.getElementById("score").textContent = score;
-        resultsDetails.innerHTML = currentQuestions.map(q => `
-            <div class="result-item">
-                <p>${q.text}</p>
-                <p>Сиздин жооп: ${userAnswers[q.id] || "Жооп берилген жок"}</p>
-                <p>Туура жооп: ${q.correct}</p>
-            </div>
-        `).join("");
+        resultsDetails.innerHTML = currentQuestions.map(q => {
+            const correctIndex = q.options.indexOf(q.correct);
+            const correctLetter = String.fromCharCode(1072 + correctIndex);
+            return `
+                <div class="result-item">
+                    <p>${q.text}</p>
+                    <p>Сиздин жооп: ${userAnswers[q.id] || "Жооп берилген жок"}</p>
+                    <p>Туура жооп: ${correctLetter}. ${q.correct}</p>
+                </div>
+            `;
+        }).join("");
 
         document.getElementById("test-section").style.display = "none";
         document.getElementById("results-section").style.display = "block";
