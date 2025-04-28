@@ -3,15 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="ОРТ тесттери: математика, кыргыз тили жана башка предметтер боюнча практика.">
     <title>Тест - ОРТго даярдануу</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <div class="theme-toggle">
-        <button id="theme-btn" aria-label="Теманы алмаштыруу">🌙</button>
-    </div>
     <header>
         <h1>ОРТ Тест</h1>
         <nav>
@@ -25,27 +20,20 @@
         <section id="start-section">
             <h2>Тестти баштоого даярсызбы?</h2>
             <p>30 суроо, убакыт: <span id="time-info">30 мүнөт</span>.</p>
-            <button id="start-test" class="action-btn pulse">Тестти баштоо</button>
+            <button id="start-test" class="action-btn">Тестти баштоо</button>
         </section>
 
         <section id="test-section" style="display: none;">
             <div id="timer">Калган убакыт: <span id="time-remaining">30:00</span></div>
-            <div id="progress-bar">
-                <div id="progress" style="width: 0%;"></div>
-            </div>
             <div id="error-message" style="color: red; display: none;"></div>
             <div id="question-area">
                 <div id="question-header">
                     <span>Суроо №</span><span id="question-number">1</span><span>/30</span>
-                    <button id="mark-question" class="mark-btn" title="Суроону белгилөө" aria-label="Суроону белгилөө">⭐</button>
                 </div>
                 <div id="question-text"></div>
                 <div id="options-container"></div>
-                <button id="hint-btn" class="hint-btn" style="display: none;">Подсказка</button>
-                <div id="hint-text" style="display: none;"></div>
                 <div id="navigation">
                     <button id="prev-question" class="nav-btn">← Мурунку</button>
-                    <button id="pause-test" class="nav-btn">⏸ Пауза</button>
                     <button id="next-question" class="nav-btn">Кийинки →</button>
                 </div>
             </div>
@@ -59,11 +47,6 @@
         <section id="results-section" style="display: none;">
             <h2>Жыйынтыктар</h2>
             <p>Сиздин упайыңыз: <span id="score"></span>/30</p>
-            <div id="stats">
-                <h3>Статистика</h3>
-                <p>Туура жооптордун пайызы: <span id="percentage"></span>%</p>
-                <p>Көп ката кеткен категория: <span id="weak-category"></span></p>
-            </div>
             <div id="results-details"></div>
             <button onclick="window.location.href='subjects.html'" class="action-btn">Башка тестти тандоо</button>
         </section>
@@ -74,7 +57,6 @@
     </footer>
 
     <script src="questions.js" onerror="document.getElementById('error-message').textContent = 'Ката: questions.js жүктөлгөн жок'; document.getElementById('error-message').style.display = 'block';"></script>
-    <script src="theme.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
