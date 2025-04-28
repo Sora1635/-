@@ -242,10 +242,44 @@ const questions = {
                 difficulty: "easy"
             }
         ],
-        part2: []
+        part2: [
+            {
+                id: 101,
+                text: "Эгерде x^2 - 4x + 3 = 0, анда x кандай мааниге ээ?",
+                options: ["1 жана 3", "2 жана 2", "-1 жана -3", "0 жана 4"],
+                correct: "1 жана 3",
+                category: "алгебра",
+                difficulty: "hard"
+            },
+            {
+                id: 102,
+                text: "Тегеректин радиусу 5 см болсо, анын аянты канча?",
+                options: ["25π см²", "10π см²", "15π см²", "20π см²"],
+                correct: "25π см²",
+                category: "геометрия",
+                difficulty: "hard"
+            }
+        ]
     },
     kyrgyz: {
-        part1: [],
+        part1: [
+            {
+                id: 201,
+                text: "«Көк» сөзүнүн синоними кайсы?",
+                options: ["Жашыл", "Асман", "Сары", "Кызыл"],
+                correct: "Асман",
+                category: "лексика",
+                difficulty: "easy"
+            },
+            {
+                id: 202,
+                text: "«Ыйман» сөзүнүн мааниси эмне?",
+                options: ["Акыл", "Адеп", "Сабыр", "Кайрат"],
+                correct: "Адеп",
+                category: "лексика",
+                difficulty: "easy"
+            }
+        ],
         part2: []
     }
 };
