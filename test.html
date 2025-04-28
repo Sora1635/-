@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест - ОРТго даярдануу</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Тест</h1>
+        <nav>
+            <a href="index.html">Башкы бет</a>
+            <a href="about.html">Сайт жөнүндө</a>
+            <a href="subjects.html">Предметтер</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="test-section" style="display: none;">
+            <div id="timer">Калган убакыт: <span id="time-remaining">30:00</span></div>
+            <div id="question-carousel">
+                <!-- Вопросы с книжной прокруткой -->
+                <button id="prev-question" class="carousel-btn">←</button>
+                <div id="question-container" class="question"></div>
+                <button id="next-question" class="carousel-btn">→</button>
+            </div>
+            <div id="answer-table">
+                <h3>Жооптор</h3>
+                <div id="answer-grid"></div>
+            </div>
+            <button id="submit-test">Тестти тапшыруу</button>
+        </section>
+
+        <section id="start-section">
+            <h2>Тестти баштоого даярсызбы?</h2>
+            <button id="start-test">Тестти баштоо</button>
+        </section>
+
+        <section id="results-section" style="display: none;">
+            <h2>Жыйынтыктар</h2>
+            <p>Сиздин упайыңыз: <span id="score"></span></p>
+            <div id="results-details"></div>
+            <a href="subjects.html" class="btn">Башка тестти тандоо</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 ОРТго даярдануу платформасы</p>
+    </footer>
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
