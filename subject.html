@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ОРТ Пробалык Тест</title>
+    <title>Выбор части</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>ОРТ Пробалык Тест</h1>
+        <h1>Выбор части</h1>
         <div class="lang-switch">
             <button onclick="setLanguage('ky')">Кыргызча</button>
             <button onclick="setLanguage('ru')">Русский</button>
         </div>
     </header>
     <main>
-        <h2 data-lang="select_subject">Предметти тандаңыз</h2>
-        <div class="subjects">
-            <button onclick="selectSubject('math')">Математика</button>
-            <button onclick="selectSubject('kyrgyz')">Кыргыз тили</button>
+        <h2 data-lang="select_part">Бөлүктү тандаңыз</h2>
+        <div class="parts">
+            <button onclick="selectPart(1)">1-бөлүк (Жеңил)</button>
+            <button onclick="selectPart(2)">2-бөлүк (Татаал)</button>
         </div>
     </main>
     <script src="script.js"></script>

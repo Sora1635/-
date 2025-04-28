@@ -3,24 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ОРТ Пробалык Тест</title>
+    <title>Тест</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>ОРТ Пробалык Тест</h1>
+        <h1>Тест</h1>
         <div class="lang-switch">
             <button onclick="setLanguage('ky')">Кыргызча</button>
             <button onclick="setLanguage('ru')">Русский</button>
         </div>
     </header>
     <main>
-        <h2 data-lang="select_subject">Предметти тандаңыз</h2>
-        <div class="subjects">
-            <button onclick="selectSubject('math')">Математика</button>
-            <button onclick="selectSubject('kyrgyz')">Кыргыз тили</button>
-        </div>
+        <h2 data-lang="test_title"></h2>
+        <div id="timer"></div>
+        <div id="questions"></div>
+        <div id="answers"></div>
+        <button onclick="submitTest()">Тестти тапшыруу</button>
     </main>
     <script src="script.js"></script>
+    <script>
+        window.onload = function() {
+            loadTest();
+            startTimer();
+        };
+    </script>
 </body>
 </html>

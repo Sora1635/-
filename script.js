@@ -1,78 +1,123 @@
-let currentSubject = '';
-let currentPart = 0;
+let currentLang = localStorage.getItem('lang') || 'ky';
+let currentSubject = localStorage.getItem('subject') || '';
+let currentPart = localStorage.getItem('part') || 0;
 let currentTest = null;
 let timerInterval = null;
 
-function switchLanguage(lang) {
+const translations = {
+    ky: {
+        select_subject: "Предметти тандаңыз",
+        select_part: "Бөлүктү тандаңыз",
+        part_details: "Бөлүк жөнүндө маалымат",
+        part_description: "Суроолордун саны: 30, Убакыт: {time} мүнөт",
+        test_title: "Тест: {subject} - {part}",
+        start_test: "Тестти баштоо",
+        submit_test: "Тестти тапшыруу",
+        results: "Жыйынтыктар",
+        back_to_main: "Кайра башкы бетке"
+    },
+    ru: {
+        select_subject: "Выберите предмет",
+        select_part: "Выберите часть",
+        part_details: "Информация о части",
+        part_description: "Количество вопросов: 30, Время: {time} минут",
+        test_title: "Тест: {subject} - {part}",
+        start_test: "Начать тест",
+        submit_test: "Завершить тест",
+        results: "Результаты",
+        back_to_main: "Вернуться на главную"
+    }
+};
+
+// Переключение языка
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('lang', lang);
+    updateTexts();
+}
+
+// Обновление текста
+function updateTexts() {
     document.querySelectorAll('[data-lang]').forEach(el => {
-        el.style.display = el.getAttribute('data-lang') === lang ? 'block' : 'none';
+        let key = el.getAttribute('data-lang');
+        let text = translations[currentLang][key];
+        if (key === 'part_description') {
+            const time = currentPart == 1 ? 30 : 60;
+            text = text.replace('{time}', time);
+        } else if (key === 'test_title') {
+            const subject = currentSubject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') : (currentLang === 'ky' ? 'Кыргыз тили' : 'Киргизский язык');
+            const part = currentPart == 1 ? (currentLang === 'ky' ? '1-бөлүк' : 'Часть 1') : (currentLang === 'ky' ? '2-бөлүк' : 'Часть 2');
+            text = text.replace('{subject}', subject).replace('{part}', part);
+        }
+        el.textContent = text;
     });
-    document.documentElement.lang = lang;
 }
 
-function showSubject(subject) {
+// Выбор предмета
+function selectSubject(subject) {
     currentSubject = subject;
-    document.getElementById('home').classList.remove('active');
-    document.getElementById('subject').classList.add('active');
-    document.getElementById('subject-title').textContent = subject === 'math' ? 'Математика' : 'Кыргыз тили';
+    localStorage.setItem('subject', subject);
+    window.location.href = 'subject.html';
 }
 
-function showPart(part) {
+// Выбор части
+function selectPart(part) {
     currentPart = part;
-    document.getElementById('subject').classList.remove('active');
-    document.getElementById('part-details').classList.add('active');
-    document.getElementById('part-title').textContent = `${part}-бөлүк (${part === 1 ? 'Жеңил' : 'Татаал'})`;
-    document.getElementById('part-description').textContent = `Суроолордун саны: 30, Убакыт: ${part === 1 ? '30 мүнөт' : '60 мүнөт'}`;
+    localStorage.setItem('part', part);
+    window.location.href = 'part-details.html';
 }
 
+// Старт теста
 function startTest() {
-    document.getElementById('part-details').classList.remove('active');
-    document.getElementById('test').classList.add('active');
-    
-    // Выбираем случайный вариант теста
-    const variants = questions[currentSubject][`part${currentPart}`];
-    const variantIndex = Math.floor(Math.random() * variants.length);
-    currentTest = variants[variantIndex];
-    
-    // Отображаем вопросы
-    const questionsDiv = document.getElementById('questions');
-    questionsDiv.innerHTML = currentTest.map((q, i) => `
-        <div class="question">
-            <p>${i + 1}. ${q.question}</p>
-            <p>a) ${q.options.a}</p>
-            <p>б) ${q.options.b}</p>
-            <p>в) ${q.options.c}</p>
-            <p>г) ${q.options.d}</p>
-        </div>
-    `).join('');
-
-    // Отображаем блок ответов
-    const answersDiv = document.getElementById('answer-options');
-    answersDiv.innerHTML = currentTest.map((q, i) => `
-        <div class="answer-row">
-            <span>${i + 1}:</span>
-            <select id="answer-${i}">
-                <option value="">Тандаңыз</option>
-                <option value="a">а</option>
-                <option value="б">б</option>
-                <option value="в">в</option>
-                <option value="г">г</option>
-            </select>
-        </div>
-    `).join('');
-
-    // Таймер
-    const timeLimit = currentPart === 1 ? 30 * 60 : 60 * 60;
-    startTimer(timeLimit);
+    window.location.href = 'test.html';
 }
 
-function startTimer(seconds) {
+// Загрузка теста
+async function loadTest() {
+    const file = `questions/${currentSubject}_part${currentPart}.json`;
+    const response = await fetch(file);
+    const data = await response.json();
+    const variants = data.variants;
+    currentTest = variants[Math.floor(Math.random() * variants.length)];
+    
+    const questionsDiv = document.getElementById('questions');
+    const answersDiv = document.getElementById('answers');
+    questionsDiv.innerHTML = '';
+    answersDiv.innerHTML = '';
+
+    currentTest.forEach((q, i) => {
+        const qText = q.question[currentLang];
+        const opts = q.options;
+        questionsDiv.innerHTML += `
+            <div class="question">
+                <p>${i + 1}. ${qText}</p>
+                <p>a) ${opts.a[currentLang]}</p>
+                <p>b) ${opts.b[currentLang]}</p>
+                <p>c) ${opts.c[currentLang]}</p>
+                <p>d) ${opts.d[currentLang]}</p>
+            </div>
+        `;
+        answersDiv.innerHTML += `
+            <div class="answer-row">
+                <span>${i + 1}.</span>
+                <label><input type="radio" name="ans${i}" value="a"> a</label>
+                <label><input type="radio" name="ans${i}" value="b"> b</label>
+                <label><input type="radio" name="ans${i}" value="c"> c</label>
+                <label><input type="radio" name="ans${i}" value="d"> d</label>
+            </div>
+        `;
+    });
+}
+
+// Таймер
+function startTimer() {
+    const timeLimit = currentPart == 1 ? 30 * 60 : 60 * 60;
+    let timeLeft = timeLimit;
     const timerDiv = document.getElementById('timer');
-    let timeLeft = seconds;
     timerInterval = setInterval(() => {
-        const minutes = Math.floor(timeLeft / 60);
+        const mins = Math.floor(timeLeft / 60);
         const secs = timeLeft % 60;
-        timerDiv.textContent = `Калган убакыт: ${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        timerDiv.textContent = `Калган убакыт: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
         timeLeft--;
         if (timeLeft < 0) {
             clearInterval(timerInterval);
@@ -81,35 +126,35 @@ function startTimer(seconds) {
     }, 1000);
 }
 
+// Отправка теста
 function submitTest() {
     clearInterval(timerInterval);
-    document.getElementById('test').classList.remove('active');
-    document.getElementById('results').classList.add('active');
-
     let score = 0;
     currentTest.forEach((q, i) => {
-        const selected = document.getElementById(`answer-${i}`).value;
-        if (selected === q.correct) score++;
+        const selected = document.querySelector(`input[name="ans${i}"]:checked`);
+        if (selected && selected.value === q.correct) score++;
     });
-
     const percentage = (score / 30 * 100).toFixed(2);
-    let knowledge = '';
-    if (percentage >= 80) knowledge = 'Жогорку билим деңгээли';
-    else if (percentage >= 50) knowledge = 'Орточо билим деңгээли';
-    else knowledge = 'Төмөн билим деңгээли';
-
-    document.getElementById('score').textContent = `Балл: ${score}/30`;
-    document.getElementById('percentage').textContent = `Пайыз: ${percentage}%`;
-    document.getElementById('knowledge').textContent = `Билим деңгээли: ${knowledge}`;
+    const knowledge = percentage >= 80 ? 'Жогорку' : percentage >= 50 ? 'Орточо' : 'Төмөн';
+    
+    localStorage.setItem('score', score);
+    localStorage.setItem('percentage', percentage);
+    localStorage.setItem('knowledge', knowledge);
+    window.location.href = 'results.html';
 }
 
-function backToHome() {
-    document.getElementById('results').classList.remove('active');
-    document.getElementById('home').classList.add('active');
-    currentSubject = '';
-    currentPart = 0;
-    currentTest = null;
+// Возврат на главную
+function backToMain() {
+    localStorage.clear();
+    window.location.href = 'index.html';
 }
 
-// Инициализация языка
-switchLanguage('ky');
+// Инициализация на каждой странице
+window.onload = function() {
+    setLanguage(currentLang);
+    if (window.location.pathname.includes('results.html')) {
+        document.getElementById('score').textContent = `Балл: ${localStorage.getItem('score')}/30`;
+        document.getElementById('percentage').textContent = `Пайыз: ${localStorage.getItem('percentage')}%`;
+        document.getElementById('knowledge').textContent = `Билим деңгээли: ${localStorage.getItem('knowledge')}`;
+    }
+};

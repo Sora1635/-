@@ -1,13 +1,9 @@
-* {
+/* Общие стили */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-body {
-    background-color: #f0f2f5;
-    color: #333;
 }
 
 header {
@@ -15,9 +11,6 @@ header {
     color: white;
     padding: 1rem;
     text-align: center;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .lang-switch button {
@@ -25,11 +18,7 @@ header {
     border: none;
     color: white;
     cursor: pointer;
-    padding: 0.5rem;
-}
-
-.lang-switch button:hover {
-    text-decoration: underline;
+    margin: 0 0.5rem;
 }
 
 main {
@@ -38,33 +27,12 @@ main {
     padding: 0 1rem;
 }
 
-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1rem;
-}
-
-.hidden {
-    display: none;
-}
-
-.active {
-    display: block;
-}
-
-h2 {
-    margin-bottom: 1rem;
-    color: #007bff;
-}
-
+/* Кнопки */
 button {
     background-color: #007bff;
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
-    border-radius: 4px;
     cursor: pointer;
     margin: 0.5rem;
 }
@@ -73,42 +41,21 @@ button:hover {
     background-color: #0056b3;
 }
 
-.subjects, .parts {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-#questions {
-    margin-bottom: 2rem;
-}
-
-.question {
+/* Тест */
+#questions, #answers {
+    max-height: 400px;
+    overflow-y: auto;
     margin-bottom: 1rem;
-}
-
-#answer-options {
-    display: grid;
-    gap: 0.5rem;
 }
 
 .answer-row {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 #timer {
     font-size: 1.2rem;
     color: #dc3545;
     margin-bottom: 1rem;
-}
-
-@media (max-width: 600px) {
-    button {
-        width: 100%;
-    }
-    .subjects, .parts {
-        flex-direction: column;
-    }
 }
