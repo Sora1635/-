@@ -2,7 +2,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 const subject = urlParams.get("subject") || "math";
 const part = urlParams.get("part") || "part1";
-const timeLimit = part === "part1" ? 30 * 60 : 60 * 60; // в секундах
+const timeLimit = part === "part1" ? 30 * 60 : 60 * 60;
 
 let currentQuestions = [];
 let userAnswers = {};
@@ -10,7 +10,7 @@ let currentQuestionIndex = 0;
 let timeRemaining = timeLimit;
 let timerInterval;
 
-// Установка времени на стартовой странице
+// Установка времени
 document.getElementById("time-info").textContent = part === "part1" ? "30 мүнөт" : "60 мүнөт";
 
 // Показ ошибки
@@ -18,6 +18,7 @@ function showError(message) {
     const errorDiv = document.getElementById("error-message");
     errorDiv.textContent = `Ката: ${message}`;
     errorDiv.style.display = "block";
+    document.getElementById("start-test").disabled = true;
 }
 
 // Рандомизация массива
@@ -32,8 +33,11 @@ function shuffle(array) {
 // Загрузка вопросов
 function loadQuestions() {
     try {
-        if (!window.questions || !questions[subject] || !questions[subject][part] || !questions[subject][part].length) {
-            throw new Error("Суроолор табылган жок же questions.js жүктөлгөн жок");
+        if (!window.questions) {
+            throw new Error("questions.js жүктөлгөн жок");
+        }
+        if (!questions[subject] || !questions[subject][part] || !questions[subject][part].length) {
+            throw new Error(`Суроолор табылган жок: ${subject}, ${part}`);
         }
 
         let availableQuestions = questions[subject][part];
@@ -41,7 +45,6 @@ function loadQuestions() {
             throw new Error("Суроолор саны жетишсиз");
         }
 
-        // Выбираем 30 случайных вопросов
         currentQuestions = shuffle([...availableQuestions]).slice(0, 30).map(q => ({
             ...q,
             options: shuffle([...q.options])
@@ -52,7 +55,6 @@ function loadQuestions() {
     } catch (error) {
         console.error("Ошибка загрузки вопросов:", error);
         showError(error.message);
-        document.getElementById("start-test").disabled = true;
     }
 }
 
@@ -67,7 +69,7 @@ function displayQuestion(index) {
 
         const optionsContainer = document.getElementById("options-container");
         optionsContainer.innerHTML = question.options.map((opt, i) => {
-            const letter = String.fromCharCode(1072 + i); // а, б, в, г
+            const letter = String.fromCharCode(1072 + i);
             return `
                 <label class="option">
                     <input type="radio" name="q${index}" value="${letter}" ${userAnswers[index] === letter ? "checked" : ""} onchange="saveAnswer(${index}, this.value)">
@@ -149,6 +151,10 @@ function submitTest() {
 
 // События
 document.getElementById("start-test").addEventListener("click", () => {
+    if (!window.questions) {
+        showError("questions.js жүктөлгөн жок");
+        return;
+    }
     document.getElementById("start-section").style.display = "none";
     document.getElementById("test-section").style.display = "block";
     loadQuestions();
@@ -171,10 +177,9 @@ document.getElementById("next-question").addEventListener("click", () => {
 
 document.getElementById("submit-test").addEventListener("click", submitTest);
 
-// Проверка загрузки questions.js
+// Диагностика загрузки
 window.addEventListener("load", () => {
     if (!window.questions) {
-        showError("questions.js жүктөлгөн жок");
-        document.getElementById("start-test").disabled = true;
+        showError("questions.js жүктөлгөн жок. Файл табылган жок же содержит ошибку.");
     }
 });
