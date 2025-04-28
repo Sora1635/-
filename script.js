@@ -5,7 +5,7 @@ const part = urlParams.get("part") || "part1";
 const timeLimit = part === "part1" ? 30 * 60 : 60 * 60;
 
 let currentQuestions = [];
-let userAnswers = {};
+let userAnswers = {}; // Хранит индексы ответов (0–3)
 let currentQuestionIndex = 0;
 let timeRemaining = timeLimit;
 let timerInterval;
@@ -25,39 +25,32 @@ function shuffle(array) {
 // Загрузка вопросов
 function loadQuestions() {
     try {
-        // Проверка наличия вопросов
         if (!questions?.[subject]?.[part]?.length) {
             throw new Error(`Суроолор табылган жок: ${subject}, ${part}`);
         }
 
-        // Получение использованных вопросов
         const usedQuestions = JSON.parse(localStorage.getItem("usedQuestions") || "{}");
         if (!usedQuestions[subject]) usedQuestions[subject] = {};
         if (!usedQuestions[subject][part]) usedQuestions[subject][part] = [];
 
-        // Фильтрация неиспользованных вопросов
         let availableQuestions = questions[subject][part].filter(
             q => !usedQuestions[subject][part].includes(q.id)
         );
 
-        // Если вопросов меньше 30, сбрасываем использованные
         if (availableQuestions.length < 30) {
             usedQuestions[subject][part] = [];
             availableQuestions = questions[subject][part];
             localStorage.setItem("usedQuestions", JSON.stringify(usedQuestions));
         }
 
-        // Выбор 30 случайных вопросов
         currentQuestions = shuffle(availableQuestions).slice(0, 30).map(q => ({
             ...q,
             options: shuffle([...q.options])
         }));
 
-        // Сохранение использованных вопросов
         usedQuestions[subject][part].push(...currentQuestions.map(q => q.id));
         localStorage.setItem("usedQuestions", JSON.stringify(usedQuestions));
 
-        // Отображение первого вопроса и таблицы ответов
         displayQuestion(0);
         updateAnswerTable();
     } catch (error) {
@@ -73,19 +66,22 @@ function displayQuestion(index) {
         if (!question) throw new Error(`Суроо табылган жок: индекс ${index}`);
 
         // Обновление номера вопроса
-        document.getElementById("question-number").textContent = index + 1;
+        document.getElementById("question-number").textContent = `Суроо ${index + 1}/30`;
 
         // Отображение текста вопроса
         document.getElementById("question-text").textContent = question.text;
 
-        // Отображение вариантов ответа
+        // Отображение вариантов ответа с буквами (а, б, в, г)
         const optionsContainer = document.getElementById("options-container");
-        optionsContainer.innerHTML = question.options.map((opt, i) => `
-            <label class="option">
-                <input type="radio" name="q${question.id}" value="${opt}" ${userAnswers[question.id] === opt ? "checked" : ""}>
-                <span>${String.fromCharCode(1072 + i)}. ${opt}</span>
-            </label>
-        `).join("");
+        optionsContainer.innerHTML = question.options.map((opt, i) => {
+            const letter = String.fromCharCode(1072 + i); // а, б, в, г
+            return `
+                <label class="option">
+                    <input type="radio" name="q${question.id}" value="${i}" ${userAnswers[question.id] === i ? "checked" : ""}>
+                    <span>${letter}. ${opt}</span>
+                </label>
+            `;
+        }).join("");
 
         // Обновление кнопок навигации
         document.getElementById("prev-question").disabled = index === 0;
@@ -100,11 +96,14 @@ function displayQuestion(index) {
 function updateAnswerTable() {
     try {
         const answerGrid = document.getElementById("answer-grid");
-        answerGrid.innerHTML = currentQuestions.map((q, i) => `
-            <div class="answer-cell" onclick="goToQuestion(${i})" style="cursor: pointer; ${userAnswers[q.id] ? 'background-color: #d1fae5;' : ''}">
-                ${i + 1}: ${userAnswers[q.id] ? userAnswers[q.id] : "-"}
-            </div>
-        `).join("");
+        answerGrid.innerHTML = currentQuestions.map((q, i) => {
+            const letter = userAnswers[q.id] !== undefined ? String.fromCharCode(1072 + userAnswers[q.id]) : "-";
+            return `
+                <div class="answer-cell" onclick="goToQuestion(${i})" style="cursor: pointer; ${userAnswers[q.id] !== undefined ? 'background-color: #d1fae5;' : ''}">
+                    ${i + 1}: ${letter}
+                </div>
+            `;
+        }).join("");
     } catch (error) {
         console.error("Ошибка обновления таблицы ответов:", error);
         showError(error.message);
@@ -114,7 +113,7 @@ function updateAnswerTable() {
 // Переход к вопросу по клику на таблицу
 function goToQuestion(index) {
     const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-    if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+    if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = parseInt(selected.value);
     currentQuestionIndex = index;
     displayQuestion(currentQuestionIndex);
     updateAnswerTable();
@@ -143,14 +142,16 @@ function submitTest() {
         const resultsDetails = document.getElementById("results-details");
 
         currentQuestions.forEach(q => {
-            if (userAnswers[q.id] === q.correct) score++;
+            if (userAnswers[q.id] !== undefined && q.options[userAnswers[q.id]] === q.correct) {
+                score++;
+            }
         });
 
         document.getElementById("score").textContent = score;
         resultsDetails.innerHTML = currentQuestions.map(q => `
             <div class="result-item">
                 <p>${q.text}</p>
-                <p>Сиздин жооп: ${userAnswers[q.id] || "Жооп берилген жок"}</p>
+                <p>Сиздин жооп: ${userAnswers[q.id] !== undefined ? q.options[userAnswers[q.id]] : "Жооп берилген жок"}</p>
                 <p>Туура жооп: ${q.correct}</p>
             </div>
         `).join("");
@@ -181,7 +182,7 @@ document.getElementById("start-test")?.addEventListener("click", () => {
 document.getElementById("prev-question")?.addEventListener("click", () => {
     if (currentQuestionIndex > 0) {
         const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = parseInt(selected.value);
         currentQuestionIndex--;
         displayQuestion(currentQuestionIndex);
         updateAnswerTable();
@@ -191,7 +192,7 @@ document.getElementById("prev-question")?.addEventListener("click", () => {
 document.getElementById("next-question")?.addEventListener("click", () => {
     if (currentQuestionIndex < currentQuestions.length - 1) {
         const selected = document.querySelector(`input[name="q${currentQuestions[currentQuestionIndex].id}"]:checked`);
-        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = selected.value;
+        if (selected) userAnswers[currentQuestions[currentQuestionIndex].id] = parseInt(selected.value);
         currentQuestionIndex++;
         displayQuestion(currentQuestionIndex);
         updateAnswerTable();
@@ -204,5 +205,7 @@ document.getElementById("submit-test")?.addEventListener("click", submitTest);
 window.addEventListener("load", () => {
     if (!window.questions) {
         showError("questions.js жүктөлгөн жок");
+    }
+});Error("questions.js жүктөлгөн жок");
     }
 });
