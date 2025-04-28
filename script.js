@@ -2,6 +2,7 @@ let currentSubject = localStorage.getItem('subject') || '';
 let currentPart = localStorage.getItem('part') || 0;
 let currentTest = null;
 let timerInterval = null;
+let currentQuestionIndex = 0; // Учурдагы суроонун индекси
 
 // Предметти тандоо
 function selectSubject(subject) {
@@ -36,31 +37,53 @@ async function loadTest() {
     const variants = data.variants;
     currentTest = variants[Math.floor(Math.random() * variants.length)];
     
+    currentQuestionIndex = 0; // Биринчи суроодон баштайбыз
+    displayQuestion(); // Учурдагы суроону көрсөтүү
+}
+
+// Учурдагы суроону көрсөтүү
+function displayQuestion() {
     const questionsDiv = document.getElementById('questions');
     const answersDiv = document.getElementById('answers');
-    questionsDiv.innerHTML = '';
-    answersDiv.innerHTML = '';
+    const questionCounter = document.getElementById('question-counter');
 
-    currentTest.forEach((q, i) => {
-        questionsDiv.innerHTML += `
-            <div class="question">
-                <p>${i + 1}. ${q.question}</p>
-                <p>a) ${q.options.a}</p>
-                <p>б) ${q.options.b}</p>
-                <p>в) ${q.options.c}</p>
-                <p>г) ${q.options.d}</p>
-            </div>
-        `;
-        answersDiv.innerHTML += `
-            <div class="answer-row">
-                <span>${i + 1}.</span>
-                <label><input type="radio" name="ans${i}" value="a"> a</label>
-                <label><input type="radio" name="ans${i}" value="б"> б</label>
-                <label><input type="radio" name="ans${i}" value="в"> в</label>
-                <label><input type="radio" name="ans${i}" value="г"> г</label>
-            </div>
-        `;
-    });
+    // Учурдагы суроону гана көрсөтүү
+    const q = currentTest[currentQuestionIndex];
+    questionsDiv.innerHTML = `
+        <div class="question">
+            <p>${currentQuestionIndex + 1}. ${q.question}</p>
+            <p>a) ${q.options.a}</p>
+            <p>б) ${q.options.b}</p>
+            <p>в) ${q.options.c}</p>
+            <p>г) ${q.options.d}</p>
+        </div>
+    `;
+    answersDiv.innerHTML = `
+        <div class="answer-row">
+            <span>${currentQuestionIndex + 1}.</span>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="a"> a</label>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="б"> б</label>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="в"> в</label>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="г"> г</label>
+        </div>
+    `;
+    questionCounter.textContent = `${currentQuestionIndex + 1}/30`;
+}
+
+// Мурунку суроого өтүү
+function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        displayQuestion();
+    }
+}
+
+// Кийинки суроого өтүү
+function nextQuestion() {
+    if (currentQuestionIndex < currentTest.length - 1) {
+        currentQuestionIndex++;
+        displayQuestion();
+    }
 }
 
 // Таймер
