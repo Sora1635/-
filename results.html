@@ -9,18 +9,21 @@
 <body>
     <header>
         <h1>Жыйынтыктар</h1>
-        <div class="lang-switch">
-            <button onclick="setLanguage('ky')">Кыргызча</button>
-            <button onclick="setLanguage('ru')">Русский</button>
-        </div>
     </header>
     <main>
-        <h2 data-lang="results">Жыйынтыктар</h2>
+        <h2>Жыйынтыктар</h2>
         <p id="score"></p>
         <p id="percentage"></p>
         <p id="knowledge"></p>
         <button onclick="backToMain()">Кайра башкы бетке</button>
     </main>
     <script src="script.js"></script>
+    <script>
+        window.onload = function() {
+            document.getElementById('score').textContent = `Балл: ${localStorage.getItem('score')}/30`;
+            document.getElementById('percentage').textContent = `Пайыз: ${localStorage.getItem('percentage')}%`;
+            document.getElementById('knowledge').textContent = `Билим деңгээли: ${localStorage.getItem('knowledge')}`;
+        };
+    </script>
 </body>
 </html>
