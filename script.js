@@ -8,22 +8,18 @@ const questions = {
             variant1: [
                 { question: "2 + 2 канча болот?", options: { a: "3", b: "4", c: "5", d: "6" }, correct: "b" },
                 { question: "5 - 3 канча болот?", options: { a: "1", b: "2", c: "3", d: "4" }, correct: "b" },
-                // Добавьте ещё 28 вопросов (всего 30)
             ],
             variant2: [
                 { question: "3 + 4 канча болот?", options: { a: "5", b: "7", c: "8", d: "9" }, correct: "b" },
                 { question: "10 - 6 канча болот?", options: { a: "2", b: "3", c: "4", d: "5" }, correct: "c" },
-                // Добавьте ещё 28 вопросов (всего 30)
             ],
         },
         part2: {
             variant1: [
                 { question: "2^3 канча болот?", options: { a: "6", b: "8", c: "10", d: "12" }, correct: "b" },
-                // Добавьте ещё 29 вопросов
             ],
             variant2: [
                 { question: "3^3 канча болот?", options: { a: "9", b: "18", c: "27", d: "36" }, correct: "c" },
-                // Добавьте ещё 29 вопросов
             ],
         },
     },
@@ -31,21 +27,17 @@ const questions = {
         part1: {
             variant1: [
                 { question: "Кыргыз тилинде 'күн' сөзү эмнени билдирет?", options: { a: "Ай", b: "Жылдыз", c: "Күн", d: "Суу" }, correct: "c" },
-                // Добавьте ещё 29 вопросов
             ],
             variant2: [
                 { question: "Кыргыз тилинде 'ай' сөзү эмнени билдирет?", options: { a: "Ай", b: "Жылдыз", c: "Күн", d: "Суу" }, correct: "a" },
-                // Добавьте ещё 29 вопросов
             ],
         },
         part2: {
             variant1: [
                 { question: "Кыргыз тилинде 'тоо' сөзү эмнени билдирет?", options: { a: "Дарыя", b: "Тоо", c: "Токой", d: "Жол" }, correct: "b" },
-                // Добавьте ещё 29 вопросов
             ],
             variant2: [
                 { question: "Кыргыз тилинде 'көл' сөзү эмнени билдирет?", options: { a: "Дарыя", b: "Көл", c: "Токой", d: "Жол" }, correct: "b" },
-                // Добавьте ещё 29 вопросов
             ],
         },
     },
@@ -53,21 +45,17 @@ const questions = {
         part1: {
             variant1: [
                 { question: "Манас эпосунда ким башкы каарман?", options: { a: "Алтай", b: "Манас", c: "Каныкей", d: "Семетей" }, correct: "b" },
-                // Добавьте ещё 29 вопросов
             ],
             variant2: [
                 { question: "Манас эпосунда Каныкей ким?", options: { a: "Манастын аялы", b: "Манастын уулу", c: "Манастын душманы", d: "Манастын атасы" }, correct: "a" },
-                // Добавьте ещё 29 вопросов
             ],
         },
         part2: {
             variant1: [
                 { question: "Манас эпосунда Семетей ким?", options: { a: "Манастын уулу", b: "Манастын аялы", c: "Манастын душманы", d: "Манастын атасы" }, correct: "a" },
-                // Добавьте ещё 29 вопросов
             ],
             variant2: [
                 { question: "Манас эпосунда Айчүрөк ким?", options: { a: "Семетейдин аялы", b: "Манастын аялы", c: "Манастын энеси", d: "Манастын душманы" }, correct: "a" },
-                // Добавьте ещё 29 вопросов
             ],
         },
     },
@@ -81,8 +69,9 @@ function switchLanguage(lang) {
 }
 
 function updateTexts() {
+    console.log('Updating texts for language:', currentLang);
     if (!currentLang) {
-        console.error('currentLang is not defined in updateTexts, defaulting to "ky"');
+        console.error('currentLang is not defined, defaulting to "ky"');
         currentLang = 'ky';
     }
 
@@ -113,17 +102,15 @@ function updateTexts() {
             option.textContent = currentLang === 'ky' ? option.getAttribute('data-lang-ky') : option.getAttribute('data-lang-ru');
         }
     });
-
-    console.log('Texts updated for language:', currentLang);
 }
 
 function selectSubject(subject) {
+    console.log('selectSubject called with:', subject);
     if (!subject) {
-        console.error('Subject is not defined in selectSubject!');
+        console.error('Subject is not defined!');
         alert(currentLang === 'ky' ? 'Предмет тандалган жок!' : 'Предмет не выбран!');
         return;
     }
-    console.log('Selecting subject:', subject);
     currentSubject = subject;
     localStorage.setItem('subject', subject);
     try {
@@ -135,34 +122,35 @@ function selectSubject(subject) {
 }
 
 function selectPart(part) {
+    console.log('selectPart called with:', part);
     if (!part) {
-        console.error('Part is not defined in selectPart!');
+        console.error('Part is not defined!');
         alert(currentLang === 'ky' ? 'Бөлүк тандалган жок!' : 'Часть не выбрана!');
         return;
     }
 
     const currentSubject = localStorage.getItem('subject');
     if (!currentSubject) {
-        console.error('Subject is not set before selecting part!');
+        console.error('Subject is not set!');
         alert(currentLang === 'ky' ? 'Предмет тандалган жок! Башкы бетке кайтыңыз.' : 'Предмет не выбран! Вернитесь на главную страницу.');
         window.location.href = 'index.html';
         return;
     }
 
-    console.log('Selecting part:', part, 'for subject:', currentSubject);
     currentPart = part;
     localStorage.setItem('part', part);
     try {
         window.location.href = 'part-details.html';
     } catch (error) {
         console.error('Navigation to part-details.html failed:', error);
-        alert(currentLang === 'ky' ? 'Навигацияда ката кетти! "part-details.html" файлы табылган жок.' : 'Ошибка навигации! Файл "part-details.html" не найден.');
+        alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
     }
 }
 
 function updatePartDetails() {
+    console.log('updatePartDetails called');
     if (!currentPart) {
-        console.error('currentPart is not defined in updatePartDetails:', currentPart);
+        console.error('currentPart is not defined:', currentPart);
         return;
     }
 
@@ -178,12 +166,12 @@ function updatePartDetails() {
 }
 
 function startTest() {
+    console.log('startTest called');
     if (!currentSubject || !currentPart) {
         console.error('Subject or part not set! Subject:', currentSubject, 'Part:', currentPart);
         alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
         return;
     }
-    console.log('Starting test for subject:', currentSubject, 'part:', currentPart);
     try {
         window.location.href = 'test.html';
     } catch (error) {
@@ -193,9 +181,10 @@ function startTest() {
 }
 
 function loadTest() {
+    console.log('loadTest called');
     const subjectData = questions[currentSubject];
     if (!subjectData) {
-        console.error('Subject not found in questions:', currentSubject);
+        console.error('Subject not found:', currentSubject);
         alert(currentLang === 'ky' ? 'Предмет табылган жок!' : 'Предмет не найден!');
         window.location.href = 'index.html';
         return;
@@ -203,7 +192,7 @@ function loadTest() {
 
     const partData = subjectData[`part${currentPart}`];
     if (!partData) {
-        console.error('Part not found for subject:', currentSubject, 'part:', currentPart);
+        console.error('Part not found:', currentPart);
         alert(currentLang === 'ky' ? 'Бөлүк табылган жок!' : 'Часть не найдена!');
         window.location.href = 'index.html';
         return;
@@ -211,7 +200,7 @@ function loadTest() {
 
     const variants = Object.keys(partData).filter(key => key.startsWith('variant'));
     if (variants.length === 0) {
-        console.error('No variants found for subject:', currentSubject, 'part:', currentPart);
+        console.error('No variants found:', currentSubject, currentPart);
         alert(currentLang === 'ky' ? 'Варианттар табылган жок!' : 'Варианты не найдены!');
         window.location.href = 'index.html';
         return;
@@ -222,8 +211,8 @@ function loadTest() {
 
     const selectedQuestions = partData[randomVariant];
     if (!selectedQuestions || selectedQuestions.length !== 30) {
-        console.error('Invalid number of questions in variant:', randomVariant, 'Found:', selectedQuestions ? selectedQuestions.length : 0);
-        alert(currentLang === 'ky' ? 'Суроолор саны туура эмес! 30 суроо болушу керек.' : 'Неверное количество вопросов! Должно быть 30 вопросов.');
+        console.error('Invalid number of questions:', selectedQuestions ? selectedQuestions.length : 0);
+        alert(currentLang === 'ky' ? 'Суроолор саны туура эмес!' : 'Неверное количество вопросов!');
         window.location.href = 'index.html';
         return;
     }
@@ -235,6 +224,7 @@ function loadTest() {
 }
 
 function displayQuestion() {
+    console.log('displayQuestion called');
     const questionCounter = document.getElementById('question-counter');
     const questionsDiv = document.getElementById('questions');
     const answersDiv = document.getElementById('answers');
@@ -263,6 +253,7 @@ function displayQuestion() {
 }
 
 function prevQuestion() {
+    console.log('prevQuestion called');
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         displayQuestion();
@@ -270,6 +261,7 @@ function prevQuestion() {
 }
 
 function nextQuestion() {
+    console.log('nextQuestion called');
     if (currentQuestionIndex < 29) {
         currentQuestionIndex++;
         displayQuestion();
@@ -277,6 +269,7 @@ function nextQuestion() {
 }
 
 function startTimer() {
+    console.log('startTimer called');
     timeLeft = (currentPart == 1 ? 30 : 60) * 60;
     const timerElement = document.getElementById('timer');
 
@@ -299,6 +292,7 @@ function startTimer() {
 }
 
 function submitTest() {
+    console.log('submitTest called');
     clearInterval(timerInterval);
     let score = 0;
     currentTest.forEach((q, i) => {
@@ -313,7 +307,7 @@ function submitTest() {
     localStorage.setItem('percentage', percentage);
     localStorage.setItem('knowledge', knowledge);
 
-    console.log('Test results saved - score:', score, 'percentage:', percentage, 'knowledge:', knowledge);
+    console.log('Test results saved:', { score, percentage, knowledge });
 
     try {
         window.location.href = 'results.html';
@@ -324,7 +318,7 @@ function submitTest() {
 }
 
 function backToMain() {
-    console.log('Navigating back to main page');
+    console.log('backToMain called');
     try {
         window.location.href = 'index.html';
     } catch (error) {
@@ -333,27 +327,84 @@ function backToMain() {
     }
 }
 
-// Закомментированный код авторизации
-/*
+function startCourseLesson() {
+    console.log('startCourseLesson called');
+    alert(currentLang === 'ky' ? 'Урок башталды!' : 'Урок начался!');
+}
+
+function initializeEventListeners() {
+    console.log('Initializing event listeners');
+
+    // index.html
+    const mathButton = document.getElementById('subject-math');
+    const kyrgyzButton = document.getElementById('subject-kyrgyz');
+    const manasButton = document.getElementById('subject-manas');
+    const langKyButton = document.getElementById('lang-ky');
+    const langRuButton = document.getElementById('lang-ru');
+
+    if (mathButton) mathButton.addEventListener('click', () => selectSubject('math'));
+    if (kyrgyzButton) kyrgyzButton.addEventListener('click', () => selectSubject('kyrgyz'));
+    if (manasButton) manasButton.addEventListener('click', () => selectSubject('manas'));
+    if (langKyButton) langKyButton.addEventListener('click', () => switchLanguage('ky'));
+    if (langRuButton) langRuButton.addEventListener('click', () => switchLanguage('ru'));
+
+    // subject.html
+    const part1Button = document.getElementById('part-1');
+    const part2Button = document.getElementById('part-2');
+    const backButtonSubject = document.getElementById('back-main-subject');
+
+    if (part1Button) part1Button.addEventListener('click', () => selectPart(1));
+    if (part2Button) part2Button.addEventListener('click', () => selectPart(2));
+    if (backButtonSubject) backButtonSubject.addEventListener('click', backToMain);
+
+    // part-details.html
+    const startTestButton = document.getElementById('start-test');
+    const backButtonPart = document.getElementById('back-main-part');
+
+    if (startTestButton) startTestButton.addEventListener('click', startTest);
+    if (backButtonPart) backButtonPart.addEventListener('click', backToMain);
+
+    // test.html
+    const prevQuestionButton = document.getElementById('prev-question');
+    const nextQuestionButton = document.getElementById('next-question');
+    const submitTestButton = document.getElementById('submit-test');
+    const backButtonTest = document.getElementById('back-main-test');
+
+    if (prevQuestionButton) prevQuestionButton.addEventListener('click', prevQuestion);
+    if (nextQuestionButton) nextQuestionButton.addEventListener('click', nextQuestion);
+    if (submitTestButton) submitTestButton.addEventListener('click', submitTest);
+    if (backButtonTest) backButtonTest.addEventListener('click', backToMain);
+
+    // results.html
+    const backButtonResults = document.getElementById('back-main-results');
+    if (backButtonResults) backButtonResults.addEventListener('click', backToMain);
+
+    // courses.html
+    const startLessonButton = document.getElementById('start-lesson');
+    const backLinkCourses = document.getElementById('back-main-courses');
+
+    if (startLessonButton) startLessonButton.addEventListener('click', startCourseLesson);
+    if (backLinkCourses) backLinkCourses.addEventListener('click', backToMain);
+}
+
+document.addEventListener('DOMContentLoaded', initializeEventListeners);
+
+/* Закомментированный код авторизации
 function login() {
     const username = document.getElementById('username');
     const password = document.getElementById('password');
-
     if (!username || !password) {
         console.error('Username or password input not found');
         alert(currentLang === 'ky' ? 'Ката: Форма толтурулган жок!' : 'Ошибка: Форма не заполнена!');
         return;
     }
-
     const usernameValue = username.value.trim();
     const passwordValue = password.value.trim();
-
     if (!usernameValue || !passwordValue) {
         console.warn('Empty username or password');
         alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз бош болбошу керек!' : 'Имя пользователя или пароль не должны быть пустыми!');
         return;
     }
-
     let users = JSON.parse(localStorage.getItem('users')) || {};
     if (users[usernameValue] && users[usernameValue].password === passwordValue) {
         currentUser = usernameValue;
@@ -368,33 +419,27 @@ function login() {
         alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз туура эмес!' : 'Неверное имя пользователя или пароль!');
     }
 }
-
 function register() {
     const username = document.getElementById('username');
     const password = document.getElementById('password');
-
     if (!username || !password) {
         console.error('Username or password input not found');
         alert(currentLang === 'ky' ? 'Ката: Форма толтурулган жок!' : 'Ошибка: Форма не заполнена!');
         return;
     }
-
     const usernameValue = username.value.trim();
     const passwordValue = password.value.trim();
-
     if (!usernameValue || !passwordValue) {
         console.warn('Empty username or password');
         alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз бош болбошу керек!' : 'Имя пользователя или пароль не должны быть пустыми!');
         return;
     }
-
     let users = JSON.parse(localStorage.getItem('users')) || {};
     if (users[usernameValue]) {
         console.warn('Username already exists:', usernameValue);
         alert(currentLang === 'ky' ? 'Бул колдонуучунун аты мурунтан эле бар!' : 'Это имя пользователя уже занято!');
         return;
     }
-
     users[usernameValue] = { password: passwordValue, testResults: {}, knowledgeAreas: {} };
     localStorage.setItem('users', JSON.stringify(users));
     currentUser = usernameValue;
@@ -405,7 +450,6 @@ function register() {
     document.getElementById('subject-selection').style.display = 'block';
     console.log('User registered and logged in:', currentUser);
 }
-
 function logout() {
     console.log('Logging out user:', currentUser);
     currentUser = null;
@@ -415,7 +459,6 @@ function logout() {
     document.getElementById('auth-section').style.display = 'block';
     document.getElementById('subject-selection').style.display = 'none';
 }
-
 function saveUserData(username) {
     let users = JSON.parse(localStorage.getItem('users')) || {};
     users[username] = userData;
@@ -423,7 +466,6 @@ function saveUserData(username) {
     localStorage.setItem('userData', JSON.stringify(userData));
     console.log('User data saved for:', username);
 }
-
 function updateUserData() {
     currentUser = localStorage.getItem('currentUser');
     userData = JSON.parse(localStorage.getItem('userData')) || { testResults: {}, knowledgeAreas: {} };

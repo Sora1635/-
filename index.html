@@ -11,31 +11,29 @@
     <header>
         <h1 data-lang-ky="Предметти тандоо" data-lang-ru="Выбор предмета">Предметти тандоо</h1>
         <div class="lang-switch">
-            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
-            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
+            <button id="lang-ky" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
+            <button id="lang-ru" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
         </div>
     </header>
 
     <div class="menu">
-        <div id="subject-selection">
-            <div class="subject-cards">
-                <div class="card" onclick="selectSubject('math')">
-                    <h3 data-lang-ky="Математика" data-lang-ru="Математика">Математика</h3>
-                </div>
-                <div class="card" onclick="selectSubject('kyrgyz')">
-                    <h3 data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</h3>
-                </div>
-                <div class="card" onclick="selectSubject('manas')">
-                    <h3 data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</h3>
-                </div>
-            </div>
+        <div class="subject-cards">
+            <button id="subject-math" class="subject-card-button">
+                <h3 data-lang-ky="Математика" data-lang-ru="Математика">Математика</h3>
+            </button>
+            <button id="subject-kyrgyz" class="subject-card-button">
+                <h3 data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</h3>
+            </button>
+            <button id="subject-manas" class="subject-card-button">
+                <h3 data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</h3>
+            </button>
         </div>
     </div>
 
     <script src="script.js"></script>
     <script>
         window.onload = function() {
-            console.log('Page loaded, initializing...');
+            console.log('Index page loaded');
             if (typeof currentLang === 'undefined') {
                 currentLang = localStorage.getItem('lang') || 'ky';
                 console.log('currentLang initialized to:', currentLang);

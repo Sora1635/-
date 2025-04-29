@@ -11,8 +11,8 @@
     <header>
         <h1 data-lang-ky="Тест" data-lang-ru="Тест">Тест</h1>
         <div class="lang-switch">
-            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
-            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
+            <button id="lang-ky" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
+            <button id="lang-ru" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
         </div>
     </header>
 
@@ -21,10 +21,10 @@
         <div id="question-counter">1/30</div>
         <div id="questions"></div>
         <div id="answers"></div>
-        <button onclick="prevQuestion()" data-lang-ky="Мурунку" data-lang-ru="Предыдущий"><i class="fas fa-chevron-left"></i> Мурунку</button>
-        <button onclick="nextQuestion()" data-lang-ky="Кийинки" data-lang-ru="Следующий"><i class="fas fa-chevron-right"></i> Кийинки</button>
-        <button onclick="submitTest()" data-lang-ky="Тапшыруу" data-lang-ru="Сдать"><i class="fas fa-check"></i> Тапшыруу</button>
-        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
+        <button id="prev-question" data-lang-ky="Мурунку" data-lang-ru="Предыдущий"><i class="fas fa-chevron-left"></i> Мурунку</button>
+        <button id="next-question" data-lang-ky="Кийинки" data-lang-ru="Следующий"><i class="fas fa-chevron-right"></i> Кийинки</button>
+        <button id="submit-test" data-lang-ky="Тапшыруу" data-lang-ru="Сдать"><i class="fas fa-check"></i> Тапшыруу</button>
+        <button id="back-main-test" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
     </div>
 
     <script src="script.js"></script>

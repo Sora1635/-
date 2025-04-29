@@ -11,22 +11,22 @@
     <header>
         <h1 data-lang-ky="Предметти тандоо" data-lang-ru="Выбор предмета">Предметти тандоо</h1>
         <div class="lang-switch">
-            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
-            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
+            <button id="lang-ky" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
+            <button id="lang-ru" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
         </div>
     </header>
 
     <div class="menu">
         <h2 id="subject-title" data-lang-ky="Предмет: " data-lang-ru="Предмет: ">Предмет: </h2>
         <div class="subject-cards">
-            <div class="card" onclick="selectPart(1)">
+            <button id="part-1" class="subject-card-button">
                 <h3 data-lang-ky="1-бөлүк (Жеңил)" data-lang-ru="Часть 1 (Лёгкая)">1-бөлүк (Жеңил)</h3>
-            </div>
-            <div class="card" onclick="selectPart(2)">
+            </button>
+            <button id="part-2" class="subject-card-button">
                 <h3 data-lang-ky="2-бөлүк (Кыйын)" data-lang-ru="Часть 2 (Сложная)">2-бөлүк (Кыйын)</h3>
-            </div>
+            </button>
         </div>
-        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
+        <button id="back-main-subject" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
     </div>
 
     <script src="script.js"></script>

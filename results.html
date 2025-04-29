@@ -11,15 +11,15 @@
     <header>
         <h1 data-lang-ky="Жыйынтыктар" data-lang-ru="Результаты">Жыйынтыктар</h1>
         <div class="lang-switch">
-            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
-            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
+            <button id="lang-ky" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
+            <button id="lang-ru" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
         </div>
     </header>
 
     <div class="menu">
         <h2 id="results-title"></h2>
         <p id="results-details"></p>
-        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
+        <button id="back-main-results" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
     </div>
 
     <script src="script.js"></script>
@@ -38,10 +38,8 @@
             console.log('Results data:', { score, percentage, knowledge });
 
             if (!score || !percentage || !knowledge) {
-                console.error('Results data not found in localStorage!');
-                alert(currentLang === 'ky'
-                    ? 'Ката: Жыйынтыктар табылган жок!'
-                    : 'Ошибка: Результаты не найдены!');
+                console.error('Results data not found!');
+                alert(currentLang === 'ky' ? 'Ката: Жыйынтыктар табылган жок!' : 'Ошибка: Результаты не найдены!');
                 window.location.href = 'index.html';
                 return;
             }

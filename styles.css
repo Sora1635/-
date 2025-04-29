@@ -1,37 +1,29 @@
-/* Общие стили */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
-    color: #FFFFFF;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #ffffff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    justify-content: center;
 }
 
-/* Хедер */
 header {
     text-align: center;
-    margin-bottom: 30px;
-    animation: fadeIn 0.8s ease-in-out;
+    padding: 20px;
+    width: 100%;
 }
 
 header h1 {
     font-size: 2.5rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, #FF6F61, #FFD700);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .lang-switch {
@@ -40,81 +32,39 @@ header h1 {
     justify-content: center;
 }
 
-/* Кнопки */
-button {
-    padding: 12px 24px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #FFFFFF;
-    background: linear-gradient(90deg, #FF6F61, #FFD700);
+.lang-switch button {
+    background: rgba(255, 255, 255, 0.2);
     border: none;
+    padding: 10px 20px;
     border-radius: 25px;
+    color: #ffffff;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 111, 97, 0.3);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 111, 97, 0.5);
-}
-
-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 10px rgba(255, 111, 97, 0.2);
-}
-
-/* Поля ввода */
-input[type="text"],
-input[type="password"] {
-    width: 100%;
-    max-width: 300px;
-    padding: 10px;
-    margin: 10px 0;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #FFFFFF;
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    transition: background 0.3s ease;
 }
 
-input[type="text"]::placeholder,
-input[type="password"]::placeholder {
-    color: #D1D1D1;
+.lang-switch button:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus {
-    border-color: #FF6F61;
-    outline: none;
-}
-
-/* Контейнер меню */
 .menu {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 30px;
-    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 800px;
     width: 100%;
-    text-align: center;
-    animation: fadeInUp 1s ease-in-out;
 }
 
-/* Карточки */
 .subject-cards {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-    margin-bottom: 20px;
 }
 
-.card {
+.subject-card-button {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     padding: 20px;
@@ -123,108 +73,115 @@ input[type="password"]:focus {
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: none;
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
-.card:hover {
+.subject-card-button:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(255, 111, 97, 0.3);
 }
 
-.card h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #FFFFFF;
+.subject-card-button h3 {
+    margin: 0;
 }
 
-/* Тест */
+button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
 #timer, #question-counter {
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-    color: #D1D1D1;
+    font-size: 1.2rem;
+    margin: 10px 0;
 }
 
 #questions {
     font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: #FFFFFF;
+    margin: 20px 0;
+}
+
+#answers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 #answers label {
-    display: block;
-    font-size: 1rem;
-    margin: 10px 0;
-    color: #D1D1D1;
-    cursor: pointer;
-    transition: color 0.3s ease;
+    font-size: 1.1rem;
 }
 
-#answers label:hover {
-    color: #FFD700;
-}
-
-#answers input[type="radio"] {
-    margin-right: 10px;
-    accent-color: #FF6F61;
-}
-
-/* Результаты */
-#results-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-    background: linear-gradient(90deg, #FF6F61, #FFD700);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-#results-details {
-    font-size: 1.2rem;
-    color: #D1D1D1;
-    margin-bottom: 20px;
-}
-
-/* Анимации */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Адаптивность */
 @media (max-width: 600px) {
     header h1 {
         font-size: 2rem;
     }
 
-    .menu {
-        padding: 20px;
-    }
-
-    .card {
+    .subject-card-button {
         width: 100%;
         max-width: 300px;
     }
 
-    button {
-        padding: 10px 20px;
+    .lang-switch button, button {
+        padding: 8px 16px;
         font-size: 0.9rem;
     }
+}
 
-    #questions {
-        font-size: 1.2rem;
-    }
+.main-container {
+    display: flex;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
 
-    #answers label {
-        font-size: 0.9rem;
-    }
+.header {
+    flex: 0 0 auto;
+    padding: 20px;
+    text-align: center;
+}
 
-    input[type="text"],
-    input[type="password"] {
-        max-width: 100%;
-    }
+.sidebar {
+    flex: 0 0 200px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    color: #ffffff;
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.sidebar li:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    color: #ffffff;
+}
+
+#course-details {
+    margin-top: 20px;
 }
