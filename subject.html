@@ -1,42 +1,49 @@
 <!DOCTYPE html>
 <html lang="ky">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-ky="Бөлүктү тандаңыз" data-lang-ru="Выберите часть">Бөлүктү тандаңыз</title>
-    <link rel="stylesheet" href="styles.css">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title data-lang-ky="Предметти тандоо" data-lang-ru="Выбор предмета">Предметти тандоо</title>
+ <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="main-container">
-        <header class="header">
-            <h1 data-lang-ky="ОРТ Пробалык Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробалык Тест</h1>
-            <div class="lang-switch">
-                <button onclick="switchLanguage('ky')">Кыргызча</button>
-                <button onclick="switchLanguage('ru')">Русский</button>
-            </div>
-        </header>
-        <nav class="sidebar">
-            <h2 data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</h2>
-            <ul>
-                <li onclick="window.location.href='index.html'" data-lang-ky="Артка" data-lang-ru="Назад">Артка</li>
-            </ul>
-        </nav>
-        <div class="content">
-            <h2 data-lang-ky="Бөлүктү тандаңыз" data-lang-ru="Выберите часть">Бөлүктү тандаңыз</h2>
-            <div class="parts">
-                <button onclick="selectPart(1)" data-lang-ky="1-бөлүк (Жеңил)" data-lang-ru="1-я часть (Лёгкая)">1-бөлүк (Жеңил)</button>
-                <button onclick="selectPart(2)" data-lang-ky="2-бөлүк (Татаал)" data-lang-ru="2-я часть (Сложная)">2-бөлүк (Татаал)</button>
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
-    <script>
-        window.onload = function() {
-            updateTexts();
-            if (!currentUser) {
-                window.location.href = 'index.html';
-            }
-        };
-    </script>
+ <header>
+ <h1 data-lang-ky="Предметти тандоо" data-lang-ru="Выбор предмета">Предметти тандоо</h1>
+ <div class="lang-switch">
+ <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский">Кыргызча</button>
+ <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский">Орусча</button>
+ </div>
+ </header>
+
+ <div class="menu">
+ <h2 id="subject-title" data-lang-ky="Предмет: " data-lang-ru="Предмет: ">Предмет: </h2>
+ <div class="subject-cards">
+ <div class="card" onclick="selectPart(1)">
+ <h3 data-lang-ky="1-бөлүк (Жеңил)" data-lang-ru="Часть 1 (Лёгкая)">1-бөлүк (Жеңил)</h3>
+ </div>
+ <div class="card" onclick="selectPart(2)">
+ <h3 data-lang-ky="2-бөлүк (Кыйын)" data-lang-ru="Часть 2 (Сложная)">2-бөлүк (Кыйын)</h3>
+ </div>
+ </div>
+ <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную">Башкы бетке кайтуу</button>
+ </div>
+
+ <script src="script.js"></script>
+ <script>
+ window.onload = function() {
+ const currentSubject = localStorage.getItem('subject');
+ console.log('Current subject on subject.html:', currentSubject); // Отладочный лог
+ if (!currentSubject) {
+ window.location.href = 'index.html';
+ } else {
+ const subjectTitle = document.getElementById('subject-title');
+ const subjectName = currentSubject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') :
+ currentSubject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз тили' : 'Кыргызский язык') :
+ currentSubject === 'manas' ? (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение') : '';
+ subjectTitle.textContent = (currentLang === 'ky' ? 'Предмет: ' : 'Предмет: ') + subjectName;
+ }
+ updateTexts();
+ };
+ </script>
 </body>
 </html>

@@ -1,134 +1,55 @@
 <!DOCTYPE html>
 <html lang="ky">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-ky="ОРТ Пробалык Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробалык Тест</title>
-    <link rel="stylesheet" href="styles.css">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title data-lang-ky="ОРТ Пробный Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробный Тест</title>
+ <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="auth-container" id="auth-container">
-        <h2 data-lang-ky="Системага кирүү же катталуу" data-lang-ru="Вход или регистрация">Системага кирүү же катталуу</h2>
-        <div class="auth-form">
-            <input type="text" id="username" placeholder="Логин">
-            <input type="password" id="password" placeholder="Сырсөз">
-            <button onclick="register()" data-lang-ky="Катталуу" data-lang-ru="Регистрация">Катталуу</button>
-            <button onclick="login()" data-lang-ky="Кирүү" data-lang-ru="Войти">Кирүү</button>
-        </div>
-    </div>
-    <div class="main-container" id="main-container" style="display: none;">
-        <header class="header">
-            <h1 data-lang-ky="ОРТ Пробалык Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробалык Тест</h1>
-            <div class="lang-switch">
-                <button onclick="switchLanguage('ky')">Кыргызча</button>
-                <button onclick="switchLanguage('ru')">Русский</button>
-            </div>
-        </header>
-        <nav class="sidebar">
-            <h2 data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</h2>
-            <ul>
-                <li onclick="showSection('tests')" data-lang-ky="Тесттер" data-lang-ru="Тесты">Тесттер</li>
-                <li onclick="showSection('courses')" data-lang-ky="Курстар" data-lang-ru="Курсы">Курстар</li>
-                <li onclick="showSection('qa')" data-lang-ky="Жалпы суроолор жана жооптор" data-lang-ru="Общие вопросы и ответы">Жалпы суроолор жана жооптор</li>
-                <li onclick="showSection('feedback')" data-lang-ky="Кайтарым байланыш" data-lang-ru="Обратная связь">Кайтарым байланыш</li>
-                <li onclick="showSection('results')" data-lang-ky="Тестирлөөлөрдүн жыйынтыктары" data-lang-ru="Результаты тестов">Тестирлөөлөрдүн жыйынтыктары</li>
-                <li onclick="showSection('continue')" data-lang-ky="Курстарды/урокторду улантуу" data-lang-ru="Продолжить курсы/уроки">Курстарды/урокторду улантуу</li>
-                <li onclick="logout()" data-lang-ky="Чыгуу" data-lang-ru="Выход">Чыгуу</li>
-            </ul>
-        </nav>
-        <div class="content">
-            <div id="tests-section" class="section">
-                <div class="section-header">
-                    <h2 data-lang-ky="Тесттер" data-lang-ru="Тесты">Тесттер</h2>
-                    <div class="filters">
-                        <div class="filter-group">
-                            <label data-lang-ky="ОРТ Пробалык:" data-lang-ru="ОРТ Пробный:">ОРТ Пробалык:</label>
-                            <select onchange="quickSelectSubject(this.value)">
-                                <option value="" data-lang-ky="Предметти тандаңыз" data-lang-ru="Выберите предмет">Предметти тандаңыз</option>
-                                <option value="math" data-lang-ky="Математика" data-lang-ru="Математика">Математика</option>
-                                <option value="kyrgyz" data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</option>
-                                <option value="manas" data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label data-lang-ky="ОРТ Сессиялык:" data-lang-ru="ОРТ Сессионный:">ОРТ Сессиялык:</label>
-                            <select onchange="quickSelectSubject(this.value, 'ort_session')">
-                                <option value="" data-lang-ky="Предметти тандаңыз" data-lang-ru="Выберите предмет">Предметти тандаңыз</option>
-                                <option value="math" data-lang-ky="Математика" data-lang-ru="Математика">Математика</option>
-                                <option value="kyrgyz" data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</option>
-                                <option value="manas" data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <p data-lang-ky="Жогорудагы тизмелерден предметти тандап, тестти баштаңыз." data-lang-ru="Выберите предмет из списков выше, чтобы начать тест.">
-                    Жогорудагы тизмелерден предметти тандап, тестти баштаңыз.
-                </p>
-            </div>
-            <div id="courses-section" class="section" style="display: none;">
-                <div class="section-header">
-                    <h2 data-lang-ky="Курстар" data-lang-ru="Курсы">Курстар</h2>
-                    <div class="filters">
-                        <div class="filter-group">
-                            <label data-lang-ky="Предмет:" data-lang-ru="Предмет:">Предмет:</label>
-                            <select onchange="quickSelectCourse(this.value)">
-                                <option value="" data-lang-ky="Предметти тандаңыз" data-lang-ru="Выберите предмет">Предметти тандаңыз</option>
-                                <option value="math" data-lang-ky="Математика" data-lang-ru="Математика">Математика</option>
-                                <option value="kyrgyz" data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</option>
-                                <option value="manas" data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <p data-lang-ky="Жогорудагы тизмеден предметти тандап, курсту баштаңыз." data-lang-ru="Выберите предмет из списка выше, чтобы начать курс.">
-                    Жогорудагы тизмеден предметти тандап, курсту баштаңыз.
-                </p>
-            </div>
-            <div id="qa-section" class="section" style="display: none;">
-                <h2 data-lang-ky="Жалпы суроолор жана жооптор" data-lang-ru="Общие вопросы и ответы">Жалпы суроолор жана жооптор</h2>
-                <p data-lang-ky="Бул жерде жалпы суроолор жана жооптор болот." data-lang-ru="Здесь будут общие вопросы и ответы.">
-                    Бул жерде жалпы суроолор жана жооптор болот.
-                </p>
-            </div>
-            <div id="feedback-section" class="section" style="display: none;">
-                <h2 data-lang-ky="Кайтарым байланыш / Көп берилүүчү суроолор" data-lang-ru="Обратная связь / Часто задаваемые вопросы">
-                    Кайтарым байланыш / Көп берилүүчү суроолор
-                </h2>
-                <textarea placeholder="Сиздин сурооңуз же пикириңиз" data-lang-ky="Сиздин сурооңуз же пикириңиз" data-lang-ru="Ваш вопрос или отзыв"></textarea>
-                <button onclick="alert(currentLang === 'ky' ? 'Пикириңиз кабыл алынды!' : 'Ваш отзыв принят!')" data-lang-ky="Жөнөтүү" data-lang-ru="Отправить">Жөнөтүү</button>
-            </div>
-            <div id="results-section" class="section" style="display: none;">
-                <div class="section-header">
-                    <h2 data-lang-ky="Тестирлөөлөрдүн жыйынтыктары" data-lang-ru="Результаты тестов">Тестирлөөлөрдүн жыйынтыктары</h2>
-                    <div class="filters">
-                        <div class="filter-group">
-                            <label data-lang-ky="Предмет:" data-lang-ru="Предмет:">Предмет:</label>
-                            <select onchange="showResults(this.value)">
-                                <option value="" data-lang-ky="Предметти тандаңыз" data-lang-ru="Выберите предмет">Предметти тандаңыз</option>
-                                <option value="math" data-lang-ky="Математика" data-lang-ru="Математика">Математика</option>
-                                <option value="kyrgyz" data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</option>
-                                <option value="manas" data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div id="results-content"></div>
-            </div>
-            <div id="continue-section" class="section" style="display: none;">
-                <h2 data-lang-ky="Курстарды/урокторду улантуу" data-lang-ru="Продолжить курсы/уроки">Курстарды/урокторду улантуу</h2>
-                <div id="continue-content"></div>
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
-    <script>
-        window.onload = function() {
-            updateTexts();
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser && users[savedUser]) {
-                loginUser(savedUser);
-            }
-        };
-    </script>
+ <header>
+ <h1 data-lang-ky="ОРТ Пробный Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробный Тест</h1>
+ <div class="lang-switch">
+ <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский">Кыргызча</button>
+ <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский">Орусча</button>
+ </div>
+ </header>
+
+ <div id="auth-container">
+ <h2 data-lang-ky="Катталуу же Кирүү" data-lang-ru="Регистрация или Вход">Катталуу же Кирүү</h2>
+ <input type="text" id="username" placeholder="Логин" data-lang-ky="Логин" data-lang-ru="Логин">
+ <input type="password" id="password" placeholder="Сырсөз" data-lang-ky="Сырсөз" data-lang-ru="Пароль">
+ <button onclick="register()" data-lang-ky="Катталуу" data-lang-ru="Зарегистрироваться">Катталуу</button>
+ <button onclick="login()" data-lang-ky="Кирүү" data-lang-ru="Войти">Кирүү</button>
+ </div>
+
+ <div id="main-container" style="display: none;">
+ <div class="menu">
+ <h2 data-lang-ky="Тестти тандоо" data-lang-ru="Выберите тест">Тестти тандоо</h2>
+ <div class="subject-cards">
+ <div class="card" onclick="quickSelectSubject('math')">
+ <h3 data-lang-ky="Математика" data-lang-ru="Математика">Математика</h3>
+ </div>
+ <div class="card" onclick="quickSelectSubject('kyrgyz')">
+ <h3 data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</h3>
+ </div>
+ <div class="card" onclick="quickSelectSubject('manas')">
+ <h3 data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</h3>
+ </div>
+ </div>
+ <button onclick="logout()" data-lang-ky="Чыгуу" data-lang-ru="Выйти">Чыгуу</button>
+ </div>
+ </div>
+
+ <script src="script.js"></script>
+ <script>
+ window.onload = function() {
+ const currentUser = localStorage.getItem('currentUser');
+ if (currentUser) {
+ loginUser(currentUser);
+ }
+ updateTexts();
+ };
+ </script>
 </body>
 </html>

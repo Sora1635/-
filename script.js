@@ -101,7 +101,7 @@ function loginUser(username) {
     localStorage.setItem('currentUser', username);
     loadUserData(username);
     document.getElementById('auth-container').style.display = 'none';
-    document.getElementById('main-container').style.display = 'flex';
+    document.getElementById('main-container').style.display = 'block';
     updateTexts();
 }
 
@@ -320,43 +320,91 @@ const questions = {
 
 // Быстрый выбор предмета для теста
 function quickSelectSubject(subject, type = 'ort_prob') {
-    if (subject) {
-        testType = type;
-        selectSubject(subject);
+    if (!subject) {
+        console.error('Subject is not provided!');
+        alert(currentLang === 'ky' ? 'Предмет тандалган жок!' : 'Предмет не выбран!');
+        return;
     }
+    console.log('Quick selecting subject:', subject, 'type:', type);
+    testType = type;
+    selectSubject(subject);
 }
 
 // Предметти тандоо
 function selectSubject(subject) {
+    if (!subject) {
+        console.error('Subject is not defined in selectSubject!');
+        alert(currentLang === 'ky' ? 'Предмет тандалган жок!' : 'Предмет не выбран!');
+        return;
+    }
+    console.log('Selecting subject:', subject);
     currentSubject = subject;
     localStorage.setItem('subject', subject);
-    window.location.href = 'subject.html';
+    try {
+        window.location.href = 'subject.html';
+    } catch (error) {
+        console.error('Navigation to subject.html failed:', error);
+        alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
+    }
 }
 
 // Бөлүктү тандоо
 function selectPart(part) {
+    if (!part) {
+        console.error('Part is not defined in selectPart!');
+        alert(currentLang === 'ky' ? 'Бөлүк тандалган жок!' : 'Часть не выбрана!');
+        return;
+    }
+    console.log('Selecting part:', part);
     currentPart = part;
     localStorage.setItem('part', part);
-    window.location.href = 'part-details.html';
+    try {
+        window.location.href = 'part-details.html';
+    } catch (error) {
+        console.error('Navigation to part-details.html failed:', error);
+        alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
+    }
 }
 
 // Бөлүк жөнүндө маалыматты жаңылоо
 function updatePartDetails() {
     const time = currentPart == 1 ? 30 : 60;
-    document.getElementById('part-description').textContent = currentLang === 'ky' 
-        ? `Суроолордун саны: 30, Убакыт: ${time} мүнөт` 
-        : `Количество вопросов: 30, Время: ${time} минут`;
+    const descriptionElement = document.getElementById('part-description');
+    if (descriptionElement) {
+        descriptionElement.textContent = currentLang === 'ky' 
+            ? `Суроолордун саны: 30, Убакыт: ${time} мүнөт` 
+            : `Количество вопросов: 30, Время: ${time} минут`;
+    } else {
+        console.warn('Element with id "part-description" not found.');
+    }
 }
 
 // Тестти баштоо
 function startTest() {
-    window.location.href = 'test.html';
+    if (!currentSubject || !currentPart) {
+        console.error('Subject or part not set! Subject:', currentSubject, 'Part:', currentPart);
+        alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
+        return;
+    }
+    console.log('Starting test for subject:', currentSubject, 'part:', currentPart);
+    try {
+        window.location.href = 'test.html';
+    } catch (error) {
+        console.error('Navigation to test.html failed:', error);
+        alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
+    }
 }
 
 // Тестти жүктөө
 function loadTest() {
     const key = `${currentSubject}_part${currentPart}`;
-    if (!questions[key] || questions[key].length !== 30) {
+    if (!questions[key]) {
+        console.error('Questions not found for key:', key);
+        alert(currentLang === 'ky' ? 'Суроолор табылган жок!' : 'Вопросы не найдены!');
+        return;
+    }
+    if (questions[key].length !== 30) {
+        console.warn('Number of questions is not 30 for key:', key, 'Found:', questions[key].length);
         alert(currentLang === 'ky' ? "Суроолор толук эмес! 30 суроо болушу керек." : "Вопросы неполные! Должно быть 30 вопросов.");
         return;
     }
@@ -371,6 +419,11 @@ function displayQuestion() {
     const questionsDiv = document.getElementById('questions');
     const answersDiv = document.getElementById('answers');
     const questionCounter = document.getElementById('question-counter');
+
+    if (!questionsDiv || !answersDiv || !questionCounter) {
+        console.error('Required DOM elements not found: questionsDiv, answersDiv, or questionCounter');
+        return;
+    }
 
     const q = currentTest[currentQuestionIndex];
     questionsDiv.innerHTML = `
@@ -421,6 +474,10 @@ function startTimer() {
     const timeLimit = currentPart == 1 ? 30 * 60 : 60 * 60;
     let timeLeft = timeLimit;
     const timerDiv = document.getElementById('timer');
+    if (!timerDiv) {
+        console.error('Timer element not found!');
+        return;
+    }
     timerInterval = setInterval(() => {
         const mins = Math.floor(timeLeft / 60);
         const secs = timeLeft % 60;
@@ -459,28 +516,50 @@ function submitTest() {
         saveUserData(currentUser);
     }
 
-    window.location.href = 'results.html';
+    try {
+        window.location.href = 'results.html';
+    } catch (error) {
+        console.error('Navigation to results.html failed:', error);
+        alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
+    }
 }
 
 // Башкы бетке кайтуу
 function backToMain() {
+    console.log('Returning to main page');
     localStorage.removeItem('subject');
     localStorage.removeItem('part');
-    window.location.href = 'index.html';
+    try {
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Navigation to index.html failed:', error);
+        alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
+    }
 }
 
 // Курстар
 function quickSelectCourse(subject) {
-    if (subject) {
-        localStorage.setItem('courseSubject', subject);
+    if (!subject) {
+        console.error('Course subject not provided!');
+        return;
+    }
+    localStorage.setItem('courseSubject', subject);
+    try {
         window.location.href = 'courses.html';
+    } catch (error) {
+        console.error('Navigation to courses.html failed:', error);
+        alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
     }
 }
 
 function startCourseLesson() {
     const subject = localStorage.getItem('courseSubject');
+    if (!subject) {
+        console.error('Course subject not found in localStorage!');
+        return;
+    }
     if (currentUser) {
-        userData.courseProgress[subject] = { progress: 50, lastLesson: currentLang === 'ky' ? 'Тема 1' : 'Тема 1' }; // Пример прогресса
+        userData.courseProgress[subject] = { progress: 50, lastLesson: currentLang === 'ky' ? 'Тема 1' : 'Тема 1' };
         saveUserData(currentUser);
     }
     alert(currentLang === 'ky' ? 'Урок башталды!' : 'Урок начат!');
@@ -489,6 +568,10 @@ function startCourseLesson() {
 // Показ результатов
 function showResults(subject) {
     const resultsDiv = document.getElementById('results-content');
+    if (!resultsDiv) {
+        console.error('Results content element not found!');
+        return;
+    }
     if (!subject) {
         resultsDiv.innerHTML = '';
         return;
@@ -508,6 +591,10 @@ function showResults(subject) {
 // Продолжение курсов
 function showContinueContent() {
     const continueDiv = document.getElementById('continue-content');
+    if (!continueDiv) {
+        console.error('Continue content element not found!');
+        return;
+    }
     if (userData && userData.courseProgress) {
         let html = '';
         for (let subject in userData.courseProgress) {
