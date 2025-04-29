@@ -17,14 +17,7 @@
     </header>
 
     <div class="menu">
-        <div id="auth-section">
-            <h2 data-lang-ky="Кирүү же Катталуу" data-lang-ru="Вход или Регистрация">Кирүү же Катталуу</h2>
-            <input type="text" id="username" data-lang-ky="Колдонуучунун аты" data-lang-ru="Имя пользователя" placeholder="Колдонуучунун аты">
-            <input type="password" id="password" data-lang-ky="Сырсөз" data-lang-ru="Пароль" placeholder="Сырсөз">
-            <button onclick="login()" data-lang-ky="Кирүү" data-lang-ru="Войти"><i class="fas fa-sign-in-alt"></i> Кирүү</button>
-            <button onclick="register()" data-lang-ky="Катталуу" data-lang-ru="Зарегистрироваться"><i class="fas fa-user-plus"></i> Катталуу</button>
-        </div>
-        <div id="subject-selection" style="display: none;">
+        <div id="subject-selection">
             <div class="subject-cards">
                 <div class="card" onclick="selectSubject('math')">
                     <h3 data-lang-ky="Математика" data-lang-ru="Математика">Математика</h3>
@@ -36,7 +29,6 @@
                     <h3 data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</h3>
                 </div>
             </div>
-            <button onclick="logout()" data-lang-ky="Чыгуу" data-lang-ru="Выйти"><i class="fas fa-sign-out-alt"></i> Чыгуу</button>
         </div>
     </div>
 
@@ -45,12 +37,6 @@
         window.onload = function() {
             if (typeof currentLang === 'undefined') {
                 currentLang = localStorage.getItem('lang') || 'ky';
-            }
-            updateUserData();
-            console.log('Current user on page load:', currentUser);
-            if (currentUser) {
-                document.getElementById('auth-section').style.display = 'none';
-                document.getElementById('subject-selection').style.display = 'block';
             }
             updateTexts();
         };

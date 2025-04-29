@@ -1,7 +1,5 @@
 let currentLang = localStorage.getItem('lang') || 'ky';
 let currentSubject, currentPart, currentTest, currentQuestionIndex, userAnswers, timerInterval, timeLeft;
-let currentUser = localStorage.getItem('currentUser');
-let userData = JSON.parse(localStorage.getItem('userData')) || { testResults: {}, knowledgeAreas: {} };
 let testType = 'subject';
 
 const questions = {
@@ -89,9 +87,7 @@ function updateTexts() {
 
     document.querySelectorAll('[data-lang-ky][data-lang-ru]').forEach(el => {
         const text = currentLang === 'ky' ? el.getAttribute('data-lang-ky') : el.getAttribute('data-lang-ru');
-        // Проверяем, есть ли дочерние элементы (например, иконки)
         if (el.children.length > 0) {
-            // Сохраняем иконки и добавляем текст
             const icon = el.querySelector('i');
             if (icon) {
                 el.innerHTML = '';
@@ -260,7 +256,7 @@ function displayQuestion() {
 
 function prevQuestion() {
     if (currentQuestionIndex > 0) {
-        currentQuestion instagramIndex--;
+        currentQuestionIndex--;
         displayQuestion();
     }
 }
@@ -304,17 +300,6 @@ function submitTest() {
     localStorage.setItem('percentage', percentage);
     localStorage.setItem('knowledge', knowledge);
 
-    console.log('Saved to localStorage - score:', localStorage.getItem('score'), 
-                'percentage:', localStorage.getItem('percentage'), 
-                'knowledge:', localStorage.getItem('knowledge'));
-
-    if (currentUser) {
-        const testKey = `${testType}_${currentSubject}_part${currentPart}`;
-        userData.testResults[testKey] = { score, percentage, knowledge, date: new Date().toLocaleString() };
-        userData.knowledgeAreas[currentSubject] = knowledge;
-        saveUserData(currentUser);
-    }
-
     try {
         window.location.href = 'results.html';
     } catch (error) {
@@ -331,75 +316,4 @@ function backToMain() {
         console.error('Navigation to index.html failed:', error);
         alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
     }
-}
-
-function saveUserData(username) {
-    let users = JSON.parse(localStorage.getItem('users')) || {};
-    users[username] = userData;
-    localStorage.setItem('users', JSON.stringify(users));
-    localStorage.setItem('userData', JSON.stringify(userData));
-}
-
-function login() {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
-
-    if (!username || !password) {
-        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз бош болбошу керек!' : 'Имя пользователя или пароль не должны быть пустыми!');
-        return;
-    }
-
-    let users = JSON.parse(localStorage.getItem('users')) || {};
-    if (users[username] && users[username].password === password) {
-        currentUser = username;
-        userData = users[username];
-        localStorage.setItem('currentUser', currentUser);
-        localStorage.setItem('userData', JSON.stringify(userData));
-        document.getElementById('auth-section').style.display = 'none';
-        document.getElementById('subject-selection').style.display = 'block';
-        console.log('User logged in:', currentUser);
-    } else {
-        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз туура эмес!' : 'Неверное имя пользователя или пароль!');
-    }
-}
-
-function register() {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
-
-    if (!username || !password) {
-        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз бош болбошу керек!' : 'Имя пользователя или пароль не должны быть пустыми!');
-        return;
-    }
-
-    let users = JSON.parse(localStorage.getItem('users')) || {};
-    if (users[username]) {
-        alert(currentLang === 'ky' ? 'Бул колдонуучунун аты мурунтан эле бар!' : 'Это имя пользователя уже занято!');
-        return;
-    }
-
-    users[username] = { password, testResults: {}, knowledgeAreas: {} };
-    localStorage.setItem('users', JSON.stringify(users));
-    currentUser = username;
-    userData = users[username];
-    localStorage.setItem('currentUser', currentUser);
-    localStorage.setItem('userData', JSON.stringify(userData));
-    document.getElementById('auth-section').style.display = 'none';
-    document.getElementById('subject-selection').style.display = 'block';
-    console.log('User registered and logged in:', currentUser);
-}
-
-function logout() {
-    currentUser = null;
-    userData = { testResults: {}, knowledgeAreas: {} };
-    localStorage.removeItem('currentUser');
-    localStorage.setItem('userData', JSON.stringify(userData));
-    document.getElementById('auth-section').style.display = 'block';
-    document.getElementById('subject-selection').style.display = 'none';
-    console.log('User logged out');
-}
-
-function updateUserData() {
-    currentUser = localStorage.getItem('currentUser');
-    userData = JSON.parse(localStorage.getItem('userData')) || { testResults: {}, knowledgeAreas: {} };
 }
