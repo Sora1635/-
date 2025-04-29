@@ -4,40 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-ky="Жыйынтыктар" data-lang-ru="Результаты">Жыйынтыктар</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1 data-lang-ky="Жыйынтыктар" data-lang-ru="Результаты">Жыйынтыктар</h1>
         <div class="lang-switch">
-            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский">Кыргызча</button>
-            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский">Орусча</button>
+            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
+            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
         </div>
     </header>
 
     <div class="menu">
         <h2 id="results-title"></h2>
         <p id="results-details"></p>
-        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную">Башкы бетке кайтуу</button>
+        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
     </div>
 
     <script src="script.js"></script>
     <script>
         window.onload = function() {
-            // Убедимся, что currentLang определён
             if (typeof currentLang === 'undefined') {
                 currentLang = localStorage.getItem('lang') || 'ky';
                 console.log('currentLang was undefined, set to:', currentLang);
             }
 
-            // Получаем данные из localStorage
             const score = localStorage.getItem('score');
             const percentage = localStorage.getItem('percentage');
             const knowledge = localStorage.getItem('knowledge');
 
             console.log('Results data - score:', score, 'percentage:', percentage, 'knowledge:', knowledge);
 
-            // Проверяем наличие данных
             if (!score || !percentage || !knowledge) {
                 console.error('Results data not found in localStorage!');
                 alert(currentLang === 'ky' 
@@ -47,7 +45,6 @@
                 return;
             }
 
-            // Отображаем результаты
             const resultsTitle = document.getElementById('results-title');
             const resultsDetails = document.getElementById('results-details');
 
@@ -62,7 +59,6 @@
                 console.error('Results elements not found on the page!');
             }
 
-            // Обновляем тексты
             try {
                 updateTexts();
             } catch (error) {

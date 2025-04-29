@@ -4,27 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-ky="Бөлүк жөнүндө маалымат" data-lang-ru="Информация о части">Бөлүк жөнүндө маалымат</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1 data-lang-ky="Бөлүк жөнүндө маалымат" data-lang-ru="Информация о части">Бөлүк жөнүндө маалымат</h1>
         <div class="lang-switch">
-            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский">Кыргызча</button>
-            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский">Орусча</button>
+            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
+            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
         </div>
     </header>
 
     <div class="menu">
         <h2 id="part-description"></h2>
-        <button onclick="startTest()" data-lang-ky="Тестти баштоо" data-lang-ru="Начать тест">Тестти баштоо</button>
-        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную">Башкы бетке кайтуу</button>
+        <button onclick="startTest()" data-lang-ky="Тестти баштоо" data-lang-ru="Начать тест"><i class="fas fa-play"></i> Тестти баштоо</button>
+        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
     </div>
 
     <script src="script.js"></script>
     <script>
         window.onload = function() {
-            // Убедимся, что currentLang определён
             if (typeof currentLang === 'undefined') {
                 currentLang = localStorage.getItem('lang') || 'ky';
             }

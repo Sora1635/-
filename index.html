@@ -1,55 +1,59 @@
 <!DOCTYPE html>
 <html lang="ky">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title data-lang-ky="ОРТ Пробный Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробный Тест</title>
- <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-ky="Предметти тандоо" data-lang-ru="Выбор предмета">Предметти тандоо</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
- <header>
- <h1 data-lang-ky="ОРТ Пробный Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробный Тест</h1>
- <div class="lang-switch">
- <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский">Кыргызча</button>
- <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский">Орусча</button>
- </div>
- </header>
+    <header>
+        <h1 data-lang-ky="Предметти тандоо" data-lang-ru="Выбор предмета">Предметти тандоо</h1>
+        <div class="lang-switch">
+            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
+            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
+        </div>
+    </header>
 
- <div id="auth-container">
- <h2 data-lang-ky="Катталуу же Кирүү" data-lang-ru="Регистрация или Вход">Катталуу же Кирүү</h2>
- <input type="text" id="username" placeholder="Логин" data-lang-ky="Логин" data-lang-ru="Логин">
- <input type="password" id="password" placeholder="Сырсөз" data-lang-ky="Сырсөз" data-lang-ru="Пароль">
- <button onclick="register()" data-lang-ky="Катталуу" data-lang-ru="Зарегистрироваться">Катталуу</button>
- <button onclick="login()" data-lang-ky="Кирүү" data-lang-ru="Войти">Кирүү</button>
- </div>
+    <div class="menu">
+        <div id="auth-section">
+            <h2 data-lang-ky="Кирүү же Катталуу" data-lang-ru="Вход или Регистрация">Кирүү же Катталуу</h2>
+            <input type="text" id="username" placeholder="Колдонуучунун аты" data-lang-ky="Колдонуучунун аты" data-lang-ru="Имя пользователя">
+            <input type="password" id="password" placeholder="Сырсөз" data-lang-ky="Сырсөз" data-lang-ru="Пароль">
+            <button onclick="login()" data-lang-ky="Кирүү" data-lang-ru="Войти"><i class="fas fa-sign-in-alt"></i> Кирүү</button>
+            <button onclick="register()" data-lang-ky="Катталуу" data-lang-ru="Зарегистрироваться"><i class="fas fa-user-plus"></i> Катталуу</button>
+        </div>
+        <div id="subject-selection" style="display: none;">
+            <div class="subject-cards">
+                <div class="card" onclick="selectSubject('math')">
+                    <h3 data-lang-ky="Математика" data-lang-ru="Математика">Математика</h3>
+                </div>
+                <div class="card" onclick="selectSubject('kyrgyz')">
+                    <h3 data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</h3>
+                </div>
+                <div class="card" onclick="selectSubject('manas')">
+                    <h3 data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</h3>
+                </div>
+            </div>
+            <button onclick="logout()" data-lang-ky="Чыгуу" data-lang-ru="Выйти"><i class="fas fa-sign-out-alt"></i> Чыгуу</button>
+        </div>
+    </div>
 
- <div id="main-container" style="display: none;">
- <div class="menu">
- <h2 data-lang-ky="Тестти тандоо" data-lang-ru="Выберите тест">Тестти тандоо</h2>
- <div class="subject-cards">
- <div class="card" onclick="quickSelectSubject('math')">
- <h3 data-lang-ky="Математика" data-lang-ru="Математика">Математика</h3>
- </div>
- <div class="card" onclick="quickSelectSubject('kyrgyz')">
- <h3 data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</h3>
- </div>
- <div class="card" onclick="quickSelectSubject('manas')">
- <h3 data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</h3>
- </div>
- </div>
- <button onclick="logout()" data-lang-ky="Чыгуу" data-lang-ru="Выйти">Чыгуу</button>
- </div>
- </div>
-
- <script src="script.js"></script>
- <script>
- window.onload = function() {
- const currentUser = localStorage.getItem('currentUser');
- if (currentUser) {
- loginUser(currentUser);
- }
- updateTexts();
- };
- </script>
+    <script src="script.js"></script>
+    <script>
+        window.onload = function() {
+            if (typeof currentLang === 'undefined') {
+                currentLang = localStorage.getItem('lang') || 'ky';
+            }
+            updateUserData();
+            console.log('Current user on page load:', currentUser);
+            if (currentUser) {
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById('subject-selection').style.display = 'block';
+            }
+            updateTexts();
+        };
+    </script>
 </body>
 </html>

@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-ky="Тест" data-lang-ru="Тест">Тест</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1 data-lang-ky="Тест" data-lang-ru="Тест">Тест</h1>
         <div class="lang-switch">
-            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский">Кыргызча</button>
-            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский">Орусча</button>
+            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
+            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
         </div>
     </header>
 
@@ -20,28 +21,25 @@
         <div id="question-counter">1/30</div>
         <div id="questions"></div>
         <div id="answers"></div>
-        <button onclick="prevQuestion()" data-lang-ky="Мурунку" data-lang-ru="Предыдущий">Мурунку</button>
-        <button onclick="nextQuestion()" data-lang-ky="Кийинки" data-lang-ru="Следующий">Кийинки</button>
-        <button onclick="submitTest()" data-lang-ky="Тапшыруу" data-lang-ru="Сдать">Тапшыруу</button>
-        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную">Башкы бетке кайтуу</button>
+        <button onclick="prevQuestion()" data-lang-ky="Мурунку" data-lang-ru="Предыдущий"><i class="fas fa-chevron-left"></i> Мурунку</button>
+        <button onclick="nextQuestion()" data-lang-ky="Кийинки" data-lang-ru="Следующий"><i class="fas fa-chevron-right"></i> Кийинки</button>
+        <button onclick="submitTest()" data-lang-ky="Тапшыруу" data-lang-ru="Сдать"><i class="fas fa-check"></i> Тапшыруу</button>
+        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
     </div>
 
     <script src="script.js"></script>
     <script>
         window.onload = function() {
-            // Убедимся, что currentLang определён
             if (typeof currentLang === 'undefined') {
                 currentLang = localStorage.getItem('lang') || 'ky';
             }
 
-            // Получаем subject и part из localStorage
             const currentSubject = localStorage.getItem('subject');
             const currentPart = localStorage.getItem('part');
 
             console.log('Current subject on test.html:', currentSubject);
             console.log('Current part on test.html:', currentPart);
 
-            // Проверяем, есть ли subject и part
             if (!currentSubject || !currentPart) {
                 console.warn('Subject or part not selected, redirecting to index.html');
                 alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок! Башкы бетке кайтыңыз.' : 'Предмет или часть не выбраны! Вернитесь на главную страницу.');
@@ -49,11 +47,9 @@
                 return;
             }
 
-            // Присваиваем значения глобальным переменным
             window.currentSubject = currentSubject;
             window.currentPart = currentPart;
 
-            // Загружаем тест и запускаем таймер
             try {
                 loadTest();
                 startTimer();
