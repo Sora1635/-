@@ -3,26 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Курстар</title>
+    <title data-lang-ky="Курстар" data-lang-ru="Курсы">Курстар</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="main-container">
+        <header class="header">
+            <h1 data-lang-ky="ОРТ Пробалык Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробалык Тест</h1>
+            <div class="lang-switch">
+                <button onclick="switchLanguage('ky')">Кыргызча</button>
+                <button onclick="switchLanguage('ru')">Русский</button>
+            </div>
+        </header>
         <nav class="sidebar">
-            <h2>Башкы меню</h2>
+            <h2 data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</h2>
             <ul>
-                <li onclick="window.location.href='index.html'">Артка</li>
+                <li onclick="window.location.href='index.html'" data-lang-ky="Артка" data-lang-ru="Назад">Артка</li>
             </ul>
         </nav>
         <div class="content">
-            <h2>Курстар</h2>
+            <h2 data-lang-ky="Курстар" data-lang-ru="Курсы">Курстар</h2>
             <div id="course-details">
                 <h3 id="course-title"></h3>
-                <p>Бул жерде аудиокитептер, видеоуроктор, суроолор жана жооптор, мини-тесттер болот.</p>
-                <button onclick="startCourseLesson()">Урокту баштоо</button>
+                <p data-lang-ky="Бул жерде аудиокитептер, видеоуроктор, суроолор жана жооптор, мини-тесттер болот."
+                   data-lang-ru="Здесь будут аудиокниги, видеоуроки, вопросы и ответы, мини-тесты.">
+                    Бул жерде аудиокитептер, видеоуроктор, суроолор жана жооптор, мини-тесттер болот.
+                </p>
+                <button onclick="startCourseLesson()" data-lang-ky="Урокту баштоо" data-lang-ru="Начать урок">Урокту баштоо</button>
             </div>
         </div>
     </div>
     <script src="script.js"></script>
+    <script>
+        window.onload = function() {
+            updateTexts();
+            if (!currentUser) {
+                window.location.href = 'index.html';
+            }
+            const subject = localStorage.getItem('courseSubject');
+            const title = subject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') :
+                          subject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз тили' : 'Кыргызский язык') :
+                          subject === 'manas' ? (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение') : '';
+            document.getElementById('course-title').textContent = title;
+        };
+    </script>
 </body>
 </html>

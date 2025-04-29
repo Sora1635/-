@@ -10,6 +10,33 @@ body {
     color: #333;
 }
 
+.header {
+    background: #1e90ff;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+}
+
+.lang-switch button {
+    background: #ffffff;
+    color: #1e90ff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.lang-switch button:hover {
+    background: #e0e0e0;
+}
+
 .auth-container {
     max-width: 400px;
     margin: 50px auto;
@@ -274,5 +301,10 @@ textarea {
 
     .filter-group select {
         width: 100%;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 10px;
     }
 }

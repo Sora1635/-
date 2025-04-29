@@ -3,15 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест</title>
+    <title data-lang-ky="Тест" data-lang-ru="Тест">Тест</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="main-container">
+        <header class="header">
+            <h1 data-lang-ky="ОРТ Пробалык Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробалык Тест</h1>
+            <div class="lang-switch">
+                <button onclick="switchLanguage('ky')">Кыргызча</button>
+                <button onclick="switchLanguage('ru')">Русский</button>
+            </div>
+        </header>
         <nav class="sidebar">
-            <h2>Башкы меню</h2>
+            <h2 data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</h2>
             <ul>
-                <li onclick="window.location.href='part-details.html'">Артка</li>
+                <li onclick="window.location.href='part-details.html'" data-lang-ky="Артка" data-lang-ru="Назад">Артка</li>
             </ul>
         </nav>
         <div class="content">
@@ -19,19 +26,23 @@
                 <h2 id="test-title"></h2>
                 <div id="timer"></div>
                 <div class="question-nav">
-                    <button onclick="prevQuestion()" class="nav-btn">← Мурунку</button>
+                    <button onclick="prevQuestion()" class="nav-btn" data-lang-ky="← Мурунку" data-lang-ru="← Предыдущий">← Мурунку</button>
                     <span id="question-counter"></span>
-                    <button onclick="nextQuestion()" class="nav-btn">Кийинки →</button>
+                    <button onclick="nextQuestion()" class="nav-btn" data-lang-ky="Кийинки →" data-lang-ru="Следующий →">Кийинки →</button>
                 </div>
                 <div id="questions" class="question-block"></div>
                 <div id="answers" class="answer-block"></div>
-                <button onclick="submitTest()" class="submit-btn">Тестти тапшыруу</button>
+                <button onclick="submitTest()" class="submit-btn" data-lang-ky="Тестти тапшыруу" data-lang-ru="Сдать тест">Тестти тапшыруу</button>
             </div>
         </div>
     </div>
     <script src="script.js"></script>
     <script>
         window.onload = function() {
+            updateTexts();
+            if (!currentUser) {
+                window.location.href = 'index.html';
+            }
             loadTest();
             startTimer();
         };

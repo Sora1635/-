@@ -3,31 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Жыйынтыктар</title>
+    <title data-lang-ky="Жыйынтыктар" data-lang-ru="Результаты">Жыйынтыктар</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="main-container">
+        <header class="header">
+            <h1 data-lang-ky="ОРТ Пробалык Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробалык Тест</h1>
+            <div class="lang-switch">
+                <button onclick="switchLanguage('ky')">Кыргызча</button>
+                <button onclick="switchLanguage('ru')">Русский</button>
+            </div>
+        </header>
         <nav class="sidebar">
-            <h2>Башкы меню</h2>
+            <h2 data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</h2>
             <ul>
-                <li onclick="window.location.href='index.html'">Башкы меню</li>
+                <li onclick="window.location.href='index.html'" data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</li>
             </ul>
         </nav>
         <div class="content">
-            <h2>Жыйынтыктар</h2>
-            <p id="score"></p>
-            <p id="percentage"></p>
-            <p id="knowledge"></p>
-            <button onclick="backToMain()">Башкы менюга кайтуу</button>
+            <h2 data-lang-ky="Жыйынтыктар" data-lang-ru="Результаты">Жыйынтыктар</h2>
+            <p id="score" data-lang-ky="Балл:" data-lang-ru="Баллы:"></p>
+            <p id="percentage" data-lang-ky="Пайыз:" data-lang-ru="Процент:"></p>
+            <p id="knowledge" data-lang-ky="Билим деңгээли:" data-lang-ru="Уровень знаний:"></p>
+            <button onclick="backToMain()" data-lang-ky="Башкы менюга кайтуу" data-lang-ru="Вернуться в главное меню">Башкы менюга кайтуу</button>
         </div>
     </div>
     <script src="script.js"></script>
     <script>
         window.onload = function() {
-            document.getElementById('score').textContent = `Балл: ${localStorage.getItem('score')}/30`;
-            document.getElementById('percentage').textContent = `Пайыз: ${localStorage.getItem('percentage')}%`;
-            document.getElementById('knowledge').textContent = `Билим деңгээли: ${localStorage.getItem('knowledge')}`;
+            updateTexts();
+            if (!currentUser) {
+                window.location.href = 'index.html';
+            }
+            document.getElementById('score').textContent = `${currentLang === 'ky' ? 'Балл:' : 'Баллы:'} ${localStorage.getItem('score')}/30`;
+            document.getElementById('percentage').textContent = `${currentLang === 'ky' ? 'Пайыз:' : 'Процент:'} ${localStorage.getItem('percentage')}%`;
+            document.getElementById('knowledge').textContent = `${currentLang === 'ky' ? 'Билим деңгээли:' : 'Уровень знаний:'} ${localStorage.getItem('knowledge')}`;
         };
     </script>
 </body>
