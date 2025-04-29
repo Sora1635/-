@@ -1,3 +1,4 @@
+// Гибкая структура вопросов и времени
 const questions = {
     math: {
         part1: {
@@ -13,7 +14,6 @@ const questions = {
                     options: { a: "7", b: "10", c: "12", d: "15" },
                     correct: "b"
                 }
-                // Добавляйте вопросы по формату: { question: "", options: { a: "", b: "", c: "", d: "" }, correct: "" }
             ],
             variant2: [
                 {
@@ -21,7 +21,6 @@ const questions = {
                     options: { a: "2", b: "4", c: "5", d: "6" },
                     correct: "b"
                 }
-                // Добавляйте вопросы
             ]
         },
         part2: {
@@ -32,7 +31,6 @@ const questions = {
                     options: { a: "2", b: "4", c: "6", d: "8" },
                     correct: "b"
                 }
-                // Добавляйте вопросы
             ],
             variant2: [
                 {
@@ -40,7 +38,6 @@ const questions = {
                     options: { a: "4", b: "6", c: "8", d: "10" },
                     correct: "c"
                 }
-                // Добавляйте вопросы
             ]
         }
     },
@@ -53,7 +50,6 @@ const questions = {
                     options: { a: "Ай", b: "Жылдыз", c: "Күн", d: "Суу" },
                     correct: "c"
                 }
-                // Добавляйте вопросы
             ],
             variant2: [
                 {
@@ -61,7 +57,6 @@ const questions = {
                     options: { a: "Ай", b: "Жылдыз", c: "Күн", d: "Суу" },
                     correct: "a"
                 }
-                // Добавляйте вопросы
             ]
         },
         part2: {
@@ -72,7 +67,6 @@ const questions = {
                     options: { a: "Дарыя", b: "Тоо", c: "Токой", d: "Жол" },
                     correct: "b"
                 }
-                // Добавляйте вопросы
             ],
             variant2: [
                 {
@@ -80,7 +74,6 @@ const questions = {
                     options: { a: "Дарыя", b: "Көл", c: "Токой", d: "Жол" },
                     correct: "b"
                 }
-                // Добавляйте вопросы
             ]
         }
     },
@@ -93,7 +86,6 @@ const questions = {
                     options: { a: "Алтай", b: "Манас", c: "Каныкей", d: "Семетей" },
                     correct: "b"
                 }
-                // Добавляйте вопросы
             ],
             variant2: [
                 {
@@ -101,7 +93,6 @@ const questions = {
                     options: { a: "Манастын аялы", b: "Манастын уулу", c: "Манастын душманы", d: "Манастын атасы" },
                     correct: "a"
                 }
-                // Добавляйте вопросы
             ]
         },
         part2: {
@@ -112,7 +103,6 @@ const questions = {
                     options: { a: "Манастын уулу", b: "Манастын аялы", c: "Манастын душманы", d: "Манастын атасы" },
                     correct: "a"
                 }
-                // Добавляйте вопросы
             ],
             variant2: [
                 {
@@ -120,8 +110,12 @@ const questions = {
                     options: { a: "Семетейдин аялы", b: "Манастын аялы", c: "Манастын энеси", d: "Манастын душманы" },
                     correct: "a"
                 }
-                // Добавляйте вопросы
             ]
         }
     }
 };
+
+// Экспорт для локального тестирования (если используется модульная система)
+if (typeof module !== 'undefined') {
+    module.exports = { questions };
+}

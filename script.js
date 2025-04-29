@@ -1,7 +1,7 @@
 // Глобальные переменные
 let currentLang = localStorage.getItem('lang') || 'ky';
-let currentSubject = localStorage.getItem('subject');
-let currentPart = localStorage.getItem('part');
+let currentSubject = null;
+let currentPart = null;
 let currentTest = null;
 let currentQuestionIndex = 0;
 let userAnswers = null;
@@ -9,15 +9,29 @@ let timerInterval = null;
 let timeLeft = 0;
 let totalQuestions = 0;
 
+// Утилита для безопасного доступа к данным
+const safeGet = (obj, path, defaultValue = null) => {
+    try {
+        return path.reduce((o, k) => o && o[k], obj) || defaultValue;
+    } catch (e) {
+        console.error('Error accessing data:', e);
+        return defaultValue;
+    }
+};
+
 // Переключение языка
 function switchLanguage(lang) {
     console.log('Switching language to:', lang);
+    if (!['ky', 'ru'].includes(lang)) {
+        console.error('Invalid language:', lang);
+        return;
+    }
     currentLang = lang;
     localStorage.setItem('lang', lang);
     updateTexts();
 }
 
-// Обновление текстов на странице
+// Обновление текстов
 function updateTexts() {
     console.log('Updating texts for language:', currentLang);
     document.querySelectorAll('[data-lang-ky][data-lang-ru]').forEach(el => {
@@ -35,41 +49,45 @@ function updateTexts() {
     // Обновление заголовка предмета
     const subjectTitle = document.getElementById('subject-title');
     if (subjectTitle && currentSubject) {
-        const subjectName = currentSubject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') :
-                           currentSubject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз тили' : 'Кыргызский язык') :
-                           currentSubject === 'manas' ? (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение') : '';
-        subjectTitle.textContent = (currentLang === 'ky' ? 'Предмет: ' : 'Предмет: ') + subjectName;
+        const subjects = {
+            math: { ky: 'Математика', ru: 'Математика' },
+            kyrgyz: { ky: 'Кыргыз тили', ru: 'Кыргызский язык' },
+            manas: { ky: 'Манас таануу', ru: 'Манасоведение' }
+        };
+        const name = safeGet(subjects, [currentSubject, currentLang], '');
+        subjectTitle.textContent = (currentLang === 'ky' ? 'Предмет: ' : 'Предмет: ') + name;
+    }
+
+    // Обновление информации о части
+    const partDescription = document.getElementById('part-description');
+    if (partDescription && currentSubject && currentPart) {
+        const partData = safeGet(questions, [currentSubject, `part${currentPart}`]);
+        if (partData) {
+            const numQuestions = safeGet(partData, ['variant1', 'length'], 0);
+            const time = partData.time || 0;
+            partDescription.textContent = currentLang === 'ky'
+                ? `Суроолордун саны: ${numQuestions}, Убакыт: ${time} мүнөт`
+                : `Количество вопросов: ${numQuestions}, Время: ${time} минут`;
+        }
     }
 
     // Обновление результатов
-    const resultsTitle = document.getElementById('results-title');
     const resultsDetails = document.getElementById('results-details');
-    if (resultsTitle && resultsDetails) {
+    if (resultsDetails) {
         const score = localStorage.getItem('score');
         const percentage = localStorage.getItem('percentage');
         const knowledge = localStorage.getItem('knowledge');
-        if (score && percentage && knowledge) {
-            resultsTitle.textContent = currentLang === 'ky' ? 'Тесттин жыйынтыктары' : 'Результаты теста';
-            resultsDetails.innerHTML = `${currentLang === 'ky' ? 'Балл' : 'Баллы'}: ${score}/${totalQuestions}<br>` +
+        const total = localStorage.getItem('totalQuestions');
+        if (score && percentage && knowledge && total) {
+            resultsDetails.innerHTML = `${currentLang === 'ky' ? 'Балл' : 'Баллы'}: ${score}/${total}<br>` +
                                       `${currentLang === 'ky' ? 'Пайыз' : 'Процент'}: ${percentage}%<br>` +
                                       `${currentLang === 'ky' ? 'Билим деңгээли' : 'Уровень знаний'}: ${knowledge}`;
         }
     }
 
-    // Обновление заголовка курса
-    const courseTitle = document.getElementById('course-title');
-    if (courseTitle) {
-        const subject = localStorage.getItem('courseSubject');
-        if (subject) {
-            courseTitle.textContent = subject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') :
-                                     subject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз тили' : 'Кыргызский язык') :
-                                     subject === 'manas' ? (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение') : '';
-        }
-    }
-
     // Обновление таймера
     const timerElement = document.getElementById('timer');
-    if (timerElement && timeLeft > 0) {
+    if (timerElement && timeLeft >= 0) {
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
         timerElement.textContent = `${currentLang === 'ky' ? 'Калган убакыт' : 'Оставшееся время'}: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
@@ -79,8 +97,8 @@ function updateTexts() {
 // Выбор предмета
 function selectSubject(subject) {
     console.log('selectSubject called with:', subject);
-    if (!subject) {
-        console.error('Subject is not defined');
+    if (!['math', 'kyrgyz', 'manas'].includes(subject)) {
+        console.error('Invalid subject:', subject);
         alert(currentLang === 'ky' ? 'Предмет тандалган жок!' : 'Предмет не выбран!');
         return;
     }
@@ -92,13 +110,13 @@ function selectSubject(subject) {
 // Выбор части
 function selectPart(part) {
     console.log('selectPart called with:', part);
-    if (!part) {
-        console.error('Part is not defined');
+    if (!['1', '2'].includes(part)) {
+        console.error('Invalid part:', part);
         alert(currentLang === 'ky' ? 'Бөлүк тандалган жок!' : 'Часть не выбрана!');
         return;
     }
     if (!currentSubject) {
-        console.error('Subject is not set');
+        console.error('Subject not set');
         alert(currentLang === 'ky' ? 'Предмет тандалган жок!' : 'Предмет не выбран!');
         window.location.href = 'index.html';
         return;
@@ -106,26 +124,6 @@ function selectPart(part) {
     currentPart = part;
     localStorage.setItem('part', part);
     window.location.href = 'part-details.html';
-}
-
-// Обновление информации о части
-function updatePartDetails() {
-    console.log('updatePartDetails called with:', { currentSubject, currentPart });
-    const descriptionElement = document.getElementById('part-description');
-    if (descriptionElement && currentPart && currentSubject) {
-        const partData = questions[currentSubject]?.[`part${currentPart}`];
-        if (partData) {
-            const time = partData.time;
-            const numQuestions = partData.variant1?.length || 0; // Берем длину первого варианта
-            descriptionElement.textContent = currentLang === 'ky'
-                ? `Суроолордун саны: ${numQuestions}, Убакыт: ${time} мүнөт`
-                : `Количество вопросов: ${numQuestions}, Время: ${time} минут`;
-        } else {
-            console.warn('Part data not found:', { currentSubject, currentPart });
-        }
-    } else {
-        console.warn('Part description element or currentPart not found:', { descriptionElement, currentPart });
-    }
 }
 
 // Начало теста
@@ -144,38 +142,30 @@ function startTest() {
 
 // Загрузка теста
 function loadTest() {
-    console.log('loadTest called with:', { currentSubject, currentPart });
+    console.log('loadTest called');
     currentSubject = localStorage.getItem('subject');
     currentPart = localStorage.getItem('part');
-    console.log('Reloaded subject and part:', { currentSubject, currentPart });
+    console.log('Loaded subject and part:', { currentSubject, currentPart });
 
     if (!currentSubject || !currentPart) {
-        console.error('Subject or part not set:', { currentSubject, currentPart });
+        console.error('Subject or part missing');
         alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
         window.location.href = 'index.html';
         return;
     }
 
-    const subjectData = questions[currentSubject];
-    if (!subjectData) {
-        console.error('Subject data not found:', currentSubject);
-        alert(currentLang === 'ky' ? 'Предмет табылган жок!' : 'Предмет не найден!');
-        window.location.href = 'index.html';
-        return;
-    }
-
-    const partData = subjectData[`part${currentPart}`];
+    const partData = safeGet(questions, [currentSubject, `part${currentPart}`]);
     if (!partData) {
-        console.error('Part data not found:', currentPart);
-        alert(currentLang === 'ky' ? 'Бөлүк табылган жок!' : 'Часть не найдена!');
+        console.error('Part data not found:', { currentSubject, currentPart });
+        alert(currentLang === 'ky' ? 'Бөлүк маалыматы табылган жок!' : 'Данные части не найдены!');
         window.location.href = 'index.html';
         return;
     }
 
     const variants = Object.keys(partData).filter(key => key.startsWith('variant'));
-    if (variants.length === 0) {
-        console.error('No variants found for:', currentSubject, currentPart);
-        alert(currentLang === 'ky' ? 'Варианттар табылган жок!' : 'Варианты не найдены!');
+    if (!variants.length) {
+        console.error('No variants found');
+        alert(currentLang === 'ky' ? 'Тест варианттары табылган жок!' : 'Варианты теста не найдены!');
         window.location.href = 'index.html';
         return;
     }
@@ -185,7 +175,7 @@ function loadTest() {
     totalQuestions = currentTest.length;
     currentQuestionIndex = 0;
     userAnswers = Array(totalQuestions).fill(null);
-    console.log('Test loaded:', { variant: randomVariant, questions: totalQuestions });
+    console.log('Test loaded:', { variant: randomVariant, totalQuestions });
     displayQuestion();
     startTimer();
 }
@@ -198,7 +188,7 @@ function displayQuestion() {
     const answersDiv = document.getElementById('answers');
 
     if (!questionCounter || !questionsDiv || !answersDiv || !currentTest) {
-        console.error('Required elements or test data not found:', { questionCounter, questionsDiv, answersDiv, currentTest });
+        console.error('Required elements or test data missing:', { questionCounter, questionsDiv, answersDiv, currentTest });
         alert(currentLang === 'ky' ? 'Тест жүктөлүүдө ката кетти!' : 'Ошибка загрузки теста!');
         window.location.href = 'index.html';
         return;
@@ -206,9 +196,8 @@ function displayQuestion() {
 
     questionCounter.textContent = `${currentQuestionIndex + 1}/${totalQuestions}`;
     questionsDiv.textContent = currentTest[currentQuestionIndex].question;
-    console.log('Displaying question:', currentTest[currentQuestionIndex].question);
-
     answersDiv.innerHTML = '';
+
     for (let option in currentTest[currentQuestionIndex].options) {
         const label = document.createElement('label');
         label.className = 'answer-option';
@@ -225,7 +214,7 @@ function displayQuestion() {
     });
 }
 
-// Предыдущий вопрос
+// Переключение вопросов
 function prevQuestion() {
     console.log('prevQuestion called');
     if (currentQuestionIndex > 0) {
@@ -234,7 +223,6 @@ function prevQuestion() {
     }
 }
 
-// Следующий вопрос
 function nextQuestion() {
     console.log('nextQuestion called');
     if (currentQuestionIndex < totalQuestions - 1) {
@@ -246,9 +234,9 @@ function nextQuestion() {
 // Запуск таймера
 function startTimer() {
     console.log('startTimer called');
-    const partData = questions[currentSubject]?.[`part${currentPart}`];
-    if (!partData) {
-        console.error('Part data not found for timer:', { currentSubject, currentPart });
+    const partData = safeGet(questions, [currentSubject, `part${currentPart}`]);
+    if (!partData || !partData.time) {
+        console.error('Time data missing');
         alert(currentLang === 'ky' ? 'Убакыт маалыматы табылган жок!' : 'Данные о времени не найдены!');
         window.location.href = 'index.html';
         return;
@@ -257,14 +245,14 @@ function startTimer() {
     timeLeft = partData.time * 60;
     const timerElement = document.getElementById('timer');
     if (!timerElement) {
-        console.error('Timer element not found');
+        console.error('Timer element missing');
         alert(currentLang === 'ky' ? 'Таймер табылган жок!' : 'Таймер не найден!');
         return;
     }
 
     timerInterval = setInterval(() => {
         if (timeLeft <= 0) {
-            console.log('Timer ended, submitting test');
+            console.log('Timer ended');
             clearInterval(timerInterval);
             submitTest();
             return;
@@ -280,7 +268,7 @@ function startTimer() {
 function submitTest() {
     console.log('submitTest called');
     if (!currentTest) {
-        console.error('No test data available');
+        console.error('Test data missing');
         alert(currentLang === 'ky' ? 'Тест маалыматы жок!' : 'Нет данных теста!');
         window.location.href = 'index.html';
         return;
@@ -305,7 +293,7 @@ function submitTest() {
 }
 
 // Возврат на главную
-function backToMain() {
+function back масло backToMain() {
     console.log('backToMain called');
     window.location.href = 'index.html';
 }
@@ -316,63 +304,57 @@ function startCourseLesson() {
     alert(currentLang === 'ky' ? 'Урок башталды!' : 'Урок начался!');
 }
 
-// Инициализация обработчиков событий
-function initializeEventListeners() {
+// Инициализация
+function initialize() {
     console.log('Initializing event listeners');
 
-    // index.html
-    const mathButton = document.getElementById('subject-math');
-    const kyrgyzButton = document.getElementById('subject-kyrgyz');
-    const manasButton = document.getElementById('subject-manas');
-    const langKyButton = document.getElementById('lang-ky');
-    const langRuButton = document.getElementById('lang-ru');
+    // Кнопки предметов
+    ['math', 'kyrgyz', 'manas'].forEach(subject => {
+        const btn = document.getElementById(`subject-${subject}`);
+        if (btn) btn.addEventListener('click', () => selectSubject(subject));
+    });
 
-    if (mathButton) mathButton.addEventListener('click', () => selectSubject('math'));
-    if (kyrgyzButton) kyrgyzButton.addEventListener('click', () => selectSubject('kyrgyz'));
-    if (manasButton) manasButton.addEventListener('click', () => selectSubject('manas'));
-    if (langKyButton) langKyButton.addEventListener('click', () => switchLanguage('ky'));
-    if (langRuButton) langRuButton.addEventListener('click', () => switchLanguage('ru'));
+    // Кнопки частей
+    ['1', '2'].forEach(part => {
+        const btn = document.getElementById(`part-${part}`);
+        if (btn) btn.addEventListener('click', () => selectPart(part));
+    });
 
-    // subject.html
-    const part1Button = document.getElementById('part-1');
-    const part2Button = document.getElementById('part-2');
-    const backButtonSubject = document.getElementById('back-main-subject');
+    // Кнопки языка
+    ['ky', 'ru'].forEach(lang => {
+        const btn = document.getElementById(`lang-${lang}`);
+        if (btn) btn.addEventListener('click', () => switchLanguage(lang));
+    });
 
-    if (part1Button) part1Button.addEventListener('click', () => selectPart('1'));
-    if (part2Button) part2Button.addEventListener('click', () => selectPart('2'));
-    if (backButtonSubject) backButtonSubject.addEventListener('click', backToMain);
+    // Кнопки навигации теста
+    const prevBtn = document.getElementById('prev-question');
+    const nextBtn = document.getElementById('next-question');
+    const submitBtn = document.getElementById('submit-test');
+    if (prevBtn) prevBtn.addEventListener('click', prevQuestion);
+    if (nextBtn) nextBtn.addEventListener('click', nextQuestion);
+    if (submitBtn) submitBtn.addEventListener('click', submitTest);
 
-    // part-details.html
-    const startTestButton = document.getElementById('start-test');
-    const backButtonPart = document.getElementById('back-main-part');
+    // Кнопки возврата
+    document.querySelectorAll('#back-main').forEach(btn => {
+        btn.addEventListener('click', backToMain);
+    });
 
-    if (startTestButton) startTestButton.addEventListener('click', startTest);
-    if (backButtonPart) backButtonPart.addEventListener('click', backToMain);
+    // Кнопка начала теста
+    const startTestBtn = document.getElementById('start-test');
+    if (startTestBtn) startTestBtn.addEventListener('click', startTest);
 
-    // test.html
-    const prevQuestionButton = document.getElementById('prev-question');
-    const nextQuestionButton = document.getElementById('next-question');
-    const submitTestButton = document.getElementById('submit-test');
-    const backButtonTest = document.getElementById('back-main-test');
+    // Кнопка начала урока
+    const startLessonBtn = document.getElementById('start-lesson');
+    if (startLessonBtn) startLessonBtn.addEventListener('click', startCourseLesson);
 
-    if (prevQuestionButton) prevQuestionButton.addEventListener('click', prevQuestion);
-    if (nextQuestionButton) nextQuestionButton.addEventListener('click', nextQuestion);
-    if (submitTestButton) submitHigher Grok 3 usage quotas than the free plan.ubmitTest);
-    if (backButtonTest) backButtonTest.addEventListener('click', backToMain);
+    // Обновление текстов
+    updateTexts();
 
-    // results.html
-    const backButtonResults = document.getElementById('back-main-results');
-    if (backButtonResults) backButtonResults.addEventListener('click', backToMain);
-
-    // courses.html
-    const startLessonButton = document.getElementById('start-lesson');
-    const backLinkCourses = document.getElementById('back-main-courses');
-    if (startLessonButton) startLessonButton.addEventListener('click', startCourseLesson);
-    if (backLinkCourses) backLinkCourses.addEventListener('click', backToMain);
+    // Загрузка теста на странице test.html
+    if (window.location.pathname.includes('test.html')) {
+        loadTest();
+    }
 }
 
-// Запуск инициализации после загрузки DOM
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded');
-    initializeEventListeners();
-});
+// Запуск
+document.addEventListener('DOMContentLoaded', initialize);

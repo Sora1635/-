@@ -9,32 +9,30 @@
 </head>
 <body>
     <div class="main-container">
-        <header class="header">
-            <h1 data-lang-ky="ОРТ Пробалык Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробалык Тест</h1>
+        <div class="header">
+            <h1 data-lang-ky="Курстар" data-lang-ru="Курсы">Курстар</h1>
             <div class="lang-switch">
                 <button id="lang-ky" data-lang-ky="Кыргызча" data-lang-ru="Киргизский"><i class="fas fa-globe"></i> Кыргызча</button>
                 <button id="lang-ru" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
             </div>
-        </header>
-        <nav class="sidebar">
-            <h2 data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</h2>
+        </div>
+        <div class="sidebar">
+            <h2 data-lang-ky="Предметтер" data-lang-ru="Предметы">Предметтер</h2>
             <ul>
-                <li id="back-main-courses" data-lang-ky="Артка" data-lang-ru="Назад"><i class="fas fa-arrow-left"></i> Артка</li>
+                <li id="course-math" data-lang-ky="Математика" data-lang-ru="Математика">Математика</li>
+                <li id="course-kyrgyz" data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</li>
+                <li id="course-manas" data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</li>
             </ul>
-        </nav>
+        </div>
         <div class="content">
-            <h2 data-lang-ky="Курстар" data-lang-ru="Курсы">Курстар</h2>
+            <h2 id="course-title"></h2>
             <div id="course-details">
-                <h3 id="course-title"></h3>
-                <p data-lang-ky="Бул жерде аудиокитептер, видеоуроктор, суроолор жана жооптор, мини-тесттер болот."
-                   data-lang-ru="Здесь будут аудиокниги, видеоуроки, вопросы и ответы, мини-тесты.">
-                    Бул жерде аудиокитептер, видеоуроктор, суроолор жана жооптор, мини-тесттер болот.
-                </p>
                 <button id="start-lesson" class="action-button" data-lang-ky="Урокту баштоо" data-lang-ru="Начать урок"><i class="fas fa-play"></i> Урокту баштоо</button>
             </div>
+            <button id="back-main" class="back-button" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
         </div>
     </div>
-
+    <script src="questions.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

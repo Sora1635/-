@@ -15,29 +15,12 @@
             <button id="lang-ru" data-lang-ky="Орусча" data-lang-ru="Русский"><i class="fas fa-globe"></i> Орусча</button>
         </div>
     </header>
-
     <div class="menu">
-        <h2 id="part-description"></h2>
+        <h2 id="part-description" data-lang-ky="Маалымат жүктөлүүдө..." data-lang-ru="Загрузка информации..."></h2>
         <button id="start-test" class="action-button" data-lang-ky="Тестти баштоо" data-lang-ru="Начать тест"><i class="fas fa-play"></i> Тестти баштоо</button>
-        <button id="back-main-part" class="back-button" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
+        <button id="back-main" class="back-button" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
     </div>
-
+    <script src="questions.js"></script>
     <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('Part-details page loaded');
-            currentSubject = localStorage.getItem('subject');
-            currentPart = localStorage.getItem('part');
-            console.log('Loaded subject and part:', { currentSubject, currentPart });
-            if (!currentSubject || !currentPart) {
-                console.error('Subject or part missing, redirecting to index');
-                alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
-                window.location.href = 'index.html';
-                return;
-            }
-            updatePartDetails();
-            updateTexts();
-        });
-    </script>
 </body>
 </html>
