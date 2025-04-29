@@ -39,12 +39,11 @@ header h1 {
     color: #ffffff;
     cursor: pointer;
     font-size: 1rem;
-    transition: background 0.3s ease, transform 0.2s ease;
+    transition: background 0.3s ease;
 }
 
 .lang-switch button:hover {
     background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.05);
 }
 
 .menu {
@@ -65,27 +64,31 @@ header h1 {
 }
 
 .card {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
-    padding: 25px;
-    width: 250px;
+    padding: 20px;
+    width: 200px;
     text-align: center;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     border: none;
     color: #ffffff;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 600;
 }
 
 .card:hover {
     transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 6px 20px rgba(255, 111, 97, 0.3);
+}
+
+.card h3 {
+    margin: 0;
 }
 
 .back-button, .action-button {
-    background: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
     border: none;
     padding: 12px 24px;
     border-radius: 25px;
@@ -97,7 +100,7 @@ header h1 {
 }
 
 .back-button:hover, .action-button:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
     transform: scale(1.05);
 }
 
@@ -153,6 +156,7 @@ header h1 {
 .main-container {
     display: flex;
     min-height: 100vh;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
 }
 
 .header {
