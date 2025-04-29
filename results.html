@@ -7,38 +7,67 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="main-container">
-        <header class="header">
-            <h1 data-lang-ky="ОРТ Пробалык Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробалык Тест</h1>
-            <div class="lang-switch">
-                <button onclick="switchLanguage('ky')">Кыргызча</button>
-                <button onclick="switchLanguage('ru')">Русский</button>
-            </div>
-        </header>
-        <nav class="sidebar">
-            <h2 data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</h2>
-            <ul>
-                <li onclick="window.location.href='index.html'" data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</li>
-            </ul>
-        </nav>
-        <div class="content">
-            <h2 data-lang-ky="Жыйынтыктар" data-lang-ru="Результаты">Жыйынтыктар</h2>
-            <p id="score" data-lang-ky="Балл:" data-lang-ru="Баллы:"></p>
-            <p id="percentage" data-lang-ky="Пайыз:" data-lang-ru="Процент:"></p>
-            <p id="knowledge" data-lang-ky="Билим деңгээли:" data-lang-ru="Уровень знаний:"></p>
-            <button onclick="backToMain()" data-lang-ky="Башкы менюга кайтуу" data-lang-ru="Вернуться в главное меню">Башкы менюга кайтуу</button>
+    <header>
+        <h1 data-lang-ky="Жыйынтыктар" data-lang-ru="Результаты">Жыйынтыктар</h1>
+        <div class="lang-switch">
+            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский">Кыргызча</button>
+            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский">Орусча</button>
         </div>
+    </header>
+
+    <div class="menu">
+        <h2 id="results-title"></h2>
+        <p id="results-details"></p>
+        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную">Башкы бетке кайтуу</button>
     </div>
+
     <script src="script.js"></script>
     <script>
         window.onload = function() {
-            updateTexts();
-            if (!currentUser) {
-                window.location.href = 'index.html';
+            // Убедимся, что currentLang определён
+            if (typeof currentLang === 'undefined') {
+                currentLang = localStorage.getItem('lang') || 'ky';
+                console.log('currentLang was undefined, set to:', currentLang);
             }
-            document.getElementById('score').textContent = `${currentLang === 'ky' ? 'Балл:' : 'Баллы:'} ${localStorage.getItem('score')}/30`;
-            document.getElementById('percentage').textContent = `${currentLang === 'ky' ? 'Пайыз:' : 'Процент:'} ${localStorage.getItem('percentage')}%`;
-            document.getElementById('knowledge').textContent = `${currentLang === 'ky' ? 'Билим деңгээли:' : 'Уровень знаний:'} ${localStorage.getItem('knowledge')}`;
+
+            // Получаем данные из localStorage
+            const score = localStorage.getItem('score');
+            const percentage = localStorage.getItem('percentage');
+            const knowledge = localStorage.getItem('knowledge');
+
+            console.log('Results data - score:', score, 'percentage:', percentage, 'knowledge:', knowledge);
+
+            // Проверяем наличие данных
+            if (!score || !percentage || !knowledge) {
+                console.error('Results data not found in localStorage!');
+                alert(currentLang === 'ky' 
+                    ? 'Ката: Жыйынтыктар табылган жок! LocalStorage: score=' + score + ', percentage=' + percentage + ', knowledge=' + knowledge 
+                    : 'Ошибка: Результаты не найдены! LocalStorage: score=' + score + ', percentage=' + percentage + ', knowledge=' + knowledge);
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Отображаем результаты
+            const resultsTitle = document.getElementById('results-title');
+            const resultsDetails = document.getElementById('results-details');
+
+            if (resultsTitle && resultsDetails) {
+                resultsTitle.textContent = currentLang === 'ky' ? 'Тесттин жыйынтыктары' : 'Результаты теста';
+                resultsDetails.innerHTML = `
+                    ${currentLang === 'ky' ? 'Балл' : 'Баллы'}: ${score}/30<br>
+                    ${currentLang === 'ky' ? 'Пайыз' : 'Процент'}: ${percentage}%<br>
+                    ${currentLang === 'ky' ? 'Билим деңгээли' : 'Уровень знаний'}: ${knowledge}
+                `;
+            } else {
+                console.error('Results elements not found on the page!');
+            }
+
+            // Обновляем тексты
+            try {
+                updateTexts();
+            } catch (error) {
+                console.error('Error in updateTexts:', error);
+            }
         };
     </script>
 </body>
