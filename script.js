@@ -7,88 +7,7 @@ let currentQuestionIndex = 0;
 let userAnswers = null;
 let timerInterval = null;
 let timeLeft = 0;
-
-// Пример структуры вопросов (дополните до 30 вопросов для каждого варианта)
-const questions = {
-    math: {
-        part1: {
-            variant1: Array(30).fill().map((_, i) => ({
-                question: `Математика 1-бөлүк, суроо ${i + 1}: 2 + ${i} канча болот?`,
-                options: { a: `${i + 1}`, b: `${i + 2}`, c: `${i + 3}`, d: `${i + 4}` },
-                correct: "b"
-            })),
-            variant2: Array(30).fill().map((_, i) => ({
-                question: `Математика 1-бөлүк, суроо ${i + 1}: 3 + ${i} канча болот?`,
-                options: { a: `${i + 2}`, b: `${i + 3}`, c: `${i + 4}`, d: `${i + 5}` },
-                correct: "b"
-            })),
-        },
-        part2: {
-            variant1: Array(30).fill().map((_, i) => ({
-                question: `Математика 2-бөлүк, суроо ${i + 1}: ${i + 1}^2 канча болот?`,
-                options: { a: `${(i + 1) * (i + 1) - 1}`, b: `${(i + 1) * (i + 1)}`, c: `${(i + 1) * (i + 1) + 1}`, d: `${(i + 1) * (i + 1) + 2}` },
-                correct: "b"
-            })),
-            variant2: Array(30).fill().map((_, i) => ({
-                question: `Математика 2-бөлүк, суроо ${i + 1}: ${i + 1}^3 канча болот?`,
-                options: { a: `${(i + 1) ** 3 - 1}`, b: `${(i + 1) ** 3}`, c: `${(i + 1) ** 3 + 1}`, d: `${(i + 1) ** 3 + 2}` },
-                correct: "b"
-            })),
-        },
-    },
-    kyrgyz: {
-        part1: {
-            variant1: Array(30).fill().map((_, i) => ({
-                question: `Кыргыз тили 1-бөлүк, суроо ${i + 1}: 'күн' сөзү эмнени билдирет?`,
-                options: { a: "Ай", b: "Жылдыз", c: "Күн", d: "Суу" },
-                correct: "c"
-            })),
-            variant2: Array(30).fill().map((_, i) => ({
-                question: `Кыргыз тили 1-бөлүк, суроо ${i + 1}: 'ай' сөзү эмнени билдирет?`,
-                options: { a: "Ай", b: "Жылдыз", c: "Күн", d: "Суу" },
-                correct: "a"
-            })),
-        },
-        part2: {
-            variant1: Array(30).fill().map((_, i) => ({
-                question: `Кыргыз тили 2-бөлүк, суроо ${i + 1}: 'тоо' сөзү эмнени билдирет?`,
-                options: { a: "Дарыя", b: "Тоо", c: "Токой", d: "Жол" },
-                correct: "b"
-            })),
-            variant2: Array(30).fill().map((_, i) => ({
-                question: `Кыргыз тили 2-бөлүк, суроо ${i + 1}: 'көл' сөзү эмнени билдирет?`,
-                options: { a: "Дарыя", b: "Көл", c: "Токой", d: "Жол" },
-                correct: "b"
-            })),
-        },
-    },
-    manas: {
-        part1: {
-            variant1: Array(30).fill().map((_, i) => ({
-                question: `Манас таануу 1-бөлүк, суроо ${i + 1}: Манас ким?`,
-                options: { a: "Алтай", b: "Манас", c: "Каныкей", d: "Семетей" },
-                correct: "b"
-            })),
-            variant2: Array(30).fill().map((_, i) => ({
-                question: `Манас таануу 1-бөлүк, суроо ${i + 1}: Каныкей ким?`,
-                options: { a: "Манастын аялы", b: "Манастын уулу", c: "Манастын душманы", d: "Манастын атасы" },
-                correct: "a"
-            })),
-        },
-        part2: {
-            variant1: Array(30).fill().map((_, i) => ({
-                question: `Манас таануу 2-бөлүк, суроо ${i + 1}: Семетей ким?`,
-                options: { a: "Манастын уулу", b: "Манастын аялы", c: "Манастын душманы", d: "Манастын атасы" },
-                correct: "a"
-            })),
-            variant2: Array(30).fill().map((_, i) => ({
-                question: `Манас таануу 2-бөлүк, суроо ${i + 1}: Айчүрөк ким?`,
-                options: { a: "Семетейдин аялы", b: "Манастын аялы", c: "Манастын энеси", d: "Манастын душманы" },
-                correct: "a"
-            })),
-        },
-    },
-};
+let totalQuestions = 0;
 
 // Переключение языка
 function switchLanguage(lang) {
@@ -131,7 +50,7 @@ function updateTexts() {
         const knowledge = localStorage.getItem('knowledge');
         if (score && percentage && knowledge) {
             resultsTitle.textContent = currentLang === 'ky' ? 'Тесттин жыйынтыктары' : 'Результаты теста';
-            resultsDetails.innerHTML = `${currentLang === 'ky' ? 'Балл' : 'Баллы'}: ${score}/30<br>` +
+            resultsDetails.innerHTML = `${currentLang === 'ky' ? 'Балл' : 'Баллы'}: ${score}/${totalQuestions}<br>` +
                                       `${currentLang === 'ky' ? 'Пайыз' : 'Процент'}: ${percentage}%<br>` +
                                       `${currentLang === 'ky' ? 'Билим деңгээли' : 'Уровень знаний'}: ${knowledge}`;
         }
@@ -193,11 +112,17 @@ function selectPart(part) {
 function updatePartDetails() {
     console.log('updatePartDetails called with:', { currentSubject, currentPart });
     const descriptionElement = document.getElementById('part-description');
-    if (descriptionElement && currentPart) {
-        const time = currentPart === '1' ? 30 : 60;
-        descriptionElement.textContent = currentLang === 'ky'
-            ? `Суроолордун саны: 30, Убакыт: ${time} мүнөт`
-            : `Количество вопросов: 30, Время: ${time} минут`;
+    if (descriptionElement && currentPart && currentSubject) {
+        const partData = questions[currentSubject]?.[`part${currentPart}`];
+        if (partData) {
+            const time = partData.time;
+            const numQuestions = partData.variant1?.length || 0; // Берем длину первого варианта
+            descriptionElement.textContent = currentLang === 'ky'
+                ? `Суроолордун саны: ${numQuestions}, Убакыт: ${time} мүнөт`
+                : `Количество вопросов: ${numQuestions}, Время: ${time} минут`;
+        } else {
+            console.warn('Part data not found:', { currentSubject, currentPart });
+        }
     } else {
         console.warn('Part description element or currentPart not found:', { descriptionElement, currentPart });
     }
@@ -257,9 +182,10 @@ function loadTest() {
 
     const randomVariant = variants[Math.floor(Math.random() * variants.length)];
     currentTest = partData[randomVariant];
+    totalQuestions = currentTest.length;
     currentQuestionIndex = 0;
-    userAnswers = Array(30).fill(null);
-    console.log('Test loaded:', { variant: randomVariant, questions: currentTest.length });
+    userAnswers = Array(totalQuestions).fill(null);
+    console.log('Test loaded:', { variant: randomVariant, questions: totalQuestions });
     displayQuestion();
     startTimer();
 }
@@ -278,7 +204,7 @@ function displayQuestion() {
         return;
     }
 
-    questionCounter.textContent = `${currentQuestionIndex + 1}/30`;
+    questionCounter.textContent = `${currentQuestionIndex + 1}/${totalQuestions}`;
     questionsDiv.textContent = currentTest[currentQuestionIndex].question;
     console.log('Displaying question:', currentTest[currentQuestionIndex].question);
 
@@ -311,7 +237,7 @@ function prevQuestion() {
 // Следующий вопрос
 function nextQuestion() {
     console.log('nextQuestion called');
-    if (currentQuestionIndex < 29) {
+    if (currentQuestionIndex < totalQuestions - 1) {
         currentQuestionIndex++;
         displayQuestion();
     }
@@ -320,7 +246,15 @@ function nextQuestion() {
 // Запуск таймера
 function startTimer() {
     console.log('startTimer called');
-    timeLeft = (currentPart === '1' ? 30 : 60) * 60;
+    const partData = questions[currentSubject]?.[`part${currentPart}`];
+    if (!partData) {
+        console.error('Part data not found for timer:', { currentSubject, currentPart });
+        alert(currentLang === 'ky' ? 'Убакыт маалыматы табылган жок!' : 'Данные о времени не найдены!');
+        window.location.href = 'index.html';
+        return;
+    }
+
+    timeLeft = partData.time * 60;
     const timerElement = document.getElementById('timer');
     if (!timerElement) {
         console.error('Timer element not found');
@@ -357,15 +291,16 @@ function submitTest() {
     currentTest.forEach((q, i) => {
         if (userAnswers[i] === q.correct) score++;
     });
-    const percentage = (score / 30 * 100).toFixed(2);
+    const percentage = (score / totalQuestions * 100).toFixed(2);
     const knowledge = percentage >= 80 ? (currentLang === 'ky' ? 'Жогорку' : 'Высокий') :
                      percentage >= 50 ? (currentLang === 'ky' ? 'Орточо' : 'Средний') :
                      (currentLang === 'ky' ? 'Төмөн' : 'Низкий');
 
-    console.log('Test results:', { score, percentage, knowledge });
+    console.log('Test results:', { score, percentage, knowledge, totalQuestions });
     localStorage.setItem('score', score);
     localStorage.setItem('percentage', percentage);
     localStorage.setItem('knowledge', knowledge);
+    localStorage.setItem('totalQuestions', totalQuestions);
     window.location.href = 'results.html';
 }
 
@@ -422,7 +357,7 @@ function initializeEventListeners() {
 
     if (prevQuestionButton) prevQuestionButton.addEventListener('click', prevQuestion);
     if (nextQuestionButton) nextQuestionButton.addEventListener('click', nextQuestion);
-    if (submitTestButton) submitTestButton.addEventListener('click', submitTest);
+    if (submitTestButton) submitHigher Grok 3 usage quotas than the free plan.ubmitTest);
     if (backButtonTest) backButtonTest.addEventListener('click', backToMain);
 
     // results.html
