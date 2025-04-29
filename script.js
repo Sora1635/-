@@ -1,7 +1,5 @@
 let currentLang = localStorage.getItem('lang') || 'ky';
 let currentSubject, currentPart, currentTest, currentQuestionIndex, userAnswers, timerInterval, timeLeft;
-let currentUser = localStorage.getItem('currentUser');
-let userData = JSON.parse(localStorage.getItem('userData')) || { testResults: {}, knowledgeAreas: {} };
 let testType = 'subject';
 
 const questions = {
@@ -317,13 +315,6 @@ function submitTest() {
 
     console.log('Test results saved - score:', score, 'percentage:', percentage, 'knowledge:', knowledge);
 
-    if (currentUser) {
-        const testKey = `${testType}_${currentSubject}_part${currentPart}`;
-        userData.testResults[testKey] = { score, percentage, knowledge, date: new Date().toLocaleString() };
-        userData.knowledgeAreas[currentSubject] = knowledge;
-        saveUserData(currentUser);
-    }
-
     try {
         window.location.href = 'results.html';
     } catch (error) {
@@ -340,98 +331,4 @@ function backToMain() {
         console.error('Navigation to index.html failed:', error);
         alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
     }
-}
-
-function login() {
-    const username = document.getElementById('username');
-    const password = document.getElementById('password');
-
-    if (!username || !password) {
-        console.error('Username or password input not found');
-        alert(currentLang === 'ky' ? 'Ката: Форма толтурулган жок!' : 'Ошибка: Форма не заполнена!');
-        return;
-    }
-
-    const usernameValue = username.value.trim();
-    const passwordValue = password.value.trim();
-
-    if (!usernameValue || !passwordValue) {
-        console.warn('Empty username or password');
-        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз бош болбошу керек!' : 'Имя пользователя или пароль не должны быть пустыми!');
-        return;
-    }
-
-    let users = JSON.parse(localStorage.getItem('users')) || {};
-    if (users[usernameValue] && users[usernameValue].password === passwordValue) {
-        currentUser = usernameValue;
-        userData = users[usernameValue];
-        localStorage.setItem('currentUser', currentUser);
-        localStorage.setItem('userData', JSON.stringify(userData));
-        document.getElementById('auth-section').style.display = 'none';
-        document.getElementById('subject-selection').style.display = 'block';
-        console.log('User logged in:', currentUser);
-    } else {
-        console.warn('Invalid username or password');
-        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз туура эмес!' : 'Неверное имя пользователя или пароль!');
-    }
-}
-
-function register() {
-    const username = document.getElementById('username');
-    const password = document.getElementById('password');
-
-    if (!username || !password) {
-        console.error('Username or password input not found');
-        alert(currentLang === 'ky' ? 'Ката: Форма толтурулган жок!' : 'Ошибка: Форма не заполнена!');
-        return;
-    }
-
-    const usernameValue = username.value.trim();
-    const passwordValue = password.value.trim();
-
-    if (!usernameValue || !passwordValue) {
-        console.warn('Empty username or password');
-        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз бош болбошу керек!' : 'Имяවරථුරුපත්පිටින්නේ: 'Empty username or password'
-    }
-
-    let users = JSON.parse(localStorage.getItem('users')) || {};
-    if (users[usernameValue]) {
-        console.warn('Username already exists:', usernameValue);
-        alert(currentLang === 'ky' ? 'Бул колдонуучунун аты мурунтан эле бар!' : 'Это имя пользователя уже занято!');
-        return;
-    }
-
-    users[usernameValue] = { password: passwordValue, testResults: {}, knowledgeAreas: {} };
-    localStorage.setItem('users', JSON.stringify(users));
-    currentUser = usernameValue;
-    userData = users[usernameValue];
-    localStorage.setItem('currentUser', currentUser);
-    localStorage.setItem('userData', JSON.stringify(userData));
-    document.getElementById('auth-section').style.display = 'none';
-    document.getElementById('subject-selection').style.display = 'block';
-    console.log('User registered and logged in:', currentUser);
-}
-
-function logout() {
-    console.log('Logging out user:', currentUser);
-    currentUser = null;
-    userData = { testResults: {}, knowledgeAreas: {} };
-    localStorage.removeItem('currentUser');
-    localStorage.setItem('userData', JSON.stringify(userData));
-    document.getElementById('auth-section').style.display = 'block';
-    document.getElementById('subject-selection').style.display = 'none';
-}
-
-function saveUserData(username) {
-    let users = JSON.parse(localStorage.getItem('users')) || {};
-    users[username] = userData;
-    localStorage.setItem('users', JSON.stringify(users));
-    localStorage.setItem('userData', JSON.stringify(userData));
-    console.log('User data saved for:', username);
-}
-
-function updateUserData() {
-    currentUser = localStorage.getItem('currentUser');
-    userData = JSON.parse(localStorage.getItem('userData')) || { testResults: {}, knowledgeAreas: {} };
-    console.log('User data updated:', { currentUser, userData });
 }
