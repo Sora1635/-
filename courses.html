@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-ky="Курстар" data-lang-ru="Курсы">Курстар</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -29,7 +30,7 @@
                    data-lang-ru="Здесь будут аудиокниги, видеоуроки, вопросы и ответы, мини-тесты.">
                     Бул жерде аудиокитептер, видеоуроктор, суроолор жана жооптор, мини-тесттер болот.
                 </p>
-                <button onclick="startCourseLesson()" data-lang-ky="Урокту баштоо" data-lang-ru="Начать урок">Урокту баштоо</button>
+                <button onclick="startCourseLesson()" data-lang-ky="Урокту баштоо" data-lang-ru="Начать урок"><i class="fas fa-play"></i> Урокту баштоо</button>
             </div>
         </div>
     </div>
@@ -37,6 +38,10 @@
     <script>
         window.onload = function() {
             console.log('Courses page loaded');
+            if (typeof currentLang === 'undefined') {
+                currentLang = localStorage.getItem('lang') || 'ky';
+                console.log('currentLang initialized to:', currentLang);
+            }
             updateTexts();
             const subject = localStorage.getItem('courseSubject');
             console.log('Course subject:', subject);
@@ -49,6 +54,7 @@
         function startCourseLesson() {
             console.log('Starting course lesson for subject:', localStorage.getItem('courseSubject'));
             alert(currentLang === 'ky' ? 'Урок башталды!' : 'Урок начался!');
+            // Здесь можно добавить логику для запуска урока
         }
     </script>
 </body>

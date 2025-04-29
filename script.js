@@ -75,19 +75,14 @@ const questions = {
 
 function switchLanguage(lang) {
     console.log('Switching language to:', lang);
-    if (!lang) {
-        console.error('Language not provided');
-        return;
-    }
     currentLang = lang;
     localStorage.setItem('lang', lang);
     updateTexts();
 }
 
 function updateTexts() {
-    console.log('Updating texts for language:', currentLang);
     if (!currentLang) {
-        console.error('currentLang is not defined, defaulting to "ky"');
+        console.error('currentLang is not defined in updateTexts, defaulting to "ky"');
         currentLang = 'ky';
     }
 
@@ -118,15 +113,17 @@ function updateTexts() {
             option.textContent = currentLang === 'ky' ? option.getAttribute('data-lang-ky') : option.getAttribute('data-lang-ru');
         }
     });
+
+    console.log('Texts updated for language:', currentLang);
 }
 
 function selectSubject(subject) {
-    console.log('Selecting subject:', subject);
     if (!subject) {
-        console.error('Subject is not defined');
+        console.error('Subject is not defined in selectSubject!');
         alert(currentLang === 'ky' ? 'Предмет тандалган жок!' : 'Предмет не выбран!');
         return;
     }
+    console.log('Selecting subject:', subject);
     currentSubject = subject;
     localStorage.setItem('subject', subject);
     try {
@@ -138,35 +135,34 @@ function selectSubject(subject) {
 }
 
 function selectPart(part) {
-    console.log('Selecting part:', part);
     if (!part) {
-        console.error('Part is not defined');
+        console.error('Part is not defined in selectPart!');
         alert(currentLang === 'ky' ? 'Бөлүк тандалган жок!' : 'Часть не выбрана!');
         return;
     }
 
     const currentSubject = localStorage.getItem('subject');
     if (!currentSubject) {
-        console.error('Subject is not set');
+        console.error('Subject is not set before selecting part!');
         alert(currentLang === 'ky' ? 'Предмет тандалган жок! Башкы бетке кайтыңыз.' : 'Предмет не выбран! Вернитесь на главную страницу.');
         window.location.href = 'index.html';
         return;
     }
 
+    console.log('Selecting part:', part, 'for subject:', currentSubject);
     currentPart = part;
     localStorage.setItem('part', part);
     try {
         window.location.href = 'part-details.html';
     } catch (error) {
         console.error('Navigation to part-details.html failed:', error);
-        alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
+        alert(currentLang === 'ky' ? 'Навигацияда ката кетти! "part-details.html" файлы табылган жок.' : 'Ошибка навигации! Файл "part-details.html" не найден.');
     }
 }
 
 function updatePartDetails() {
-    console.log('Updating part details, currentPart:', currentPart);
     if (!currentPart) {
-        console.error('currentPart is not defined');
+        console.error('currentPart is not defined in updatePartDetails:', currentPart);
         return;
     }
 
@@ -177,17 +173,17 @@ function updatePartDetails() {
             ? `Суроолордун саны: 30, Убакыт: ${time} мүнөт`
             : `Количество вопросов: 30, Время: ${time} минут`;
     } else {
-        console.warn('Element with id "part-description" not found');
+        console.warn('Element with id "part-description" not found.');
     }
 }
 
 function startTest() {
-    console.log('Starting test, subject:', currentSubject, 'part:', currentPart);
     if (!currentSubject || !currentPart) {
-        console.error('Subject or part not set');
+        console.error('Subject or part not set! Subject:', currentSubject, 'Part:', currentPart);
         alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
         return;
     }
+    console.log('Starting test for subject:', currentSubject, 'part:', currentPart);
     try {
         window.location.href = 'test.html';
     } catch (error) {
@@ -197,17 +193,17 @@ function startTest() {
 }
 
 function loadTest() {
-    console.log('Loading test, subject:', currentSubject, 'part:', currentPart);
     const subjectData = questions[currentSubject];
     if (!subjectData) {
-        console.error('Subject not found:',    alert(currentLang === 'ky' ? 'Предмет табылган жок!' : 'Предмет не найден!');
+        console.error('Subject not found in questions:', currentSubject);
+        alert(currentLang === 'ky' ? 'Предмет табылган жок!' : 'Предмет не найден!');
         window.location.href = 'index.html';
         return;
     }
 
-    const partData = subjectData['part' + currentPart];
+    const partData = subjectData[`part${currentPart}`];
     if (!partData) {
-        console.error('Part not found');
+        console.error('Part not found for subject:', currentSubject, 'part:', currentPart);
         alert(currentLang === 'ky' ? 'Бөлүк табылган жок!' : 'Часть не найдена!');
         window.location.href = 'index.html';
         return;
@@ -215,7 +211,7 @@ function loadTest() {
 
     const variants = Object.keys(partData).filter(key => key.startsWith('variant'));
     if (variants.length === 0) {
-        console.error('No variants found');
+        console.error('No variants found for subject:', currentSubject, 'part:', currentPart);
         alert(currentLang === 'ky' ? 'Варианттар табылган жок!' : 'Варианты не найдены!');
         window.location.href = 'index.html';
         return;
@@ -226,7 +222,7 @@ function loadTest() {
 
     const selectedQuestions = partData[randomVariant];
     if (!selectedQuestions || selectedQuestions.length !== 30) {
-        console.error('Invalid number of questions');
+        console.error('Invalid number of questions in variant:', randomVariant, 'Found:', selectedQuestions ? selectedQuestions.length : 0);
         alert(currentLang === 'ky' ? 'Суроолор саны туура эмес! 30 суроо болушу керек.' : 'Неверное количество вопросов! Должно быть 30 вопросов.');
         window.location.href = 'index.html';
         return;
@@ -239,13 +235,12 @@ function loadTest() {
 }
 
 function displayQuestion() {
-    console.log('Displaying question:', currentQuestionIndex + 1);
     const questionCounter = document.getElementById('question-counter');
     const questionsDiv = document.getElementById('questions');
     const answersDiv = document.getElementById('answers');
 
     if (!questionCounter || !questionsDiv || !answersDiv) {
-        console.error('Required elements not found');
+        console.error('Required elements not found:', { questionCounter, questionsDiv, answersDiv });
         return;
     }
 
@@ -263,13 +258,11 @@ function displayQuestion() {
     document.querySelectorAll('input[name="answer"]').forEach(input => {
         input.addEventListener('change', (e) => {
             userAnswers[currentQuestionIndex] = e.target.value;
-            console.log('Answer selected:', e.target.value);
         });
     });
 }
 
 function prevQuestion() {
-    console.log('Going to previous question');
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         displayQuestion();
@@ -277,7 +270,6 @@ function prevQuestion() {
 }
 
 function nextQuestion() {
-    console.log('Going to next question');
     if (currentQuestionIndex < 29) {
         currentQuestionIndex++;
         displayQuestion();
@@ -285,7 +277,6 @@ function nextQuestion() {
 }
 
 function startTimer() {
-    console.log('Starting timer');
     timeLeft = (currentPart == 1 ? 30 : 60) * 60;
     const timerElement = document.getElementById('timer');
 
@@ -308,7 +299,6 @@ function startTimer() {
 }
 
 function submitTest() {
-    console.log('Submitting test');
     clearInterval(timerInterval);
     let score = 0;
     currentTest.forEach((q, i) => {
@@ -323,7 +313,7 @@ function submitTest() {
     localStorage.setItem('percentage', percentage);
     localStorage.setItem('knowledge', knowledge);
 
-    console.log('Test results:', { score, percentage, knowledge });
+    console.log('Test results saved - score:', score, 'percentage:', percentage, 'knowledge:', knowledge);
 
     try {
         window.location.href = 'results.html';
@@ -342,3 +332,101 @@ function backToMain() {
         alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
     }
 }
+
+// Закомментированный код авторизации
+/*
+function login() {
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+
+    if (!username || !password) {
+        console.error('Username or password input not found');
+        alert(currentLang === 'ky' ? 'Ката: Форма толтурулган жок!' : 'Ошибка: Форма не заполнена!');
+        return;
+    }
+
+    const usernameValue = username.value.trim();
+    const passwordValue = password.value.trim();
+
+    if (!usernameValue || !passwordValue) {
+        console.warn('Empty username or password');
+        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз бош болбошу керек!' : 'Имя пользователя или пароль не должны быть пустыми!');
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    if (users[usernameValue] && users[usernameValue].password === passwordValue) {
+        currentUser = usernameValue;
+        userData = users[usernameValue];
+        localStorage.setItem('currentUser', currentUser);
+        localStorage.setItem('userData', JSON.stringify(userData));
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('subject-selection').style.display = 'block';
+        console.log('User logged in:', currentUser);
+    } else {
+        console.warn('Invalid username or password');
+        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз туура эмес!' : 'Неверное имя пользователя или пароль!');
+    }
+}
+
+function register() {
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+
+    if (!username || !password) {
+        console.error('Username or password input not found');
+        alert(currentLang === 'ky' ? 'Ката: Форма толтурулган жок!' : 'Ошибка: Форма не заполнена!');
+        return;
+    }
+
+    const usernameValue = username.value.trim();
+    const passwordValue = password.value.trim();
+
+    if (!usernameValue || !passwordValue) {
+        console.warn('Empty username or password');
+        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз бош болбошу керек!' : 'Имя пользователя или пароль не должны быть пустыми!');
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    if (users[usernameValue]) {
+        console.warn('Username already exists:', usernameValue);
+        alert(currentLang === 'ky' ? 'Бул колдонуучунун аты мурунтан эле бар!' : 'Это имя пользователя уже занято!');
+        return;
+    }
+
+    users[usernameValue] = { password: passwordValue, testResults: {}, knowledgeAreas: {} };
+    localStorage.setItem('users', JSON.stringify(users));
+    currentUser = usernameValue;
+    userData = users[usernameValue];
+    localStorage.setItem('currentUser', currentUser);
+    localStorage.setItem('userData', JSON.stringify(userData));
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('subject-selection').style.display = 'block';
+    console.log('User registered and logged in:', currentUser);
+}
+
+function logout() {
+    console.log('Logging out user:', currentUser);
+    currentUser = null;
+    userData = { testResults: {}, knowledgeAreas: {} };
+    localStorage.removeItem('currentUser');
+    localStorage.setItem('userData', JSON.stringify(userData));
+    document.getElementById('auth-section').style.display = 'block';
+    document.getElementById('subject-selection').style.display = 'none';
+}
+
+function saveUserData(username) {
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    users[username] = userData;
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('userData', JSON.stringify(userData));
+    console.log('User data saved for:', username);
+}
+
+function updateUserData() {
+    currentUser = localStorage.getItem('currentUser');
+    userData = JSON.parse(localStorage.getItem('userData')) || { testResults: {}, knowledgeAreas: {} };
+    console.log('User data updated:', { currentUser, userData });
+}
+*/

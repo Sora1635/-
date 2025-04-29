@@ -39,8 +39,8 @@
 
             if (!score || !percentage || !knowledge) {
                 console.error('Results data not found in localStorage!');
-                alert(currentLang === 'ky' 
-                    ? 'Ката: Жыйынтыктар табылган жок!' 
+                alert(currentLang === 'ky'
+                    ? 'Ката: Жыйынтыктар табылган жок!'
                     : 'Ошибка: Результаты не найдены!');
                 window.location.href = 'index.html';
                 return;
@@ -51,7 +51,7 @@
 
             if (resultsTitle && resultsDetails) {
                 resultsTitle.textContent = currentLang === 'ky' ? 'Тесттин жыйынтыктары' : 'Результаты теста';
-                resultsDetails.innerHTML = 
+                resultsDetails.innerHTML =
                     `${currentLang === 'ky' ? 'Балл' : 'Баллы'}: ${score}/30<br>` +
                     `${currentLang === 'ky' ? 'Пайыз' : 'Процент'}: ${percentage}%<br>` +
                     `${currentLang === 'ky' ? 'Билим деңгээли' : 'Уровень знаний'}: ${knowledge}`;
