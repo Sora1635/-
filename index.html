@@ -7,16 +7,88 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>ОРТ Пробалык Тест</h1>
-    </header>
-    <main>
-        <h2>Предметти тандаңыз</h2>
-        <div class="subjects">
-            <button onclick="selectSubject('math')">Математика</button>
-            <button onclick="selectSubject('kyrgyz')">Кыргыз тили</button>
+    <div class="auth-container" id="auth-container">
+        <h2>Системага кирүү же катталуу</h2>
+        <div class="auth-form">
+            <input type="text" id="username" placeholder="Атыңыз">
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Сырсөз">
+            <button onclick="register()">Катталуу</button>
+            <button onclick="login()">Кирүү</button>
         </div>
-    </main>
+    </div>
+    <div class="main-container" id="main-container" style="display: none;">
+        <nav class="sidebar">
+            <h2>Башкы меню</h2>
+            <ul>
+                <li onclick="showSection('tests')">Тесттер</li>
+                <li onclick="showSection('courses')">Курстар</li>
+                <li onclick="showSection('qa')">Жалпы суроолор жана жооптор</li>
+                <li onclick="showSection('feedback')">Кайтарым байланыш</li>
+                <li onclick="showSection('results')">Тестирлөөлөрдүн жыйынтыктары</li>
+                <li onclick="showSection('continue')">Курстарды/урокторду улантуу</li>
+                <li onclick="logout()">Чыгуу</li>
+            </ul>
+        </nav>
+        <div class="content">
+            <div id="tests-section" class="section">
+                <h2>Тесттер</h2>
+                <div class="test-options">
+                    <h3>ОРТ Пробалык Тестирлөөлөр</h3>
+                    <select onchange="quickSelectSubject(this.value)">
+                        <option value="">Предметти тандаңыз</option>
+                        <option value="math">Математика</option>
+                        <option value="kyrgyz">Кыргыз тили</option>
+                        <option value="manas">Манас таануу</option>
+                    </select>
+                    <button onclick="selectTestType('ort_prob')">Кадимки жол менен</button>
+                </div>
+                <div class="test-options">
+                    <h3>ОРТ Сессиялык Тестирлөөлөр</h3>
+                    <select onchange="quickSelectSubject(this.value, 'ort_session')">
+                        <option value="">Предметти тандаңыз</option>
+                        <option value="math">Математика</option>
+                        <option value="kyrgyz">Кыргыз тили</option>
+                        <option value="manas">Манас таануу</option>
+                    </select>
+                    <button onclick="selectTestType('ort_session')">Кадимки жол менен</button>
+                </div>
+            </div>
+            <div id="courses-section" class="section" style="display: none;">
+                <h2>Курстар</h2>
+                <select onchange="quickSelectCourse(this.value)">
+                    <option value="">Предметти тандаңыз</option>
+                    <option value="math">Математика</option>
+                    <option value="kyrgyz">Кыргыз тили</option>
+                    <option value="manas">Манас таануу</option>
+                </select>
+                <button onclick="showCourses()">Кадимки жол менен</button>
+            </div>
+            <div id="qa-section" class="section" style="display: none;">
+                <h2>Жалпы суроолор жана жооптор</h2>
+                <p>Бул жерде жалпы суроолор жана жооптор болот.</p>
+            </div>
+            <div id="feedback-section" class="section" style="display: none;">
+                <h2>Кайтарым байланыш / Көп берилүүчү суроолор</h2>
+                <textarea placeholder="Сиздин сурооңуз же пикириңиз"></textarea>
+                <button onclick="alert('Пикириңиз кабыл алынды!')">Жөнөтүү</button>
+            </div>
+            <div id="results-section" class="section" style="display: none;">
+                <h2>Тестирлөөлөрдүн жыйынтыктары</h2>
+                <select onchange="showResults(this.value)">
+                    <option value="">Предметти тандаңыз</option>
+                    <option value="math">Математика</option>
+                    <option value="kyrgyz">Кыргыз тили</option>
+                    <option value="manas">Манас таануу</option>
+                </select>
+                <div id="results-content"></div>
+            </div>
+            <div id="continue-section" class="section" style="display: none;">
+                <h2>Курстарды/урокторду улантуу</h2>
+                <div id="continue-content"></div>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

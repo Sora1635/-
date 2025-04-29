@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Бөлүктү тандаңыз</title>
+    <title>Курстар</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,10 +15,11 @@
             </ul>
         </nav>
         <div class="content">
-            <h2>Бөлүктү тандаңыз</h2>
-            <div class="parts">
-                <button onclick="selectPart(1)">1-бөлүк (Жеңил)</button>
-                <button onclick="selectPart(2)">2-бөлүк (Татаал)</button>
+            <h2>Курстар</h2>
+            <div id="course-details">
+                <h3 id="course-title"></h3>
+                <p>Бул жерде аудиокитептер, видеоуроктор, суроолор жана жооптор, мини-тесттер болот.</p>
+                <button onclick="startCourseLesson()">Урокту баштоо</button>
             </div>
         </div>
     </div>

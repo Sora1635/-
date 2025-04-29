@@ -1,190 +1,145 @@
+// Пользовательские данные
+let currentUser = null;
+let users = JSON.parse(localStorage.getItem('users')) || {};
+
+// Система аккаунтов
+function register() {
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    if (!username || !email || !password) {
+        alert('Бардык талааларды толтуруңуз!');
+        return;
+    }
+
+    if (users[email]) {
+        alert('Бул email мурунтан катталган!');
+        return;
+    }
+
+    users[email] = {
+        username,
+        password,
+        testResults: {},
+        courseProgress: {},
+        knowledgeAreas: {}
+    };
+    localStorage.setItem('users', JSON.stringify(users));
+    loginUser(email);
+}
+
+function login() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    if (!users[email] || users[email].password !== password) {
+        alert('Email же сырсөз туура эмес!');
+        return;
+    }
+
+    loginUser(email);
+}
+
+function loginUser(email) {
+    currentUser = users[email];
+    localStorage.setItem('currentUser', email);
+    document.getElementById('auth-container').style.display = 'none';
+    document.getElementById('main-container').style.display = 'flex';
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('currentUser');
+    window.location.reload();
+}
+
+// Проверка авторизации
+window.onload = function() {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser && users[savedUser]) {
+        loginUser(savedUser);
+    }
+};
+
+// Переключение секций
+function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(section => {
+        section.style.display = 'none';
+    });
+    document.getElementById(`${sectionId}-section`).style.display = 'block';
+}
+
+// Тесты
 let currentSubject = localStorage.getItem('subject') || '';
 let currentPart = localStorage.getItem('part') || 0;
 let currentTest = null;
 let timerInterval = null;
 let currentQuestionIndex = 0;
 let userAnswers = Array(30).fill(null);
+let testType = 'ort_prob';
 
 // Все вопросы встроены прямо в код
 const questions = {
     math_part1: [
-        {
-            question: "2 + 2 канча болот?",
-            options: { a: "3", б: "4", в: "5", г: "6" },
-            correct: "б"
-        },
-        {
-            question: "5 - 3 канча болот?",
-            options: { a: "1", б: "2", в: "3", г: "4" },
-            correct: "б"
-        },
-        {
-            question: "3 * 4 канча болот?",
-            options: { a: "6", б: "8", в: "10", г: "12" },
-            correct: "г"
-        },
-        {
-            question: "10 / 2 канча болот?",
-            options: { a: "2", б: "4", в: "5", г: "6" },
-            correct: "в"
-        },
-        {
-            question: "7 + 8 канча болот?",
-            options: { a: "13", б: "15", в: "16", г: "17" },
-            correct: "б"
-        },
-        {
-            question: "9 - 4 канча болот?",
-            options: { a: "3", б: "5", в: "6", г: "7" },
-            correct: "б"
-        },
-        {
-            question: "6 * 3 канча болот?",
-            options: { a: "9", б: "12", в: "15", г: "18" },
-            correct: "г"
-        },
-        {
-            question: "20 / 5 канча болот?",
-            options: { a: "2", б: "4", в: "5", г: "10" },
-            correct: "в"
-        },
-        {
-            question: "12 + 13 канча болот?",
-            options: { a: "23", б: "25", в: "26", г: "27" },
-            correct: "б"
-        },
-        {
-            question: "15 - 7 канча болот?",
-            options: { a: "6", б: "8", в: "9", г: "10" },
-            correct: "б"
-        },
-        {
-            question: "8 * 9 канча болот?",
-            options: { a: "64", б: "72", в: "78", г: "81" },
-            correct: "б"
-        },
-        {
-            question: "24 / 6 канча болот?",
-            options: { a: "3", б: "4", в: "5", г: "6" },
-            correct: "б"
-        },
-        {
-            question: "17 + 18 канча болот?",
-            options: { a: "33", б: "35", в: "36", г: "37" },
-            correct: "б"
-        },
-        {
-            question: "22 - 9 канча болот?",
-            options: { a: "11", б: "12", в: "13", г: "14" },
-            correct: "в"
-        },
-        {
-            question: "7 * 8 канча болот?",
-            options: { a: "49", б: "56", в: "58", г: "64" },
-            correct: "б"
-        },
-        {
-            question: "30 / 5 канча болот?",
-            options: { a: "5", б: "6", в: "7", г: "8" },
-            correct: "б"
-        },
-        {
-            question: "23 + 24 канча болот?",
-            options: { a: "45", б: "46", в: "47", г: "48" },
-            correct: "в"
-        },
-        {
-            question: "28 - 12 канча болот?",
-            options: { a: "14", б: "16", в: "18", г: "20" },
-            correct: "б"
-        },
-        {
-            question: "9 * 10 канча болот?",
-            options: { a: "80", б: "90", в: "95", г: "100" },
-            correct: "б"
-        },
-        {
-            question: "40 / 8 канча болот?",
-            options: { a: "4", б: "5", в: "6", г: "7" },
-            correct: "б"
-        },
-        {
-            question: "31 + 32 канча болот?",
-            options: { a: "61", б: "62", в: "63", г: "64" },
-            correct: "в"
-        },
-        {
-            question: "35 - 15 канча болот?",
-            options: { a: "18", б: "20", в: "22", г: "25" },
-            correct: "б"
-        },
-        {
-            question: "11 * 12 канча болот?",
-            options: { a: "121", б: "132", в: "133", г: "144" },
-            correct: "б"
-        },
-        {
-            question: "50 / 10 канча болот?",
-            options: { a: "4", б: "5", в: "6", г: "7" },
-            correct: "б"
-        },
-        {
-            question: "42 + 43 канча болот?",
-            options: { a: "83", б: "84", в: "85", г: "86" },
-            correct: "в"
-        },
-        {
-            question: "47 - 23 канча болот?",
-            options: { a: "22", б: "24", в: "26", г: "28" },
-            correct: "б"
-        },
-        {
-            question: "13 * 14 канча болот?",
-            options: { a: "169", б: "170", в: "182", г: "184" },
-            correct: "в"
-        },
-        {
-            question: "60 / 15 канча болот?",
-            options: { a: "3", б: "4", в: "5", г: "6" },
-            correct: "б"
-        },
-        {
-            question: "55 + 56 канча болот?",
-            options: { a: "109", б: "110", в: "111", г: "112" },
-            correct: "в"
-        },
-        {
-            question: "60 - 25 канча болот?",
-            options: { a: "33", б: "35", в: "37", г: "40" },
-            correct: "б"
-        }
+        { question: "2 + 2 канча болот?", options: { a: "3", b: "4", c: "5", d: "6" }, correct: "b" },
+        { question: "5 - 3 канча болот?", options: { a: "1", b: "2", c: "3", d: "4" }, correct: "b" },
+        { question: "3 * 4 канча болот?", options: { a: "6", b: "8", c: "10", d: "12" }, correct: "d" },
+        { question: "10 / 2 канча болот?", options: { a: "2", b: "4", c: "5", d: "6" }, correct: "c" },
+        { question: "7 + 8 канча болот?", options: { a: "13", b: "15", c: "16", d: "17" }, correct: "b" },
+        { question: "9 - 4 канча болот?", options: { a: "3", b: "5", c: "6", d: "7" }, correct: "b" },
+        { question: "6 * 3 канча болот?", options: { a: "9", b: "12", c: "15", d: "18" }, correct: "d" },
+        { question: "20 / 5 канча болот?", options: { a: "2", b: "4", c: "5", d: "10" }, correct: "c" },
+        { question: "12 + 13 канча болот?", options: { a: "23", b: "25", c: "26", d: "27" }, correct: "b" },
+        { question: "15 - 7 канча болот?", options: { a: "6", b: "8", c: "9", d: "10" }, correct: "b" },
+        { question: "8 * 9 канча болот?", options: { a: "64", b: "72", c: "78", d: "81" }, correct: "b" },
+        { question: "24 / 6 канча болот?", options: { a: "3", b: "4", c: "5", d: "6" }, correct: "b" },
+        { question: "17 + 18 канча болот?", options: { a: "33", b: "35", c: "36", d: "37" }, correct: "b" },
+        { question: "22 - 9 канча болот?", options: { a: "11", b: "12", c: "13", d: "14" }, correct: "c" },
+        { question: "7 * 8 канча болот?", options: { a: "49", b: "56", c: "58", d: "64" }, correct: "b" },
+        { question: "30 / 5 канча болот?", options: { a: "5", b: "6", c: "7", d: "8" }, correct: "b" },
+        { question: "23 + 24 канча болот?", options: { a: "45", b: "46", c: "47", d: "48" }, correct: "c" },
+        { question: "28 - 12 канча болот?", options: { a: "14", b: "16", c: "18", d: "20" }, correct: "b" },
+        { question: "9 * 10 канча болот?", options: { a: "80", b: "90", c: "95", d: "100" }, correct: "b" },
+        { question: "40 / 8 канча болот?", options: { a: "4", b: "5", c: "6", d: "7" }, correct: "b" },
+        { question: "31 + 32 канча болот?", options: { a: "61", b: "62", c: "63", d: "64" }, correct: "c" },
+        { question: "35 - 15 канча болот?", options: { a: "18", b: "20", c: "22", d: "25" }, correct: "b" },
+        { question: "11 * 12 канча болот?", options: { a: "121", b: "132", c: "133", d: "144" }, correct: "b" },
+        { question: "50 / 10 канча болот?", options: { a: "4", b: "5", c: "6", d: "7" }, correct: "b" },
+        { question: "42 + 43 канча болот?", options: { a: "83", b: "84", c: "85", d: "86" }, correct: "c" },
+        { question: "47 - 23 канча болот?", options: { a: "22", b: "24", c: "26", d: "28" }, correct: "b" },
+        { question: "13 * 14 канча болот?", options: { a: "169", b: "170", c: "182", d: "184" }, correct: "c" },
+        { question: "60 / 15 канча болот?", options: { a: "3", b: "4", c: "5", d: "6" }, correct: "b" },
+        { question: "55 + 56 канча болот?", options: { a: "109", b: "110", c: "111", d: "112" }, correct: "c" },
+        { question: "60 - 25 канча болот?", options: { a: "33", b: "35", c: "37", d: "40" }, correct: "b" }
     ],
     math_part2: [
-        // Пример для Математики, часть 2
-        {
-            question: "2^3 канча болот?",
-            options: { a: "6", б: "8", в: "10", г: "12" },
-            correct: "б"
-        }
-        // Добавьте ещё 29 вопросов для math_part2
+        { question: "2^3 канча болот?", options: { a: "6", b: "8", c: "10", d: "12" }, correct: "b" }
+        // Добавьте ещё 29 вопросов
     ],
     kyrgyz_part1: [
-        {
-            question: "Кыргыз тилинде 'күн' сөзү эмнени билдирет?",
-            options: { a: "Ай", б: "Жылдыз", в: "Күн", г: "Суу" },
-            correct: "в"
-        }
-        // Добавьте ещё 29 вопросов для kyrgyz_part1
+        { question: "Кыргыз тилинде 'күн' сөзү эмнени билдирет?", options: { a: "Ай", b: "Жылдыз", c: "Күн", d: "Суу" }, correct: "c" }
+        // Добавьте ещё 29 вопросов
     ],
     kyrgyz_part2: [
-        {
-            question: "Кыргыз тилинде 'тоо' сөзү эмнени билдирет?",
-            options: { a: "Дарыя", б: "Тоо", в: "Токой", г: "Жол" },
-            correct: "б"
-        }
-        // Добавьте ещё 29 вопросов для kyrgyz_part2
+        { question: "Кыргыз тилинде 'тоо' сөзү эмнени билдирет?", options: { a: "Дарыя", b: "Тоо", c: "Токой", d: "Жол" }, correct: "b" }
+        // Добавьте ещё 29 вопросов
     ]
 };
+
+// Быстрый выбор предмета для теста
+function quickSelectSubject(subject, type = 'ort_prob') {
+    if (subject) {
+        testType = type;
+        selectSubject(subject);
+    }
+}
+
+// Выбор типа теста
+function selectTestType(type) {
+    testType = type;
+    window.location.href = 'subject.html';
+}
 
 // Предметти тандоо
 function selectSubject(subject) {
@@ -220,7 +175,7 @@ function loadTest() {
     }
     currentTest = questions[key];
     currentQuestionIndex = 0;
-    userAnswers = Array(30).fill(null); // Сбрасываем ответы
+    userAnswers = Array(30).fill(null);
     displayQuestion();
 }
 
@@ -235,23 +190,22 @@ function displayQuestion() {
         <div class="question">
             <p>${currentQuestionIndex + 1}. ${q.question}</p>
             <p>a) ${q.options.a}</p>
-            <p>б) ${q.options.b}</p>
-            <p>в) ${q.options.c}</p>
-            <p>г) ${q.options.d}</p>
+            <p>b) ${q.options.b}</p>
+            <p>c) ${q.options.c}</p>
+            <p>d) ${q.options.d}</p>
         </div>
     `;
     answersDiv.innerHTML = `
         <div class="answer-row">
             <span>${currentQuestionIndex + 1}.</span>
             <label><input type="radio" name="ans${currentQuestionIndex}" value="a" ${userAnswers[currentQuestionIndex] === 'a' ? 'checked' : ''}> a</label>
-            <label><input type="radio" name="ans${currentQuestionIndex}" value="б" ${userAnswers[currentQuestionIndex] === 'б' ? 'checked' : ''}> б</label>
-            <label><input type="radio" name="ans${currentQuestionIndex}" value="в" ${userAnswers[currentQuestionIndex] === 'в' ? 'checked' : ''}> в</label>
-            <label><input type="radio" name="ans${currentQuestionIndex}" value="г" ${userAnswers[currentQuestionIndex] === 'г' ? 'checked' : ''}> г</label>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="b" ${userAnswers[currentQuestionIndex] === 'b' ? 'checked' : ''}> b</label>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="c" ${userAnswers[currentQuestionIndex] === 'c' ? 'checked' : ''}> c</label>
+            <label><input type="radio" name="ans${currentQuestionIndex}" value="d" ${userAnswers[currentQuestionIndex] === 'd' ? 'checked' : ''}> d</label>
         </div>
     `;
     questionCounter.textContent = `${currentQuestionIndex + 1}/30`;
 
-    // Сохраняем выбор пользователя
     answersDiv.querySelectorAll(`input[name="ans${currentQuestionIndex}"]`).forEach(input => {
         input.addEventListener('change', () => {
             userAnswers[currentQuestionIndex] = input.value;
@@ -301,20 +255,78 @@ function submitTest() {
     });
     const percentage = (score / 30 * 100).toFixed(2);
     const knowledge = percentage >= 80 ? 'Жогорку' : percentage >= 50 ? 'Орточо' : 'Төмөн';
-    
+
     localStorage.setItem('score', score);
     localStorage.setItem('percentage', percentage);
     localStorage.setItem('knowledge', knowledge);
+
+    // Сохранение результатов в профиль пользователя
+    if (currentUser) {
+        const testKey = `${testType}_${currentSubject}_part${currentPart}`;
+        currentUser.testResults[testKey] = { score, percentage, knowledge, date: new Date().toLocaleString() };
+        currentUser.knowledgeAreas[currentSubject] = knowledge;
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+
     window.location.href = 'results.html';
 }
 
 // Башкы бетке кайтуу
 function backToMain() {
-    localStorage.clear();
+    localStorage.removeItem('subject');
+    localStorage.removeItem('part');
     window.location.href = 'index.html';
 }
 
-// Бөлүк жөнүндө маалымат барагы үчүн инициализация
-if (window.location.pathname.includes('part-details.html')) {
-    updatePartDetails();
+// Курстар
+function quickSelectCourse(subject) {
+    if (subject) {
+        localStorage.setItem('courseSubject', subject);
+        window.location.href = 'courses.html';
+    }
+}
+
+function showCourses() {
+    window.location.href = 'courses.html';
+}
+
+function startCourseLesson() {
+    const subject = localStorage.getItem('courseSubject');
+    if (currentUser) {
+        currentUser.courseProgress[subject] = { progress: 50, lastLesson: 'Тема 1' }; // Пример прогресса
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+    alert('Урок башталды!');
+}
+
+// Показ результатов
+function showResults(subject) {
+    const resultsDiv = document.getElementById('results-content');
+    if (!subject) {
+        resultsDiv.innerHTML = '';
+        return;
+    }
+    if (currentUser && currentUser.testResults) {
+        let html = '';
+        for (let key in currentUser.testResults) {
+            if (key.includes(subject)) {
+                const result = currentUser.testResults[key];
+                html += `<p>${key}: Балл: ${result.score}/30, Пайыз: ${result.percentage}%, Билим деңгээли: ${result.knowledge}, Күнү: ${result.date}</p>`;
+            }
+        }
+        resultsDiv.innerHTML = html || 'Жыйынтыктар жок.';
+    }
+}
+
+// Продолжение курсов
+function showContinueContent() {
+    const continueDiv = document.getElementById('continue-content');
+    if (currentUser && currentUser.courseProgress) {
+        let html = '';
+        for (let subject in currentUser.courseProgress) {
+            const progress = currentUser.courseProgress[subject];
+            html += `<p>${subject}: Прогресс: ${progress.progress}%, Акыркы урок: ${progress.lastLesson}</p>`;
+        }
+        continueDiv.innerHTML = html || 'Улантуу үчүн курстар жок.';
+    }
 }

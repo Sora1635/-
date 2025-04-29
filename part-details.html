@@ -7,14 +7,19 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Бөлүк жөнүндө маалымат</h1>
-    </header>
-    <main>
-        <h2>Бөлүк жөнүндө маалымат</h2>
-        <p id="part-description"></p>
-        <button onclick="startTest()">Тестти баштоо</button>
-    </main>
+    <div class="main-container">
+        <nav class="sidebar">
+            <h2>Башкы меню</h2>
+            <ul>
+                <li onclick="window.location.href='subject.html'">Артка</li>
+            </ul>
+        </nav>
+        <div class="content">
+            <h2>Бөлүк жөнүндө маалымат</h2>
+            <p id="part-description"></p>
+            <button onclick="startTest()">Тестти баштоо</button>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

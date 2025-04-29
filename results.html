@@ -7,16 +7,21 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Жыйынтыктар</h1>
-    </header>
-    <main>
-        <h2>Жыйынтыктар</h2>
-        <p id="score"></p>
-        <p id="percentage"></p>
-        <p id="knowledge"></p>
-        <button onclick="backToMain()">Кайра башкы бетке</button>
-    </main>
+    <div class="main-container">
+        <nav class="sidebar">
+            <h2>Башкы меню</h2>
+            <ul>
+                <li onclick="window.location.href='index.html'">Башкы меню</li>
+            </ul>
+        </nav>
+        <div class="content">
+            <h2>Жыйынтыктар</h2>
+            <p id="score"></p>
+            <p id="percentage"></p>
+            <p id="knowledge"></p>
+            <button onclick="backToMain()">Башкы менюга кайтуу</button>
+        </div>
+    </div>
     <script src="script.js"></script>
     <script>
         window.onload = function() {

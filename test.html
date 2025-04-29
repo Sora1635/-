@@ -7,23 +7,28 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Тест</h1>
-    </header>
-    <main>
-        <div class="test-container">
-            <h2 id="test-title"></h2>
-            <div id="timer"></div>
-            <div class="question-nav">
-                <button onclick="prevQuestion()" class="nav-btn">← Мурунку</button>
-                <span id="question-counter"></span>
-                <button onclick="nextQuestion()" class="nav-btn">Кийинки →</button>
+    <div class="main-container">
+        <nav class="sidebar">
+            <h2>Башкы меню</h2>
+            <ul>
+                <li onclick="window.location.href='part-details.html'">Артка</li>
+            </ul>
+        </nav>
+        <div class="content">
+            <div class="test-container">
+                <h2 id="test-title"></h2>
+                <div id="timer"></div>
+                <div class="question-nav">
+                    <button onclick="prevQuestion()" class="nav-btn">← Мурунку</button>
+                    <span id="question-counter"></span>
+                    <button onclick="nextQuestion()" class="nav-btn">Кийинки →</button>
+                </div>
+                <div id="questions" class="question-block"></div>
+                <div id="answers" class="answer-block"></div>
+                <button onclick="submitTest()" class="submit-btn">Тестти тапшыруу</button>
             </div>
-            <div id="questions" class="question-block"></div>
-            <div id="answers" class="answer-block"></div>
-            <button onclick="submitTest()" class="submit-btn">Тестти тапшыруу</button>
         </div>
-    </main>
+    </div>
     <script src="script.js"></script>
     <script>
         window.onload = function() {
