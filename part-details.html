@@ -23,5 +23,21 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Part-details page loaded');
+            currentSubject = localStorage.getItem('subject');
+            currentPart = localStorage.getItem('part');
+            console.log('Loaded subject and part:', { currentSubject, currentPart });
+            if (!currentSubject || !currentPart) {
+                console.error('Subject or part missing, redirecting to index');
+                alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
+                window.location.href = 'index.html';
+                return;
+            }
+            updatePartDetails();
+            updateTexts();
+        });
+    </script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 // Глобальные переменные
 let currentLang = localStorage.getItem('lang') || 'ky';
-let currentSubject = null;
-let currentPart = null;
+let currentSubject = localStorage.getItem('subject');
+let currentPart = localStorage.getItem('part');
 let currentTest = null;
 let currentQuestionIndex = 0;
 let userAnswers = null;
@@ -113,7 +113,7 @@ function updateTexts() {
         }
     });
 
-    // Обновление заголовка предмета на subject.html
+    // Обновление заголовка предмета
     const subjectTitle = document.getElementById('subject-title');
     if (subjectTitle && currentSubject) {
         const subjectName = currentSubject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') :
@@ -122,7 +122,7 @@ function updateTexts() {
         subjectTitle.textContent = (currentLang === 'ky' ? 'Предмет: ' : 'Предмет: ') + subjectName;
     }
 
-    // Обновление результатов на results.html
+    // Обновление результатов
     const resultsTitle = document.getElementById('results-title');
     const resultsDetails = document.getElementById('results-details');
     if (resultsTitle && resultsDetails) {
@@ -137,7 +137,7 @@ function updateTexts() {
         }
     }
 
-    // Обновление заголовка курса на courses.html
+    // Обновление заголовка курса
     const courseTitle = document.getElementById('course-title');
     if (courseTitle) {
         const subject = localStorage.getItem('courseSubject');
@@ -183,7 +183,7 @@ function selectPart(part) {
 
 // Обновление информации о части
 function updatePartDetails() {
-    console.log('updatePartDetails called');
+    console.log('updatePartDetails called with:', { currentSubject, currentPart });
     const descriptionElement = document.getElementById('part-description');
     if (descriptionElement && currentPart) {
         const time = currentPart === '1' ? 30 : 60;
@@ -191,24 +191,28 @@ function updatePartDetails() {
             ? `Суроолордун саны: 30, Убакыт: ${time} мүнөт`
             : `Количество вопросов: 30, Время: ${time} минут`;
     } else {
-        console.warn('Part description element or currentPart not found');
+        console.warn('Part description element or currentPart not found:', { descriptionElement, currentPart });
     }
 }
 
 // Начало теста
 function startTest() {
-    console.log('startTest called');
+    console.log('startTest called with:', { currentSubject, currentPart });
     if (!currentSubject || !currentPart) {
         console.error('Subject or part not set:', { currentSubject, currentPart });
         alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
+        window.location.href = 'index.html';
         return;
     }
+    // Убедимся, что значения сохранены
+    localStorage.setItem('subject', currentSubject);
+    localStorage.setItem('part', currentPart);
     window.location.href = 'test.html';
 }
 
 // Загрузка теста
 function loadTest() {
-    console.log('loadTest called');
+    console.log('loadTest called with:', { currentSubject, currentPart });
     if (!currentSubject || !currentPart) {
         console.error('Subject or part not set:', { currentSubject, currentPart });
         alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
