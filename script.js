@@ -87,14 +87,32 @@ function updateTexts() {
         currentLang = 'ky';
     }
 
-    document.querySelectorAll('[data-lang-ky], [data-lang-ru]').forEach(el => {
-        el.textContent = currentLang === 'ky' ? el.getAttribute('data-lang-ky') : el.getAttribute('data-lang-ru');
+    document.querySelectorAll('[data-lang-ky][data-lang-ru]').forEach(el => {
+        const text = currentLang === 'ky' ? el.getAttribute('data-lang-ky') : el.getAttribute('data-lang-ru');
+        // Проверяем, есть ли дочерние элементы (например, иконки)
+        if (el.children.length > 0) {
+            // Сохраняем иконки и добавляем текст
+            const icon = el.querySelector('i');
+            if (icon) {
+                el.innerHTML = '';
+                el.appendChild(icon);
+                el.appendChild(document.createTextNode(' ' + text));
+            } else {
+                el.textContent = text;
+            }
+        } else {
+            el.textContent = text;
+        }
     });
-    document.querySelectorAll('textarea').forEach(el => {
-        el.placeholder = currentLang === 'ky' ? el.getAttribute('data-lang-ky') : el.getAttribute('data-lang-ru');
+
+    document.querySelectorAll('input, textarea').forEach(el => {
+        if (el.hasAttribute('data-lang-ky') && el.hasAttribute('data-lang-ru')) {
+            el.placeholder = currentLang === 'ky' ? el.getAttribute('data-lang-ky') : el.getAttribute('data-lang-ru');
+        }
     });
+
     document.querySelectorAll('select option').forEach(option => {
-        if (option.value) {
+        if (option.value && option.hasAttribute('data-lang-ky') && option.hasAttribute('data-lang-ru')) {
             option.textContent = currentLang === 'ky' ? option.getAttribute('data-lang-ky') : option.getAttribute('data-lang-ru');
         }
     });
@@ -242,7 +260,7 @@ function displayQuestion() {
 
 function prevQuestion() {
     if (currentQuestionIndex > 0) {
-        currentQuestionIndex--;
+        currentQuestion instagramIndex--;
         displayQuestion();
     }
 }
@@ -307,9 +325,6 @@ function submitTest() {
 
 function backToMain() {
     console.log('backToMain called - Returning to main page');
-    alert('backToMain was called! Check the console for details.');
-    // localStorage.removeItem('subject');
-    // localStorage.removeItem('part');
     try {
         window.location.href = 'index.html';
     } catch (error) {
@@ -323,4 +338,68 @@ function saveUserData(username) {
     users[username] = userData;
     localStorage.setItem('users', JSON.stringify(users));
     localStorage.setItem('userData', JSON.stringify(userData));
+}
+
+function login() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (!username || !password) {
+        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз бош болбошу керек!' : 'Имя пользователя или пароль не должны быть пустыми!');
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    if (users[username] && users[username].password === password) {
+        currentUser = username;
+        userData = users[username];
+        localStorage.setItem('currentUser', currentUser);
+        localStorage.setItem('userData', JSON.stringify(userData));
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('subject-selection').style.display = 'block';
+        console.log('User logged in:', currentUser);
+    } else {
+        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз туура эмес!' : 'Неверное имя пользователя или пароль!');
+    }
+}
+
+function register() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (!username || !password) {
+        alert(currentLang === 'ky' ? 'Колдонуучунун аты же сырсөз бош болбошу керек!' : 'Имя пользователя или пароль не должны быть пустыми!');
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    if (users[username]) {
+        alert(currentLang === 'ky' ? 'Бул колдонуучунун аты мурунтан эле бар!' : 'Это имя пользователя уже занято!');
+        return;
+    }
+
+    users[username] = { password, testResults: {}, knowledgeAreas: {} };
+    localStorage.setItem('users', JSON.stringify(users));
+    currentUser = username;
+    userData = users[username];
+    localStorage.setItem('currentUser', currentUser);
+    localStorage.setItem('userData', JSON.stringify(userData));
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('subject-selection').style.display = 'block';
+    console.log('User registered and logged in:', currentUser);
+}
+
+function logout() {
+    currentUser = null;
+    userData = { testResults: {}, knowledgeAreas: {} };
+    localStorage.removeItem('currentUser');
+    localStorage.setItem('userData', JSON.stringify(userData));
+    document.getElementById('auth-section').style.display = 'block';
+    document.getElementById('subject-selection').style.display = 'none';
+    console.log('User logged out');
+}
+
+function updateUserData() {
+    currentUser = localStorage.getItem('currentUser');
+    userData = JSON.parse(localStorage.getItem('userData')) || { testResults: {}, knowledgeAreas: {} };
 }
