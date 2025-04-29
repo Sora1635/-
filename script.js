@@ -147,6 +147,14 @@ function updateTexts() {
                                      subject === 'manas' ? (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение') : '';
         }
     }
+
+    // Обновление таймера
+    const timerElement = document.getElementById('timer');
+    if (timerElement && timeLeft > 0) {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerElement.textContent = `${currentLang === 'ky' ? 'Калган убакыт' : 'Оставшееся время'}: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
 }
 
 // Выбор предмета
@@ -204,7 +212,6 @@ function startTest() {
         window.location.href = 'index.html';
         return;
     }
-    // Убедимся, что значения сохранены
     localStorage.setItem('subject', currentSubject);
     localStorage.setItem('part', currentPart);
     window.location.href = 'test.html';
@@ -213,6 +220,10 @@ function startTest() {
 // Загрузка теста
 function loadTest() {
     console.log('loadTest called with:', { currentSubject, currentPart });
+    currentSubject = localStorage.getItem('subject');
+    currentPart = localStorage.getItem('part');
+    console.log('Reloaded subject and part:', { currentSubject, currentPart });
+
     if (!currentSubject || !currentPart) {
         console.error('Subject or part not set:', { currentSubject, currentPart });
         alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
@@ -248,6 +259,7 @@ function loadTest() {
     currentTest = partData[randomVariant];
     currentQuestionIndex = 0;
     userAnswers = Array(30).fill(null);
+    console.log('Test loaded:', { variant: randomVariant, questions: currentTest.length });
     displayQuestion();
     startTimer();
 }
@@ -261,15 +273,19 @@ function displayQuestion() {
 
     if (!questionCounter || !questionsDiv || !answersDiv || !currentTest) {
         console.error('Required elements or test data not found:', { questionCounter, questionsDiv, answersDiv, currentTest });
+        alert(currentLang === 'ky' ? 'Тест жүктөлүүдө ката кетти!' : 'Ошибка загрузки теста!');
+        window.location.href = 'index.html';
         return;
     }
 
     questionCounter.textContent = `${currentQuestionIndex + 1}/30`;
     questionsDiv.textContent = currentTest[currentQuestionIndex].question;
+    console.log('Displaying question:', currentTest[currentQuestionIndex].question);
 
     answersDiv.innerHTML = '';
     for (let option in currentTest[currentQuestionIndex].options) {
         const label = document.createElement('label');
+        label.className = 'answer-option';
         label.innerHTML = `<input type="radio" name="answer" value="${option}" ${userAnswers[currentQuestionIndex] === option ? 'checked' : ''}> ${option.toUpperCase()}. ${currentTest[currentQuestionIndex].options[option]}`;
         answersDiv.appendChild(label);
         answersDiv.appendChild(document.createElement('br'));
@@ -308,11 +324,13 @@ function startTimer() {
     const timerElement = document.getElementById('timer');
     if (!timerElement) {
         console.error('Timer element not found');
+        alert(currentLang === 'ky' ? 'Таймер табылган жок!' : 'Таймер не найден!');
         return;
     }
 
     timerInterval = setInterval(() => {
         if (timeLeft <= 0) {
+            console.log('Timer ended, submitting test');
             clearInterval(timerInterval);
             submitTest();
             return;
@@ -327,6 +345,13 @@ function startTimer() {
 // Отправка теста
 function submitTest() {
     console.log('submitTest called');
+    if (!currentTest) {
+        console.error('No test data available');
+        alert(currentLang === 'ky' ? 'Тест маалыматы жок!' : 'Нет данных теста!');
+        window.location.href = 'index.html';
+        return;
+    }
+
     clearInterval(timerInterval);
     let score = 0;
     currentTest.forEach((q, i) => {
@@ -337,6 +362,7 @@ function submitTest() {
                      percentage >= 50 ? (currentLang === 'ky' ? 'Орточо' : 'Средний') :
                      (currentLang === 'ky' ? 'Төмөн' : 'Низкий');
 
+    console.log('Test results:', { score, percentage, knowledge });
     localStorage.setItem('score', score);
     localStorage.setItem('percentage', percentage);
     localStorage.setItem('knowledge', knowledge);
@@ -408,9 +434,6 @@ function initializeEventListeners() {
     const backLinkCourses = document.getElementById('back-main-courses');
     if (startLessonButton) startLessonButton.addEventListener('click', startCourseLesson);
     if (backLinkCourses) backLinkCourses.addEventListener('click', backToMain);
-
-    // Инициализация текстов
-    updateTexts();
 }
 
 // Запуск инициализации после загрузки DOM
