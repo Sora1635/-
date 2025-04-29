@@ -1,37 +1,34 @@
 // Пользовательские данные
 let currentUser = null;
-let users = {};
+let userData = {};
 
-// Функции для кодирования/декодирования Base64
-function encodeBase64(str) {
-    return btoa(unescape(encodeURIComponent(str)));
-}
-
-function decodeBase64(str) {
-    return decodeURIComponent(escape(atob(str)));
-}
-
-// Загрузка данных из localStorage
-function loadUsers() {
-    const encodedData = localStorage.getItem('usersData');
-    if (encodedData) {
-        try {
-            users = JSON.parse(decodeBase64(encodedData));
-        } catch (e) {
-            console.error('Декодирование данных не удалось:', e);
-            users = {};
-        }
+// Загрузка данных пользователя
+function loadUserData(username) {
+    const data = localStorage.getItem(`user_${username}`);
+    if (data) {
+        userData = JSON.parse(data);
+    } else {
+        userData = {
+            password: '',
+            testResults: {},
+            courseProgress: {},
+            knowledgeAreas: {}
+        };
     }
 }
 
-// Сохранение данных в localStorage
-function saveUsers() {
-    const encodedData = encodeBase64(JSON.stringify(users));
-    localStorage.setItem('usersData', encodedData);
+// Сохранение данных пользователя
+function saveUserData(username) {
+    localStorage.setItem(`user_${username}`, JSON.stringify(userData));
 }
 
-// Инициализация
-loadUsers();
+// Список пользователей (логины и пароли)
+let users = JSON.parse(localStorage.getItem('users')) || {};
+
+// Сохранение списка пользователей
+function saveUsers() {
+    localStorage.setItem('users', JSON.stringify(users));
+}
 
 // Система аккаунтов
 function register() {
@@ -48,13 +45,11 @@ function register() {
         return;
     }
 
-    users[username] = {
-        password,
-        testResults: {},
-        courseProgress: {},
-        knowledgeAreas: {}
-    };
+    users[username] = password;
     saveUsers();
+    loadUserData(username);
+    userData.password = password;
+    saveUserData(username);
     loginUser(username);
 }
 
@@ -62,7 +57,7 @@ function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    if (!users[username] || users[username].password !== password) {
+    if (!users[username] || users[username] !== password) {
         alert('Логин же сырсөз туура эмес!');
         return;
     }
@@ -71,8 +66,9 @@ function login() {
 }
 
 function loginUser(username) {
-    currentUser = users[username];
-    localStorage.setItem('currentUser', encodeBase64(username));
+    currentUser = username;
+    localStorage.setItem('currentUser', username);
+    loadUserData(username);
     document.getElementById('auth-container').style.display = 'none';
     document.getElementById('main-container').style.display = 'flex';
 }
@@ -86,8 +82,8 @@ function logout() {
 // Проверка авторизации
 window.onload = function() {
     const savedUser = localStorage.getItem('currentUser');
-    if (savedUser && users[decodeBase64(savedUser)]) {
-        loginUser(decodeBase64(savedUser));
+    if (savedUser && users[savedUser]) {
+        loginUser(savedUser);
     }
 };
 
@@ -292,9 +288,9 @@ function submitTest() {
     // Сохранение результатов в профиль пользователя
     if (currentUser) {
         const testKey = `${testType}_${currentSubject}_part${currentPart}`;
-        currentUser.testResults[testKey] = { score, percentage, knowledge, date: new Date().toLocaleString() };
-        currentUser.knowledgeAreas[currentSubject] = knowledge;
-        saveUsers();
+        userData.testResults[testKey] = { score, percentage, knowledge, date: new Date().toLocaleString() };
+        userData.knowledgeAreas[currentSubject] = knowledge;
+        saveUserData(currentUser);
     }
 
     window.location.href = 'results.html';
@@ -322,8 +318,8 @@ function showCourses() {
 function startCourseLesson() {
     const subject = localStorage.getItem('courseSubject');
     if (currentUser) {
-        currentUser.courseProgress[subject] = { progress: 50, lastLesson: 'Тема 1' }; // Пример прогресса
-        saveUsers();
+        userData.courseProgress[subject] = { progress: 50, lastLesson: 'Тема 1' }; // Пример прогресса
+        saveUserData(currentUser);
     }
     alert('Урок башталды!');
 }
@@ -335,11 +331,11 @@ function showResults(subject) {
         resultsDiv.innerHTML = '';
         return;
     }
-    if (currentUser && currentUser.testResults) {
+    if (userData && userData.testResults) {
         let html = '';
-        for (let key in currentUser.testResults) {
+        for (let key in userData.testResults) {
             if (key.includes(subject)) {
-                const result = currentUser.testResults[key];
+                const result = userData.testResults[key];
                 html += `<p>${key}: Балл: ${result.score}/30, Пайыз: ${result.percentage}%, Билим деңгээли: ${result.knowledge}, Күнү: ${result.date}</p>`;
             }
         }
@@ -350,10 +346,10 @@ function showResults(subject) {
 // Продолжение курсов
 function showContinueContent() {
     const continueDiv = document.getElementById('continue-content');
-    if (currentUser && currentUser.courseProgress) {
+    if (userData && userData.courseProgress) {
         let html = '';
-        for (let subject in currentUser.courseProgress) {
-            const progress = currentUser.courseProgress[subject];
+        for (let subject in userData.courseProgress) {
+            const progress = userData.courseProgress[subject];
             html += `<p>${subject}: Прогресс: ${progress.progress}%, Акыркы урок: ${progress.lastLesson}</p>`;
         }
         continueDiv.innerHTML = html || 'Улантуу үчүн курстар жок.';
