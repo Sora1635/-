@@ -7,44 +7,62 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="main-container">
-        <header class="header">
-            <h1 data-lang-ky="ОРТ Пробалык Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробалык Тест</h1>
-            <div class="lang-switch">
-                <button onclick="switchLanguage('ky')">Кыргызча</button>
-                <button onclick="switchLanguage('ru')">Русский</button>
-            </div>
-        </header>
-        <nav class="sidebar">
-            <h2 data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</h2>
-            <ul>
-                <li onclick="window.location.href='part-details.html'" data-lang-ky="Артка" data-lang-ru="Назад">Артка</li>
-            </ul>
-        </nav>
-        <div class="content">
-            <div class="test-container">
-                <h2 id="test-title"></h2>
-                <div id="timer"></div>
-                <div class="question-nav">
-                    <button onclick="prevQuestion()" class="nav-btn" data-lang-ky="← Мурунку" data-lang-ru="← Предыдущий">← Мурунку</button>
-                    <span id="question-counter"></span>
-                    <button onclick="nextQuestion()" class="nav-btn" data-lang-ky="Кийинки →" data-lang-ru="Следующий →">Кийинки →</button>
-                </div>
-                <div id="questions" class="question-block"></div>
-                <div id="answers" class="answer-block"></div>
-                <button onclick="submitTest()" class="submit-btn" data-lang-ky="Тестти тапшыруу" data-lang-ru="Сдать тест">Тестти тапшыруу</button>
-            </div>
+    <header>
+        <h1 data-lang-ky="Тест" data-lang-ru="Тест">Тест</h1>
+        <div class="lang-switch">
+            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский">Кыргызча</button>
+            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский">Орусча</button>
         </div>
+    </header>
+
+    <div class="menu">
+        <div id="timer" data-lang-ky="Калган убакыт: " data-lang-ru="Оставшееся время: "></div>
+        <div id="question-counter">1/30</div>
+        <div id="questions"></div>
+        <div id="answers"></div>
+        <button onclick="prevQuestion()" data-lang-ky="Мурунку" data-lang-ru="Предыдущий">Мурунку</button>
+        <button onclick="nextQuestion()" data-lang-ky="Кийинки" data-lang-ru="Следующий">Кийинки</button>
+        <button onclick="submitTest()" data-lang-ky="Тапшыруу" data-lang-ru="Сдать">Тапшыруу</button>
+        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную">Башкы бетке кайтуу</button>
     </div>
+
     <script src="script.js"></script>
     <script>
         window.onload = function() {
-            updateTexts();
-            if (!currentUser) {
+            // Убедимся, что currentLang определён
+            if (typeof currentLang === 'undefined') {
+                currentLang = localStorage.getItem('lang') || 'ky';
+            }
+
+            // Получаем subject и part из localStorage
+            const currentSubject = localStorage.getItem('subject');
+            const currentPart = localStorage.getItem('part');
+
+            console.log('Current subject on test.html:', currentSubject);
+            console.log('Current part on test.html:', currentPart);
+
+            // Проверяем, есть ли subject и part
+            if (!currentSubject || !currentPart) {
+                console.warn('Subject or part not selected, redirecting to index.html');
+                alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок! Башкы бетке кайтыңыз.' : 'Предмет или часть не выбраны! Вернитесь на главную страницу.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Присваиваем значения глобальным переменным
+            window.currentSubject = currentSubject;
+            window.currentPart = currentPart;
+
+            // Загружаем тест и запускаем таймер
+            try {
+                loadTest();
+                startTimer();
+                updateTexts();
+            } catch (error) {
+                console.error('Error loading test:', error);
+                alert(currentLang === 'ky' ? 'Тестти жүктөөдө ката кетти!' : 'Ошибка при загрузке теста!');
                 window.location.href = 'index.html';
             }
-            loadTest();
-            startTimer();
         };
     </script>
 </body>
