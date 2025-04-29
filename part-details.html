@@ -7,34 +7,42 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="main-container">
-        <header class="header">
-            <h1 data-lang-ky="ОРТ Пробалык Тест" data-lang-ru="Пробный тест ОРТ">ОРТ Пробалык Тест</h1>
-            <div class="lang-switch">
-                <button onclick="switchLanguage('ky')">Кыргызча</button>
-                <button onclick="switchLanguage('ru')">Русский</button>
-            </div>
-        </header>
-        <nav class="sidebar">
-            <h2 data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</h2>
-            <ul>
-                <li onclick="window.location.href='subject.html'" data-lang-ky="Артка" data-lang-ru="Назад">Артка</li>
-            </ul>
-        </nav>
-        <div class="content">
-            <h2 data-lang-ky="Бөлүк жөнүндө маалымат" data-lang-ru="Информация о части">Бөлүк жөнүндө маалымат</h2>
-            <p id="part-description"></p>
-            <button onclick="startTest()" data-lang-ky="Тестти баштоо" data-lang-ru="Начать тест">Тестти баштоо</button>
+    <header>
+        <h1 data-lang-ky="Бөлүк жөнүндө маалымат" data-lang-ru="Информация о части">Бөлүк жөнүндө маалымат</h1>
+        <div class="lang-switch">
+            <button onclick="switchLanguage('ky')" data-lang-ky="Кыргызча" data-lang-ru="Киргизский">Кыргызча</button>
+            <button onclick="switchLanguage('ru')" data-lang-ky="Орусча" data-lang-ru="Русский">Орусча</button>
         </div>
+    </header>
+
+    <div class="menu">
+        <h2 id="part-description"></h2>
+        <button onclick="startTest()" data-lang-ky="Тестти баштоо" data-lang-ru="Начать тест">Тестти баштоо</button>
+        <button onclick="backToMain()" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную">Башкы бетке кайтуу</button>
     </div>
+
     <script src="script.js"></script>
     <script>
         window.onload = function() {
-            updateTexts();
-            if (!currentUser) {
-                window.location.href = 'index.html';
+            // Убедимся, что currentLang определён
+            if (typeof currentLang === 'undefined') {
+                currentLang = localStorage.getItem('lang') || 'ky';
             }
+
+            const currentSubject = localStorage.getItem('subject');
+            const currentPart = localStorage.getItem('part');
+
+            console.log('Current subject on part-details.html:', currentSubject);
+            console.log('Current part on part-details.html:', currentPart);
+
+            if (!currentSubject || !currentPart) {
+                console.warn('Subject or part not selected, redirecting to index.html');
+                window.location.href = 'index.html';
+                return;
+            }
+
             updatePartDetails();
+            updateTexts();
         };
     </script>
 </body>
