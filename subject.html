@@ -50,7 +50,7 @@
             const subjectTitle = document.getElementById('subject-title');
             if (subjectTitle) {
                 const subjectName = currentSubject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') :
-                                   currentSubject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз т [Кыргыз тили' : 'Кыргызский язык') :
+                                   currentSubject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз тили' : 'Кыргызский язык') :
                                    currentSubject === 'manas' ? (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение') : '';
                 subjectTitle.textContent = (currentLang === 'ky' ? 'Предмет: ' : 'Предмет: ') + subjectName;
             } else {

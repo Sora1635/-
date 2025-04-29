@@ -51,11 +51,10 @@
 
             if (resultsTitle && resultsDetails) {
                 resultsTitle.textContent = currentLang === 'ky' ? 'Тесттин жыйынтыктары' : 'Результаты теста';
-                resultsDetails.innerHTML = `
-                    ${currentLang === 'ky' ? 'Балл' : 'Баллы'}: ${score}/30<br>
-                    ${currentLang === 'ky' ? 'Пайыз' : 'Процент'}: ${percentage}%<br>
-                    ${currentLang === 'ky' ? 'Билим деңгээли' : 'Уровень знаний'}: ${knowledge}
-                `;
+                resultsDetails.innerHTML = 
+                    `${currentLang === 'ky' ? 'Балл' : 'Баллы'}: ${score}/30<br>` +
+                    `${currentLang === 'ky' ? 'Пайыз' : 'Процент'}: ${percentage}%<br>` +
+                    `${currentLang === 'ky' ? 'Билим деңгээли' : 'Уровень знаний'}: ${knowledge}`;
             } else {
                 console.error('Results elements not found!');
             }

@@ -75,14 +75,19 @@ const questions = {
 
 function switchLanguage(lang) {
     console.log('Switching language to:', lang);
+    if (!lang) {
+        console.error('Language not provided');
+        return;
+    }
     currentLang = lang;
     localStorage.setItem('lang', lang);
     updateTexts();
 }
 
 function updateTexts() {
+    console.log('Updating texts for language:', currentLang);
     if (!currentLang) {
-        console.error('currentLang is not defined in updateTexts, defaulting to "ky"');
+        console.error('currentLang is not defined, defaulting to "ky"');
         currentLang = 'ky';
     }
 
@@ -113,17 +118,15 @@ function updateTexts() {
             option.textContent = currentLang === 'ky' ? option.getAttribute('data-lang-ky') : option.getAttribute('data-lang-ru');
         }
     });
-
-    console.log('Texts updated for language:', currentLang);
 }
 
 function selectSubject(subject) {
+    console.log('Selecting subject:', subject);
     if (!subject) {
-        console.error('Subject is not defined in selectSubject!');
+        console.error('Subject is not defined');
         alert(currentLang === 'ky' ? 'Предмет тандалган жок!' : 'Предмет не выбран!');
         return;
     }
-    console.log('Selecting subject:', subject);
     currentSubject = subject;
     localStorage.setItem('subject', subject);
     try {
@@ -135,55 +138,56 @@ function selectSubject(subject) {
 }
 
 function selectPart(part) {
+    console.log('Selecting part:', part);
     if (!part) {
-        console.error('Part is not defined in selectPart!');
+        console.error('Part is not defined');
         alert(currentLang === 'ky' ? 'Бөлүк тандалган жок!' : 'Часть не выбрана!');
         return;
     }
 
     const currentSubject = localStorage.getItem('subject');
     if (!currentSubject) {
-        console.error('Subject is not set before selecting part!');
+        console.error('Subject is not set');
         alert(currentLang === 'ky' ? 'Предмет тандалган жок! Башкы бетке кайтыңыз.' : 'Предмет не выбран! Вернитесь на главную страницу.');
         window.location.href = 'index.html';
         return;
     }
 
-    console.log('Selecting part:', part, 'for subject:', currentSubject);
     currentPart = part;
     localStorage.setItem('part', part);
     try {
         window.location.href = 'part-details.html';
     } catch (error) {
         console.error('Navigation to part-details.html failed:', error);
-        alert(currentLang === 'ky' ? 'Навигацияда ката кетти! "part-details.html" файлы табылган жок.' : 'Ошибка навигации! Файл "part-details.html" не найден.');
+        alert(currentLang === 'ky' ? 'Навигацияда ката кетти!' : 'Ошибка навигации!');
     }
 }
 
 function updatePartDetails() {
+    console.log('Updating part details, currentPart:', currentPart);
     if (!currentPart) {
-        console.error('currentPart is not defined in updatePartDetails:', currentPart);
+        console.error('currentPart is not defined');
         return;
     }
 
     const time = currentPart == 1 ? 30 : 60;
     const descriptionElement = document.getElementById('part-description');
     if (descriptionElement) {
-        descriptionElement.textContent = currentLang === 'ky' 
-            ? `Суроолордун саны: 30, Убакыт: ${time} мүнөт` 
+        descriptionElement.textContent = currentLang === 'ky'
+            ? `Суроолордун саны: 30, Убакыт: ${time} мүнөт`
             : `Количество вопросов: 30, Время: ${time} минут`;
     } else {
-        console.warn('Element with id "part-description" not found.');
+        console.warn('Element with id "part-description" not found');
     }
 }
 
 function startTest() {
+    console.log('Starting test, subject:', currentSubject, 'part:', currentPart);
     if (!currentSubject || !currentPart) {
-        console.error('Subject or part not set! Subject:', currentSubject, 'Part:', currentPart);
+        console.error('Subject or part not set');
         alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
         return;
     }
-    console.log('Starting test for subject:', currentSubject, 'part:', currentPart);
     try {
         window.location.href = 'test.html';
     } catch (error) {
@@ -193,17 +197,17 @@ function startTest() {
 }
 
 function loadTest() {
+    console.log('Loading test, subject:', currentSubject, 'part:', currentPart);
     const subjectData = questions[currentSubject];
     if (!subjectData) {
-        console.error('Subject not found in questions:', currentSubject);
-        alert(currentLang === 'ky' ? 'Предмет табылган жок!' : 'Предмет не найден!');
+        console.error('Subject not found:',    alert(currentLang === 'ky' ? 'Предмет табылган жок!' : 'Предмет не найден!');
         window.location.href = 'index.html';
         return;
     }
 
-    const partData = subjectData[`part${currentPart}`];
+    const partData = subjectData['part' + currentPart];
     if (!partData) {
-        console.error('Part not found for subject:', currentSubject, 'part:', currentPart);
+        console.error('Part not found');
         alert(currentLang === 'ky' ? 'Бөлүк табылган жок!' : 'Часть не найдена!');
         window.location.href = 'index.html';
         return;
@@ -211,7 +215,7 @@ function loadTest() {
 
     const variants = Object.keys(partData).filter(key => key.startsWith('variant'));
     if (variants.length === 0) {
-        console.error('No variants found for subject:', currentSubject, 'part:', currentPart);
+        console.error('No variants found');
         alert(currentLang === 'ky' ? 'Варианттар табылган жок!' : 'Варианты не найдены!');
         window.location.href = 'index.html';
         return;
@@ -222,7 +226,7 @@ function loadTest() {
 
     const selectedQuestions = partData[randomVariant];
     if (!selectedQuestions || selectedQuestions.length !== 30) {
-        console.error('Invalid number of questions in variant:', randomVariant, 'Found:', selectedQuestions ? selectedQuestions.length : 0);
+        console.error('Invalid number of questions');
         alert(currentLang === 'ky' ? 'Суроолор саны туура эмес! 30 суроо болушу керек.' : 'Неверное количество вопросов! Должно быть 30 вопросов.');
         window.location.href = 'index.html';
         return;
@@ -235,12 +239,13 @@ function loadTest() {
 }
 
 function displayQuestion() {
+    console.log('Displaying question:', currentQuestionIndex + 1);
     const questionCounter = document.getElementById('question-counter');
     const questionsDiv = document.getElementById('questions');
     const answersDiv = document.getElementById('answers');
 
     if (!questionCounter || !questionsDiv || !answersDiv) {
-        console.error('Required elements not found:', { questionCounter, questionsDiv, answersDiv });
+        console.error('Required elements not found');
         return;
     }
 
@@ -258,11 +263,13 @@ function displayQuestion() {
     document.querySelectorAll('input[name="answer"]').forEach(input => {
         input.addEventListener('change', (e) => {
             userAnswers[currentQuestionIndex] = e.target.value;
+            console.log('Answer selected:', e.target.value);
         });
     });
 }
 
 function prevQuestion() {
+    console.log('Going to previous question');
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         displayQuestion();
@@ -270,6 +277,7 @@ function prevQuestion() {
 }
 
 function nextQuestion() {
+    console.log('Going to next question');
     if (currentQuestionIndex < 29) {
         currentQuestionIndex++;
         displayQuestion();
@@ -277,6 +285,7 @@ function nextQuestion() {
 }
 
 function startTimer() {
+    console.log('Starting timer');
     timeLeft = (currentPart == 1 ? 30 : 60) * 60;
     const timerElement = document.getElementById('timer');
 
@@ -299,21 +308,22 @@ function startTimer() {
 }
 
 function submitTest() {
+    console.log('Submitting test');
     clearInterval(timerInterval);
     let score = 0;
     currentTest.forEach((q, i) => {
         if (userAnswers[i] === q.correct) score++;
     });
     const percentage = (score / 30 * 100).toFixed(2);
-    const knowledge = percentage >= 80 ? (currentLang === 'ky' ? 'Жогорку' : 'Высокий') : 
-                      percentage >= 50 ? (currentLang === 'ky' ? 'Орточо' : 'Средний') : 
+    const knowledge = percentage >= 80 ? (currentLang === 'ky' ? 'Жогорку' : 'Высокий') :
+                      percentage >= 50 ? (currentLang === 'ky' ? 'Орточо' : 'Средний') :
                       (currentLang === 'ky' ? 'Төмөн' : 'Низкий');
 
     localStorage.setItem('score', score);
     localStorage.setItem('percentage', percentage);
     localStorage.setItem('knowledge', knowledge);
 
-    console.log('Test results saved - score:', score, 'percentage:', percentage, 'knowledge:', knowledge);
+    console.log('Test results:', { score, percentage, knowledge });
 
     try {
         window.location.href = 'results.html';
