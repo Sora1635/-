@@ -32,15 +32,17 @@
     <script src="script.js"></script>
     <script>
         window.onload = function() {
+            console.log('Subject page loaded');
             if (typeof currentLang === 'undefined') {
                 currentLang = localStorage.getItem('lang') || 'ky';
+                console.log('currentLang initialized to:', currentLang);
             }
 
             const currentSubject = localStorage.getItem('subject');
-            console.log('Current subject on subject.html:', currentSubject);
+            console.log('Current subject:', currentSubject);
 
             if (!currentSubject) {
-                console.warn('No subject selected, redirecting to index.html');
+                console.warn('No subject selected');
                 window.location.href = 'index.html';
                 return;
             }
@@ -48,7 +50,7 @@
             const subjectTitle = document.getElementById('subject-title');
             if (subjectTitle) {
                 const subjectName = currentSubject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') :
-                                   currentSubject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз тили' : 'Кыргызский язык') :
+                                   currentSubject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз т [Кыргыз тили' : 'Кыргызский язык') :
                                    currentSubject === 'manas' ? (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение') : '';
                 subjectTitle.textContent = (currentLang === 'ky' ? 'Предмет: ' : 'Предмет: ') + subjectName;
             } else {

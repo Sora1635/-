@@ -25,18 +25,19 @@
     <script src="script.js"></script>
     <script>
         window.onload = function() {
+            console.log('Part details page loaded');
             if (typeof currentLang === 'undefined') {
                 currentLang = localStorage.getItem('lang') || 'ky';
+                console.log('currentLang initialized to:', currentLang);
             }
 
             const currentSubject = localStorage.getItem('subject');
             const currentPart = localStorage.getItem('part');
 
-            console.log('Current subject on part-details.html:', currentSubject);
-            console.log('Current part on part-details.html:', currentPart);
+            console.log('Part details parameters:', { currentSubject, currentPart });
 
             if (!currentSubject || !currentPart) {
-                console.warn('Subject or part not selected, redirecting to index.html');
+                console.warn('Subject or part not selected');
                 window.location.href = 'index.html';
                 return;
             }

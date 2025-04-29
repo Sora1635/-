@@ -25,22 +25,23 @@
     <script src="script.js"></script>
     <script>
         window.onload = function() {
+            console.log('Results page loaded');
             if (typeof currentLang === 'undefined') {
                 currentLang = localStorage.getItem('lang') || 'ky';
-                console.log('currentLang was undefined, set to:', currentLang);
+                console.log('currentLang initialized to:', currentLang);
             }
 
             const score = localStorage.getItem('score');
             const percentage = localStorage.getItem('percentage');
             const knowledge = localStorage.getItem('knowledge');
 
-            console.log('Results data - score:', score, 'percentage:', percentage, 'knowledge:', knowledge);
+            console.log('Results data:', { score, percentage, knowledge });
 
             if (!score || !percentage || !knowledge) {
                 console.error('Results data not found in localStorage!');
                 alert(currentLang === 'ky' 
-                    ? 'Ката: Жыйынтыктар табылган жок! LocalStorage: score=' + score + ', percentage=' + percentage + ', knowledge=' + knowledge 
-                    : 'Ошибка: Результаты не найдены! LocalStorage: score=' + score + ', percentage=' + percentage + ', knowledge=' + knowledge);
+                    ? 'Ката: Жыйынтыктар табылган жок!' 
+                    : 'Ошибка: Результаты не найдены!');
                 window.location.href = 'index.html';
                 return;
             }
@@ -56,14 +57,10 @@
                     ${currentLang === 'ky' ? 'Билим деңгээли' : 'Уровень знаний'}: ${knowledge}
                 `;
             } else {
-                console.error('Results elements not found on the page!');
+                console.error('Results elements not found!');
             }
 
-            try {
-                updateTexts();
-            } catch (error) {
-                console.error('Error in updateTexts:', error);
-            }
+            updateTexts();
         };
     </script>
 </body>

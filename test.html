@@ -30,19 +30,20 @@
     <script src="script.js"></script>
     <script>
         window.onload = function() {
+            console.log('Test page loaded');
             if (typeof currentLang === 'undefined') {
                 currentLang = localStorage.getItem('lang') || 'ky';
+                console.log('currentLang initialized to:', currentLang);
             }
 
             const currentSubject = localStorage.getItem('subject');
             const currentPart = localStorage.getItem('part');
 
-            console.log('Current subject on test.html:', currentSubject);
-            console.log('Current part on test.html:', currentPart);
+            console.log('Test parameters:', { currentSubject, currentPart });
 
             if (!currentSubject || !currentPart) {
-                console.warn('Subject or part not selected, redirecting to index.html');
-                alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок! Башкы бетке кайтыңыз.' : 'Предмет или часть не выбраны! Вернитесь на главную страницу.');
+                console.warn('Subject or part not selected');
+                alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
                 window.location.href = 'index.html';
                 return;
             }
@@ -50,15 +51,9 @@
             window.currentSubject = currentSubject;
             window.currentPart = currentPart;
 
-            try {
-                loadTest();
-                startTimer();
-                updateTexts();
-            } catch (error) {
-                console.error('Error loading test:', error);
-                alert(currentLang === 'ky' ? 'Тестти жүктөөдө ката кетти!' : 'Ошибка при загрузке теста!');
-                window.location.href = 'index.html';
-            }
+            loadTest();
+            startTimer();
+            updateTexts();
         };
     </script>
 </body>
