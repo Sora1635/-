@@ -18,28 +18,18 @@
 
     <div class="menu">
         <div class="subject-cards">
-            <button id="subject-math" class="subject-card-button">
+            <button id="subject-math" class="card">
                 <h3 data-lang-ky="Математика" data-lang-ru="Математика">Математика</h3>
             </button>
-            <button id="subject-kyrgyz" class="subject-card-button">
+            <button id="subject-kyrgyz" class="card">
                 <h3 data-lang-ky="Кыргыз тили" data-lang-ru="Кыргызский язык">Кыргыз тили</h3>
             </button>
-            <button id="subject-manas" class="subject-card-button">
+            <button id="subject-manas" class="card">
                 <h3 data-lang-ky="Манас таануу" data-lang-ru="Манасоведение">Манас таануу</h3>
             </button>
         </div>
     </div>
 
     <script src="script.js"></script>
-    <script>
-        window.onload = function() {
-            console.log('Index page loaded');
-            if (typeof currentLang === 'undefined') {
-                currentLang = localStorage.getItem('lang') || 'ky';
-                console.log('currentLang initialized to:', currentLang);
-            }
-            updateTexts();
-        };
-    </script>
 </body>
 </html>

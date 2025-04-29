@@ -18,36 +18,10 @@
 
     <div class="menu">
         <h2 id="part-description"></h2>
-        <button id="start-test" data-lang-ky="Тестти баштоо" data-lang-ru="Начать тест"><i class="fas fa-play"></i> Тестти баштоо</button>
-        <button id="back-main-part" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
+        <button id="start-test" class="action-button" data-lang-ky="Тестти баштоо" data-lang-ru="Начать тест"><i class="fas fa-play"></i> Тестти баштоо</button>
+        <button id="back-main-part" class="back-button" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
     </div>
 
     <script src="script.js"></script>
-    <script>
-        window.onload = function() {
-            console.log('Part details page loaded');
-            if (typeof currentLang === 'undefined') {
-                currentLang = localStorage.getItem('lang') || 'ky';
-                console.log('currentLang initialized to:', currentLang);
-            }
-
-            const currentSubject = localStorage.getItem('subject');
-            const currentPart = localStorage.getItem('part');
-
-            console.log('Part details parameters:', { currentSubject, currentPart });
-
-            if (!currentSubject || !currentPart) {
-                console.warn('Subject or part not selected');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            window.currentSubject = currentSubject;
-            window.currentPart = currentPart;
-
-            updatePartDetails();
-            updateTexts();
-        };
-    </script>
 </body>
 </html>

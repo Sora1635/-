@@ -12,7 +12,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 }
 
 header {
@@ -64,7 +63,7 @@ header h1 {
     justify-content: center;
 }
 
-.subject-card-button {
+.card {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     padding: 20px;
@@ -79,16 +78,16 @@ header h1 {
     font-weight: 600;
 }
 
-.subject-card-button:hover {
+.card:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(255, 111, 97, 0.3);
 }
 
-.subject-card-button h3 {
+.card h3 {
     margin: 0;
 }
 
-button {
+.back-button, .action-button {
     background: rgba(255, 255, 255, 0.2);
     border: none;
     padding: 10px 20px;
@@ -99,7 +98,7 @@ button {
     transition: background 0.3s ease;
 }
 
-button:hover {
+.back-button:hover, .action-button:hover {
     background: rgba(255, 255, 255, 0.3);
 }
 
@@ -121,22 +120,6 @@ button:hover {
 
 #answers label {
     font-size: 1.1rem;
-}
-
-@media (max-width: 600px) {
-    header h1 {
-        font-size: 2rem;
-    }
-
-    .subject-card-button {
-        width: 100%;
-        max-width: 300px;
-    }
-
-    .lang-switch button, button {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-    }
 }
 
 .main-container {
@@ -184,4 +167,18 @@ button:hover {
 
 #course-details {
     margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    .card {
+        width: 100%;
+        max-width: 300px;
+    }
+    .lang-switch button, .back-button, .action-button {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
 }

@@ -21,40 +21,12 @@
         <div id="question-counter">1/30</div>
         <div id="questions"></div>
         <div id="answers"></div>
-        <button id="prev-question" data-lang-ky="Мурунку" data-lang-ru="Предыдущий"><i class="fas fa-chevron-left"></i> Мурунку</button>
-        <button id="next-question" data-lang-ky="Кийинки" data-lang-ru="Следующий"><i class="fas fa-chevron-right"></i> Кийинки</button>
-        <button id="submit-test" data-lang-ky="Тапшыруу" data-lang-ru="Сдать"><i class="fas fa-check"></i> Тапшыруу</button>
-        <button id="back-main-test" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
+        <button id="prev-question" class="action-button" data-lang-ky="Мурунку" data-lang-ru="Предыдущий"><i class="fas fa-chevron-left"></i> Мурунку</button>
+        <button id="next-question" class="action-button" data-lang-ky="Кийинки" data-lang-ru="Следующий"><i class="fas fa-chevron-right"></i> Кийинки</button>
+        <button id="submit-test" class="action-button" data-lang-ky="Тапшыруу" data-lang-ru="Сдать"><i class="fas fa-check"></i> Тапшыруу</button>
+        <button id="back-main-test" class="back-button" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
     </div>
 
     <script src="script.js"></script>
-    <script>
-        window.onload = function() {
-            console.log('Test page loaded');
-            if (typeof currentLang === 'undefined') {
-                currentLang = localStorage.getItem('lang') || 'ky';
-                console.log('currentLang initialized to:', currentLang);
-            }
-
-            const currentSubject = localStorage.getItem('subject');
-            const currentPart = localStorage.getItem('part');
-
-            console.log('Test parameters:', { currentSubject, currentPart });
-
-            if (!currentSubject || !currentPart) {
-                console.warn('Subject or part not selected');
-                alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            window.currentSubject = currentSubject;
-            window.currentPart = currentPart;
-
-            loadTest();
-            startTimer();
-            updateTexts();
-        };
-    </script>
 </body>
 </html>

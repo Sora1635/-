@@ -19,7 +19,7 @@
         <nav class="sidebar">
             <h2 data-lang-ky="Башкы меню" data-lang-ru="Главное меню">Башкы меню</h2>
             <ul>
-                <li id="back-main-courses" data-lang-ky="Артка" data-lang-ru="Назад">Артка</li>
+                <li id="back-main-courses" data-lang-ky="Артка" data-lang-ru="Назад"><i class="fas fa-arrow-left"></i> Артка</li>
             </ul>
         </nav>
         <div class="content">
@@ -30,26 +30,11 @@
                    data-lang-ru="Здесь будут аудиокниги, видеоуроки, вопросы и ответы, мини-тесты.">
                     Бул жерде аудиокитептер, видеоуроктор, суроолор жана жооптор, мини-тесттер болот.
                 </p>
-                <button id="start-lesson" data-lang-ky="Урокту баштоо" data-lang-ru="Начать урок"><i class="fas fa-play"></i> Урокту баштоо</button>
+                <button id="start-lesson" class="action-button" data-lang-ky="Урокту баштоо" data-lang-ru="Начать урок"><i class="fas fa-play"></i> Урокту баштоо</button>
             </div>
         </div>
     </div>
+
     <script src="script.js"></script>
-    <script>
-        window.onload = function() {
-            console.log('Courses page loaded');
-            if (typeof currentLang === 'undefined') {
-                currentLang = localStorage.getItem('lang') || 'ky';
-                console.log('currentLang initialized to:', currentLang);
-            }
-            updateTexts();
-            const subject = localStorage.getItem('courseSubject');
-            console.log('Course subject:', subject);
-            const title = subject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') :
-                          subject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз тили' : 'Кыргызский язык') :
-                          subject === 'manas' ? (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение') : '';
-            document.getElementById('course-title').textContent = title;
-        };
-    </script>
 </body>
 </html>

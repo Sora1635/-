@@ -17,48 +17,11 @@
     </header>
 
     <div class="menu">
-        <h2 id="results-title"></h2>
+        <h2 id="results-title" data-lang-ky="Тесттин жыйынтыктары" data-lang-ru="Результаты теста"></h2>
         <p id="results-details"></p>
-        <button id="back-main-results" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
+        <button id="back-main-results" class="back-button" data-lang-ky="Башкы бетке кайтуу" data-lang-ru="Вернуться на главную"><i class="fas fa-arrow-left"></i> Башкы бетке кайтуу</button>
     </div>
 
     <script src="script.js"></script>
-    <script>
-        window.onload = function() {
-            console.log('Results page loaded');
-            if (typeof currentLang === 'undefined') {
-                currentLang = localStorage.getItem('lang') || 'ky';
-                console.log('currentLang initialized to:', currentLang);
-            }
-
-            const score = localStorage.getItem('score');
-            const percentage = localStorage.getItem('percentage');
-            const knowledge = localStorage.getItem('knowledge');
-
-            console.log('Results data:', { score, percentage, knowledge });
-
-            if (!score || !percentage || !knowledge) {
-                console.error('Results data not found!');
-                alert(currentLang === 'ky' ? 'Ката: Жыйынтыктар табылган жок!' : 'Ошибка: Результаты не найдены!');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            const resultsTitle = document.getElementById('results-title');
-            const resultsDetails = document.getElementById('results-details');
-
-            if (resultsTitle && resultsDetails) {
-                resultsTitle.textContent = currentLang === 'ky' ? 'Тесттин жыйынтыктары' : 'Результаты теста';
-                resultsDetails.innerHTML =
-                    `${currentLang === 'ky' ? 'Балл' : 'Баллы'}: ${score}/30<br>` +
-                    `${currentLang === 'ky' ? 'Пайыз' : 'Процент'}: ${percentage}%<br>` +
-                    `${currentLang === 'ky' ? 'Билим деңгээли' : 'Уровень знаний'}: ${knowledge}`;
-            } else {
-                console.error('Results elements not found!');
-            }
-
-            updateTexts();
-        };
-    </script>
 </body>
 </html>
