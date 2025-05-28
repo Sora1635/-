@@ -8,17 +8,77 @@ let userAnswers = null;
 let timerInterval = null;
 let timeLeft = 0;
 
+// Вопросы
+const questions = {
+    math: {
+        part1: {
+            time: 30,
+            questions: [
+                { question: "2 + 2 канча болот?", options: { a: "3", б: "4", в: "5", г: "6" }, correct: "б" },
+                { question: "5 - 3 канча болот?", options: { a: "1", б: "2", в: "3", г: "4" }, correct: "б" },
+                { question: "3 * 4 канча болот?", options: { a: "6", б: "8", в: "10", г: "12" }, correct: "г" },
+                { question: "10 / 2 канча болот?", options: { a: "2", б: "4", в: "5", г: "6" }, correct: "в" },
+                { question: "7 + 8 канча болот?", options: { a: "13", б: "15", в: "16", г: "17" }, correct: "б" },
+                { question: "9 - 4 канча болот?", options: { a: "3", б: "5", в: "6", г: "7" }, correct: "б" },
+                { question: "6 * 3 канча болот?", options: { a: "9", б: "12", в: "15", г: "18" }, correct: "г" },
+                { question: "20 / 5 канча болот?", options: { a: "2", б: "4", в: "5", г: "10" }, correct: "в" },
+                { question: "12 + 13 канча болот?", options: { a: "23", б: "25", в: "26", г: "27" }, correct: "б" },
+                { question: "15 - 7 канча болот?", options: { a: "6", б: "8", в: "9", г: "10" }, correct: "б" }
+            ]
+        },
+        part2: {
+            time: 60,
+            questions: [
+                { question: "2^2 канча болот?", options: { a: "2", б: "4", в: "6", г: "8" }, correct: "б" },
+                { question: "2^3 канча болот?", options: { a: "4", б: "6", в: "8", г: "10" }, correct: "в" }
+            ]
+        }
+    },
+    kyrgyz: {
+        part1: {
+            time: 30,
+            questions: [
+                { question: "'күн' сөзү эмнени билдирет?", options: { a: "Ай", б: "Жылдыз", в: "Күн", г: "Суу" }, correct: "в" },
+                { question: "'ай' сөзү эмнени билдирет?", options: { a: "Ай", б: "Жылдыз", в: "Күн", г: "Суу" }, correct: "а" }
+            ]
+        },
+        part2: {
+            time: 60,
+            questions: [
+                { question: "'тоо' сөзү эмнени билдирет?", options: { a: "Дарыя", б: "Тоо", в: "Токой", г: "Жол" }, correct: "б" },
+                { question: "'көл' сөзү эмнени билдирет?", options: { a: "Дарыя", б: "Көл", в: "Токой", г: "Жол" }, correct: "б" }
+            ]
+        }
+    },
+    manas: {
+        part1: {
+            time: 30,
+            questions: [
+                { question: "Манас ким?", options: { a: "Алтай", б: "Манас", в: "Каныкей", г: "Семетей" }, correct: "б" },
+                { question: "Каныкей ким?", options: { a: "Манастын аялы", б: "Манастын уулу", в: "Манастын душманы", г: "Манастын атасы" }, correct: "а" }
+            ]
+        },
+        part2: {
+            time: 60,
+            questions: [
+                { question: "Семетей ким?", options: { a: "Манастын уулу", б: "Манастын аялы", в: "Манастын душманы", г: "Манастын атасы" }, correct: "а" },
+                { question: "Айчүрөк ким?", options: { a: "Семетейдин аялы", б: "Манастын аялы", в: "Манастын энеси", г: "Манастын душманы" }, correct: "а" }
+            ]
+        }
+    }
+};
+
 // Переключение языка
 function switchLanguage(lang) {
-    console.log('Switching language to:', lang);
+    console.log('Переключение языка:', lang);
     currentLang = lang;
     localStorage.setItem('lang', lang);
     updateTexts();
 }
 
-// Обновление текстов на странице
+// Обновление текстов
 function updateTexts() {
-    console.log('Updating texts for language:', currentLang);
+    console.log('Обновление текстов:', currentLang);
     document.querySelectorAll('[data-lang-ky][data-lang-ru]').forEach(el => {
         const text = currentLang === 'ky' ? el.getAttribute('data-lang-ky') : el.getAttribute('data-lang-ru');
         if (el.tagName === 'BUTTON' && el.querySelector('i')) {
@@ -36,34 +96,32 @@ function updateTexts() {
     if (subjectTitle && currentSubject) {
         const subjectName = currentSubject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') :
                            currentSubject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз тили' : 'Кыргызский язык') :
-                           currentSubject === 'manas' ? (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение') : '';
+                           (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение');
         subjectTitle.textContent = (currentLang === 'ky' ? 'Предмет: ' : 'Предмет: ') + subjectName;
     }
 
+    // Обновление информации о части
+    const partDescription = document.getElementById('part-description');
+    if (partDescription && currentSubject && currentPart) {
+        const partData = questions[currentSubject][`part${currentPart}`];
+        if (partData) {
+            partDescription.textContent = currentLang === 'ky'
+                ? `Суроолордун саны: ${partData.questions.length}, Убакыт: ${partData.time} мүнөт`
+                : `Количество вопросов: ${partData.questions.length}, Время: ${partData.time} минут`;
+        }
+    }
+
     // Обновление результатов
-    const resultsTitle = document.getElementById('results-title');
     const resultsDetails = document.getElementById('results-details');
-    if (resultsTitle && resultsDetails) {
+    if (resultsDetails) {
         const score = localStorage.getItem('score');
         const totalQuestions = localStorage.getItem('totalQuestions');
         const percentage = localStorage.getItem('percentage');
         const knowledge = localStorage.getItem('knowledge');
         if (score && totalQuestions && percentage && knowledge) {
-            resultsTitle.textContent = currentLang === 'ky' ? 'Тесттин жыйынтыктары' : 'Результаты теста';
             resultsDetails.innerHTML = `${currentLang === 'ky' ? 'Балл' : 'Баллы'}: ${score}/${totalQuestions}<br>` +
                                       `${currentLang === 'ky' ? 'Пайыз' : 'Процент'}: ${percentage}%<br>` +
                                       `${currentLang === 'ky' ? 'Билим деңгээли' : 'Уровень знаний'}: ${knowledge}`;
-        }
-    }
-
-    // Обновление заголовка курса
-    const courseTitle = document.getElementById('course-title');
-    if (courseTitle) {
-        const subject = localStorage.getItem('courseSubject');
-        if (subject) {
-            courseTitle.textContent = subject === 'math' ? (currentLang === 'ky' ? 'Математика' : 'Математика') :
-                                     subject === 'kyrgyz' ? (currentLang === 'ky' ? 'Кыргыз тили' : 'Кыргызский язык') :
-                                     subject === 'manas' ? (currentLang === 'ky' ? 'Манас таануу' : 'Манасоведение') : '';
         }
     }
 
@@ -78,12 +136,7 @@ function updateTexts() {
 
 // Выбор предмета
 function selectSubject(subject) {
-    console.log('selectSubject called with:', subject);
-    if (!subject) {
-        console.error('Subject is not defined');
-        alert(currentLang === 'ky' ? 'Предмет тандалган жок!' : 'Предмет не выбран!');
-        return;
-    }
+    console.log('Выбор предмета:', subject);
     currentSubject = subject;
     localStorage.setItem('subject', subject);
     window.location.href = 'subject.html';
@@ -91,120 +144,53 @@ function selectSubject(subject) {
 
 // Выбор части
 function selectPart(part) {
-    console.log('selectPart called with:', part);
-    if (!part) {
-        console.error('Part is not defined');
-        alert(currentLang === 'ky' ? 'Бөлүк тандалган жок!' : 'Часть не выбрана!');
-        return;
-    }
-    if (!currentSubject) {
-        console.error('Subject is not set');
-        alert(currentLang === 'ky' ? 'Предмет тандалган жок!' : 'Предмет не выбран!');
-        window.location.href = 'index.html';
-        return;
-    }
+    console.log('Выбор части:', part);
     currentPart = part;
     localStorage.setItem('part', part);
     window.location.href = 'part-details.html';
 }
 
-// Обновление информации о части
-function updatePartDetails() {
-    console.log('updatePartDetails called with:', { currentSubject, currentPart });
-    const descriptionElement = document.getElementById('part-description');
-    if (descriptionElement && currentPart && currentSubject) {
-        const partData = questions[currentSubject][`part${currentPart}`];
-        if (partData && partData.time) {
-            const variants = Object.keys(partData).filter(key => key.startsWith('variant'));
-            const questionCount = variants.length > 0 ? partData[variants[0]].length : 0;
-            descriptionElement.textContent = currentLang === 'ky'
-                ? `Суроолордун саны: ${questionCount}, Убакыт: ${partData.time} мүнөт`
-                : `Количество вопросов: ${questionCount}, Время: ${partData.time} минут`;
-        } else {
-            console.warn('Part data or time not found:', { currentSubject, currentPart });
-        }
-    } else {
-        console.warn('Part description element or currentPart not found:', { descriptionElement, currentPart });
-    }
-}
-
 // Начало теста
 function startTest() {
-    console.log('startTest called with:', { currentSubject, currentPart });
-    if (!currentSubject || !currentPart) {
-        console.error('Subject or part not set:', { currentSubject, currentPart });
-        alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
-        window.location.href = 'index.html';
-        return;
-    }
-    localStorage.setItem('subject', currentSubject);
-    localStorage.setItem('part', currentPart);
+    console.log('Начало теста:', { currentSubject, currentPart });
     window.location.href = 'test.html';
 }
 
 // Загрузка теста
 function loadTest() {
-    console.log('loadTest called with:', { currentSubject, currentPart });
+    console.log('Загрузка теста:', { currentSubject, currentPart });
     currentSubject = localStorage.getItem('subject');
     currentPart = localStorage.getItem('part');
-    console.log('Reloaded subject and part:', { currentSubject, currentPart });
 
     if (!currentSubject || !currentPart) {
-        console.error('Subject or part not set:', { currentSubject, currentPart });
         alert(currentLang === 'ky' ? 'Предмет же бөлүк тандалган жок!' : 'Предмет или часть не выбраны!');
         window.location.href = 'index.html';
         return;
     }
 
-    const subjectData = questions[currentSubject];
-    if (!subjectData) {
-        console.error('Subject data not found:', currentSubject);
-        alert(currentLang === 'ky' ? 'Предмет табылган жок!' : 'Предмет не найден!');
-        window.location.href = 'index.html';
-        return;
-    }
-
-    const partData = subjectData[`part${currentPart}`];
+    const partData = questions[currentSubject][`part${currentPart}`];
     if (!partData) {
-        console.error('Part data not found:', currentPart);
         alert(currentLang === 'ky' ? 'Бөлүк табылган жок!' : 'Часть не найдена!');
-        window.location.href = 'index.html';
+        window.location.href = 'index.html = 'index.html';
         return;
     }
 
-    const variants = Object.keys(partData).filter(key => key.startsWith('variant'));
-    if (variants.length === 0) {
-        console.error('No variants found for:', currentSubject, currentPart);
-        alert(currentLang === 'ky' ? 'Варианттар табылган жок!' : 'Варианты не найдены!');
-        window.location.href = 'index.html';
-        return;
-    }
-
-    const randomVariant = variants[Math.floor(Math.random() * variants.length)];
-    currentTest = partData[randomVariant];
-    if (!currentTest || currentTest.length === 0) {
-        console.error('No questions found in variant:', randomVariant);
-        alert(currentLang === 'ky' ? 'Суроолор табылган жок!' : 'Вопросы не найдены!');
-        window.location.href = 'index.html';
-        return;
-    }
-
+    currentTest = partData.questions;
     currentQuestionIndex = 0;
     userAnswers = Array(currentTest.length).fill(null);
-    console.log('Test loaded:', { variant: randomVariant, questionCount: currentTest.length, time: partData.time });
+    console.log('Тест загружен:', { questionCount: currentTest.length, time: partData.time });
     displayQuestion();
     startTimer(partData.time);
 }
 
 // Отображение вопроса
 function displayQuestion() {
-    console.log('displayQuestion called, index:', currentQuestionIndex);
+    console.log('Отображение вопроса:', currentQuestionIndex);
     const questionCounter = document.getElementById('question-counter');
     const questionsDiv = document.getElementById('questions');
     const answersDiv = document.getElementById('answers');
 
     if (!questionCounter || !questionsDiv || !answersDiv || !currentTest) {
-        console.error('Required elements or test data not found:', { questionCounter, questionsDiv, answersDiv, currentTest });
         alert(currentLang === 'ky' ? 'Тест жүктөлүүдө ката кетти!' : 'Ошибка загрузки теста!');
         window.location.href = 'index.html';
         return;
@@ -212,28 +198,27 @@ function displayQuestion() {
 
     questionCounter.textContent = `${currentQuestionIndex + 1}/${currentTest.length}`;
     questionsDiv.textContent = currentTest[currentQuestionIndex].question;
-    console.log('Displaying question:', currentTest[currentQuestionIndex].question);
-
     answersDiv.innerHTML = '';
+
     for (let option in currentTest[currentQuestionIndex].options) {
         const label = document.createElement('label');
         label.className = 'answer-option';
-        label.innerHTML = `<input type="radio" name="answer" value="${option}" ${userAnswers[currentQuestionIndex] === option ? 'checked' : ''}> ${option.toUpperCase()}. ${currentTest[currentQuestionIndex].options[option]}`;
+        label.innerHTML = `<input type="radio" name="answer" value="${option}" ${userAnswers[currentQuestionIndex] === option ? 'checked' : ''}>${option.toUpperCase()}. ${currentTest[currentQuestionIndex].options[option]}`;
         answersDiv.appendChild(label);
         answersDiv.appendChild(document.createElement('br'));
     }
 
     document.querySelectorAll('input[name="answer"]').forEach(input => {
-        input.addEventListener('change', (e) => {
+        input.addEventListener('change', e => {
             userAnswers[currentQuestionIndex] = e.target.value;
-            console.log('Answer selected:', e.target.value);
+            console.log('Ответ выбран:', e.target.value);
         });
     });
 }
 
 // Предыдущий вопрос
 function prevQuestion() {
-    console.log('prevQuestion called');
+    console.log('Предыдущий вопрос');
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
         displayQuestion();
@@ -242,7 +227,7 @@ function prevQuestion() {
 
 // Следующий вопрос
 function nextQuestion() {
-    console.log('nextQuestion called');
+    console.log('Следующий вопрос');
     if (currentQuestionIndex < currentTest.length - 1) {
         currentQuestionIndex++;
         displayQuestion();
@@ -251,19 +236,14 @@ function nextQuestion() {
 
 // Запуск таймера
 function startTimer(minutes) {
-    console.log('startTimer called with:', minutes, 'minutes');
+    console.log('Запуск таймера:', minutes, 'минут');
     timeLeft = minutes * 60;
     const timerElement = document.getElementById('timer');
-    if (!timerElement) {
-        console.error('Timer element not found');
-        alert(currentLang === 'ky' ? 'Таймер табылган жок!' : 'Таймер не найден!');
-        return;
-    }
 
+    clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         if (timeLeft <= 0) {
-            console.log('Timer ended, submitting test');
-            clearInterval(timerInterval);
+            console.log('Время истекло');
             submitTest();
             return;
         }
@@ -276,14 +256,7 @@ function startTimer(minutes) {
 
 // Отправка теста
 function submitTest() {
-    console.log('submitTest called');
-    if (!currentTest) {
-        console.error('No test data available');
-        alert(currentLang === 'ky' ? 'Тест маалыматы жок!' : 'Нет данных теста!');
-        window.location.href = 'index.html';
-        return;
-    }
-
+    console.log('Отправка теста');
     clearInterval(timerInterval);
     let score = 0;
     currentTest.forEach((q, i) => {
@@ -294,7 +267,7 @@ function submitTest() {
                      percentage >= 50 ? (currentLang === 'ky' ? 'Орточо' : 'Средний') :
                      (currentLang === 'ky' ? 'Төмөн' : 'Низкий');
 
-    console.log('Test results:', { score, totalQuestions: currentTest.length, percentage, knowledge });
+    console.log('Результаты:', { score, total: currentTest.length, percentage, knowledge });
     localStorage.setItem('score', score);
     localStorage.setItem('totalQuestions', currentTest.length);
     localStorage.setItem('percentage', percentage);
@@ -303,33 +276,51 @@ function submitTest() {
 }
 
 // Возврат на главную
-function backToMain() {
-    console.log('backToMain called');
+function back() {
+    console.log('Возврат на главную');
     window.location.href = 'index.html';
 }
 
-// Начало урока
-function startCourseLesson() {
-    console.log('startCourseLesson called');
-    alert(currentLang === 'ky' ? 'Урок башталды!' : 'Урок начался!');
-}
-
-// Инициализация обработчиков событий
-function initializeEventListeners() {
-    console.log('Initializing event listeners');
-
-    // Обработчики для смены языка (доступны на всех страницах)
-    const langKyButton = document.getElementById('lang-ky');
-    const langRuButton = document.getElementById('lang-ru');
-    if (langKyButton) langKyButton.addEventListener('click', () => switchLanguage('ky'));
-    if (langRuButton) langRuButton.addEventListener('click', () => switchLanguage('ru'));
+// Инициализация
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Инициализация страницы');
 
     // Обработчики для index.html
     const mathButton = document.getElementById('subject-math');
     const kyrgyzButton = document.getElementById('subject-kyrgyz');
     const manasButton = document.getElementById('subject-manas');
-    if (mathButton) mathButton.addEventListener('click', () => selectSubject('math'));
-    if (kyrgyzButton) kyrgyzButton.addEventListener('click', () => selectSubject('kyrgyz'));
+    if (mathButton) mathButton.onclick = () => selectSubject('math');
+    if (kyrgyzButtonButton) kyrgyzButton.onclick = () => selectSubject('kyrgyz');
+    if (manasButton) manasButton.onclick = () => selectSubject('manas');
+
+    // Обработчики для subject.html
+    const part1Button = document.getElementById('part-1');
+    const part2Button = document.getElementById('part-2');
+    if (part1Button) part1Button.onclick = () => selectPart('1');
+    if (part2Button) part2Button.onclick = () => selectPart('2');
+
+    // Обработчики для part-details.html
+    const startTestButton = document.getElementById('start-test');
+    if (startTestButton) startTestButton.onclick = startTest;
+
+    // Обработчики для test.html
+    const prevQuestionButton = document.getElementById('prev-question');
+    const nextQuestionButton = document.getElementById('next-question');
+    const submitTestButton = document.getElementById('submit-test');
+    if (prevQuestionButton) prevQuestionButton.onclick = prevQuestion;
+    if (nextQuestionButton) nextQuestionButton.onclick = nextQuestion;
+    if (submitTestButton) submitTestButton.onclick = submitTest;
+
+    // Обработчики для всех страниц
+    const langKyButton = document.getElementById('lang-ky');
+    const langRuButton = document.getElementById('lang-ru');
+    const backButton = document.getElementById('back-main');
+    if (langKyButton) langKyButton.onclick = () => switchLanguage('ky');
+    if (langRuButton) langRuButton.onclick = () => switchLanguage('ru');
+    if (backButton) backButton.onclick = back;
+
+    updateTexts();
+});() => selectSubject('kyrgyz'));
     if (manasButton) manasButton.addEventListener('click', () => selectSubject('manas'));
 
     // Обработчики для subject.html
