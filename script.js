@@ -8,84 +8,6 @@ let userAnswers = null;
 let timerInterval = null;
 let timeLeft = 0;
 
-// Структура вопросов с временем в минутах для каждой части
-const questions = {
-    math: {
-        part1: {
-            time: 30, // Время в минутах
-            variant1: [
-                { question: "Математика 1-бөлүк, суроо 1: 2 + 0 канча болот?", options: { a: "1", b: "2", c: "3", d: "4" }, correct: "b" },
-                { question: "Математика 1-бөлүк, суроо 2: 3 + 1 канча болот?", options: { a: "3", b: "4", c: "5", d: "6" }, correct: "b" },
-                // Добавляйте вопросы сюда
-            ],
-            variant2: [
-                { question: "Математика 1-бөлүк, суроо 1: 3 + 0 канча болот?", options: { a: "2", b: "3", c: "4", d: "5" }, correct: "b" },
-                { question: "Математика 1-бөлүк, суроо 2: 4 + 1 канча болот?", options: { a: "4", b: "5", c: "6", d: "7" }, correct: "b" },
-                // Добавляйте вопросы сюда
-            ],
-        },
-        part2: {
-            time: 60,
-            variant1: [
-                { question: "Математика 2-бөлүк, суроо 1: 1^2 канча болот?", options: { a: "0", b: "1", c: "2", d: "3" }, correct: "b" },
-                // Добавляйте вопросы сюда
-            ],
-            variant2: [
-                { question: "Математика 2-бөлүк, суроо 1: 1^3 канча болот?", options: { a: "0", b: "1", c: "2", d: "3" }, correct: "b" },
-                // Добавляйте вопросы сюда
-            ],
-        },
-    },
-    kyrgyz: {
-        part1: {
-            time: 30,
-            variant1: [
-                { question: "Кыргыз тили 1-бөлүк, суроо 1: 'күн' сөзү эмнени билдирет?", options: { a: "Ай", b: "Жылдыз", c: "Күн", d: "Суу" }, correct: "c" },
-                // Добавляйте вопросы сюда
-            ],
-            variant2: [
-                { question: "Кыргыз тили 1-бөлүк, суроо 1: 'ай' сөзү эмнени билдирет?", options: { a: "Ай", b: "Жылдыз", c: "Күн", d: "Суу" }, correct: "a" },
-                // Добавляйте вопросы сюда
-            ],
-        },
-        part2: {
-            time: 60,
-            variant1: [
-                { question: "Кыргыз тили 2-бөлүк, суроо 1: 'тоо' сөзү эмнени билдирет?", options: { a: "Дарыя", b: "Тоо", c: "Токой", d: "Жол" }, correct: "b" },
-                // Добавляйте вопросы сюда
-            ],
-            variant2: [
-                { question: "Кыргыз тили 2-бөлүк, суроо 1: 'көл' сөзү эмнени билдирет?", options: { a: "Дарыя", b: "Көл", c: "Токой", d: "Жол" }, correct: "b" },
-                // Добавляйте вопросы сюда
-            ],
-        },
-    },
-    manas: {
-        part1: {
-            time: 30,
-            variant1: [
-                { question: "Манас таануу 1-бөлүк, суроо 1: Манас ким?", options: { a: "Алтай", b: "Манас", c: "Каныкей", d: "Семетей" }, correct: "b" },
-                // Добавляйте вопросы сюда
-            ],
-            variant2: [
-                { question: "Манас таануу 1-бөлүк, суроо 1: Каныкей ким?", options: { a: "Манастын аялы", b: "Манастын уулу", c: "Манастын душманы", d: "Манастын атасы" }, correct: "a" },
-                // Добавляйте вопросы сюда
-            ],
-        },
-        part2: {
-            time: 60,
-            variant1: [
-                { question: "Манас таануу 2-бөлүк, суроо 1: Семетей ким?", options: { a: "Манастын уулу", b: "Манастын аялы", c: "Манастын душманы", d: "Манастын атасы" }, correct: "a" },
-                // Добавляйте вопросы сюда
-            ],
-            variant2: [
-                { question: "Манас таануу 2-бөлүк, суроо 1: Айчүрөк ким?", options: { a: "Семетейдин аялы", b: "Манастын аялы", c: "Манастын энеси", d: "Манастын душманы" }, correct: "a" },
-                // Добавляйте вопросы сюда
-            ],
-        },
-    },
-};
-
 // Переключение языка
 function switchLanguage(lang) {
     console.log('Switching language to:', lang);
@@ -378,6 +300,101 @@ function submitTest() {
     localStorage.setItem('percentage', percentage);
     localStorage.setItem('knowledge', knowledge);
     window.location.href = 'results.html';
+}
+
+// Возврат на главную
+function backToMain() {
+    console.log('backToMain called');
+    window.location.href = 'index.html';
+}
+
+// Начало урока
+function startCourseLesson() {
+    console.log('startCourseLesson called');
+    alert(currentLang === 'ky' ? 'Урок башталды!' : 'Урок начался!');
+}
+
+// Инициализация обработчиков событий
+function initializeEventListeners() {
+    console.log('Initializing event listeners');
+
+    // Обработчики для смены языка (доступны на всех страницах)
+    const langKyButton = document.getElementById('lang-ky');
+    const langRuButton = document.getElementById('lang-ru');
+    if (langKyButton) langKyButton.addEventListener('click', () => switchLanguage('ky'));
+    if (langRuButton) langRuButton.addEventListener('click', () => switchLanguage('ru'));
+
+    // Обработчики для index.html
+    const mathButton = document.getElementById('subject-math');
+    const kyrgyzButton = document.getElementById('subject-kyrgyz');
+    const manasButton = document.getElementById('subject-manas');
+    if (mathButton) mathButton.addEventListener('click', () => selectSubject('math'));
+    if (kyrgyzButton) kyrgyzButton.addEventListener('click', () => selectSubject('kyrgyz'));
+    if (manasButton) manasButton.addEventListener('click', () => selectSubject('manas'));
+
+    // Обработчики для subject.html
+    const part1Button = document.getElementById('part-1');
+    const part2Button = document.getElementById('part-2');
+    const backButtonSubject = document.getElementById('back-main');
+    if (part1Button) part1Button.addEventListener('click', () => selectPart('1'));
+    if (part2Button) part2Button.addEventListener('click', () => selectPart('2'));
+    if (backButtonSubject) backButtonSubject.addEventListener('click', backToMain);
+
+    // Обработчики для part-details.html
+    const startTestButton = document.getElementById('start-test');
+    const backButtonPart = document.getElementById('back-main');
+    if (startTestButton) startTestButton.addEventListener('click', startTest);
+    if (backButtonPart) backButtonPart.addEventListener('click', backToMain);
+
+    // Обработчики для test.html
+    const prevQuestionButton = document.getElementById('prev-question');
+    const nextQuestionButton = document.getElementById('next-question');
+    const submitTestButton = document.getElementById('submit-test');
+    const backButtonTest = document.getElementById('back-main-test');
+    if (prevQuestionButton) prevQuestionButton.addEventListener('click', prevQuestion);
+    if (nextQuestionButton) nextQuestionButton.addEventListener('click', nextQuestion);
+    if (submitTestButton) submitTestButton.addEventListener('click', submitTest);
+    if (backButtonTest) backButtonTest.addEventListener('click', backToMain);
+
+    // Обработчики для results.html
+    const backButtonResults = document.getElementById('back-main');
+    if (backButtonResults) backButtonResults.addEventListener('click', backToMain);
+
+    // Обработчики для courses.html
+    const startLessonButton = document.getElementById('start-lesson');
+    const backLinkCourses = document.getElementById('back-main');
+    const courseMath = document.getElementById('course-math');
+    const courseKyrgyz = document.getElementById('course-kyrgyz');
+    const courseManas = document.getElementById('course-manas');
+    if (startLessonButton) startLessonButton.addEventListener('click', startCourseLesson);
+    if (backLinkCourses) backLinkCourses.addEventListener('click', backToMain);
+    if (courseMath) courseMath.addEventListener('click', () => {
+        localStorage.setItem('courseSubject', 'math');
+        updateTexts();
+    });
+    if (courseKyrgyz) courseKyrgyz.addEventListener('click', () => {
+        localStorage.setItem('courseSubject', 'kyrgyz');
+        updateTexts();
+    });
+    if (courseManas) courseManas.addEventListener('click', () => {
+        localStorage.setItem('courseSubject', 'manas');
+        updateTexts();
+    });
+
+    // Обновление текстов при загрузке
+    updateTexts();
+
+    // Обновление информации о части для part-details.html
+    if (window.location.pathname.includes('part-details.html')) {
+        updatePartDetails();
+    }
+}
+
+// Запуск инициализации после загрузки DOM
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM fully loaded');
+    initializeEventListeners();
+});ocation.href = 'results.html';
 }
 
 // Возврат на главную
